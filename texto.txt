@@ -1,0 +1,236 @@
+
+                  <div class="row" id="header" style="">
+                    <div class="col-sm-12 col-md-12 col-12" style="text-align: center;">
+                      <div class="col-sm-12 col-md-12 col-12">
+                        <h3><b>AL RAHMANIAH AUTO ACCESSORIES TR L.L.C</b></h3>
+                      </div>
+                      <div class="col-sm-12 col-md-12 col-12">
+                        <b>Al Khan bldg Ind Area 1 Al Khan Road Sharjah- U.A.E, SHARJAH, SHARJAH-U.A.E</b>
+                      </div>
+                      <div class="col-sm-12 col-md-12 col-12">
+                        <b>Mobile&nbsp;&nbsp;:&nbsp;&nbsp;+971558674927+971557502083</b>
+                      </div>
+                      <div class="col-sm-12 col-md-12 col-12">
+                        <b>Email&nbsp;&nbsp;:&nbsp;&nbsp;alrahmaniah27@gmail.com</b>
+                      </div>
+                      <div class="col-sm-12 col-md-12 col-12">
+                        <b>TRN&nbsp;&nbsp;:&nbsp;&nbsp;100457407300003</b>
+                      </div>
+                    </div>
+                    <div class="col-sm-8 col-md-8 col-xs-8">
+                      <div class="col-sm-12 col-md-12 col-12">
+                        <b>Customer&nbsp;&nbsp;:&nbsp;&nbsp;HOLLYWOOD AUTO. SEATS UPHOLESTRY  SERVICES</b>
+                      </div>
+                      <div class="col-sm-12 col-md-12 col-12">
+                        <b>Mobile&nbsp;&nbsp;:&nbsp;&nbsp;0505754678</b>
+                      </div>
+                      <div class="col-sm-12 col-md-12 col-12">
+                        <b>Address&nbsp;&nbsp;:&nbsp;&nbsp;</b>
+                      </div>
+                    </div>
+                    <div class="col-sm-4 col-md-4 col-xs-4">
+                      <div class="col-sm-12 col-md-12 col-12">
+                        <b>Start Date&nbsp;&nbsp;:&nbsp;&nbsp;01-05-2024</b>
+                      </div>
+                      <div class="col-sm-12 col-md-12 col-12">
+                        <b>End Date&nbsp;&nbsp;:&nbsp;&nbsp;21-05-2024</b>
+                      </div>
+                      <div class="col-sm-12 col-md-12 col-12">
+                        <b>Print Date&nbsp;&nbsp;:&nbsp;&nbsp;21-05-2024</b>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="box-body">
+                    <div class="col-sm-12 col-md-12 col-xs-12">
+                      <table class="table table-bordered table-striped " id="report-data">
+                        <thead>
+                          <tr class="bg-blue">
+                            <th class="hidden">#</th>
+                            <th data-orderable="false">Doc No.</th>
+                            <th data-orderable="false">Doc Date</th>
+                            <th data-orderable="false">Doc Type</th>
+                            <th data-orderable="false">Debit</th>
+                            <th data-orderable="false">Credit</th>
+                            <th data-orderable="false">Balance</th>
+                          </tr>
+                        </thead>
+                        <tbody id="tbodyid">
+                                                                                    <tr class="gradeX">
+                                <td class="hidden">20240501</td>
+                                <td>ARA-24-11453</td>
+                                <td>01-05-2024</td>
+                                <td>Invoice</td>
+                                <td>658.00</td>
+                                <td>0.00</td>
+                                <td>658.00</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240501</td>
+                                <td>ARA-24-11457</td>
+                                <td>01-05-2024</td>
+                                <td>Invoice</td>
+                                <td>21.00</td>
+                                <td>0.00</td>
+                                <td>679.00</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240501</td>
+                                <td>ARA-24-11460</td>
+                                <td>01-05-2024</td>
+                                <td>Invoice</td>
+                                <td>84.00</td>
+                                <td>0.00</td>
+                                <td>763.00</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240502</td>
+                                <td>ARA-24-11474</td>
+                                <td>02-05-2024</td>
+                                <td>Invoice</td>
+                                <td>84.00</td>
+                                <td>0.00</td>
+                                <td>847.00</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240502</td>
+                                <td>ARA-24-11487</td>
+                                <td>02-05-2024</td>
+                                <td>Invoice</td>
+                                <td>66.00</td>
+                                <td>0.00</td>
+                                <td>913.00</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240502</td>
+                                <td>ARA-24-11490</td>
+                                <td>02-05-2024</td>
+                                <td>Invoice</td>
+                                <td>132.00</td>
+                                <td>0.00</td>
+                                <td>1,045.00</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240506</td>
+                                <td>ARA-24-11651</td>
+                                <td>06-05-2024</td>
+                                <td>Invoice</td>
+                                <td>113.00</td>
+                                <td>0.00</td>
+                                <td>1,158.00</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240508</td>
+                                <td>ARA-24-11766</td>
+                                <td>08-05-2024</td>
+                                <td>Invoice</td>
+                                <td>166.00</td>
+                                <td>0.00</td>
+                                <td>1,324.00</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240509</td>
+                                <td>ARA-24-11862</td>
+                                <td>09-05-2024</td>
+                                <td>Invoice</td>
+                                <td>131.00</td>
+                                <td>0.00</td>
+                                <td>1,455.00</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240511</td>
+                                <td>ARA-24-11938</td>
+                                <td>11-05-2024</td>
+                                <td>Invoice</td>
+                                <td>74.00</td>
+                                <td>0.00</td>
+                                <td>1,529.00</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240512</td>
+                                <td>ARA-24-11951</td>
+                                <td>12-05-2024</td>
+                                <td>Invoice</td>
+                                <td>145.00</td>
+                                <td>0.00</td>
+                                <td>1,674.00</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240513</td>
+                                <td>ARA-24-12006</td>
+                                <td>13-05-2024</td>
+                                <td>Invoice</td>
+                                <td>121.00</td>
+                                <td>0.00</td>
+                                <td>1,795.00</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240515</td>
+                                <td>ARA-24-12143</td>
+                                <td>15-05-2024</td>
+                                <td>Invoice</td>
+                                <td>100.80</td>
+                                <td>0.00</td>
+                                <td>1,895.80</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240519</td>
+                                <td>ARA-24-12300</td>
+                                <td>19-05-2024</td>
+                                <td>Invoice</td>
+                                <td>63.00</td>
+                                <td>0.00</td>
+                                <td>1,958.80</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240519</td>
+                                <td>ARA-24-12347</td>
+                                <td>19-05-2024</td>
+                                <td>Invoice</td>
+                                <td>64.05</td>
+                                <td>0.00</td>
+                                <td>2,022.85</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240520</td>
+                                <td>ARA-24-12419</td>
+                                <td>20-05-2024</td>
+                                <td>Invoice</td>
+                                <td>247.80</td>
+                                <td>0.00</td>
+                                <td>2,270.65</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240520</td>
+                                <td>ARA-24-12425</td>
+                                <td>20-05-2024</td>
+                                <td>Invoice</td>
+                                <td>124.95</td>
+                                <td>0.00</td>
+                                <td>2,395.60</td>
+                              </tr>
+                                                          <tr class="gradeX">
+                                <td class="hidden">20240521</td>
+                                <td>ARA-24-12440</td>
+                                <td>21-05-2024</td>
+                                <td>Invoice</td>
+                                <td>100.80</td>
+                                <td>0.00</td>
+                                <td>2,496.40</td>
+                              </tr>
+                                                      
+                                                                                
+                                                                                                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <td class="hidden"></td>
+                            <td colspan="3" align="right"><b>Grand Total</b></td>
+                            <td><b>2,496.40</b></td>
+                            <td><b>0.00</b></td>
+                            <td><b>2,496.40</b></td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                

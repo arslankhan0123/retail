@@ -864,6 +864,31 @@
                                               </label></div>
                                           </td>
                                         </tr>
+                                        <!-- Delivery Note -->
+                                        <tr>
+                                          <td><?= $i++;?></td>
+                                          <td>Delivery Note</td>
+                                          <td>
+                                              <div class="checkbox icheck"><label>
+                                                <input type="checkbox" class="change_me" id="deliverynote" > <?= $this->lang->line('select_all'); ?>
+                                              </label></div>
+                                          </td>
+                                          <td>
+                                              <input type="hidden" name="module[deliverynote]" value="on">
+                                              <div class="checkbox icheck"><label>
+                                                <input type="checkbox" class="deliverynote_all" id='deliverynote_add' name="permission[deliverynote_add]" > <?= $this->lang->line('add'); ?>
+                                              </label></div>
+                                              <div class="checkbox icheck"><label>
+                                                <input type="checkbox" class="deliverynote_all" id='deliverynote_edit' name="permission[deliverynote_edit]"> <?= $this->lang->line('edit'); ?>
+                                              </label></div>
+                                              <div class="checkbox icheck"><label>
+                                                <input type="checkbox" class="deliverynote_all" id='deliverynote_delete' name="permission[deliverynote_delete]"> <?= $this->lang->line('delete'); ?>
+                                              </label></div>
+                                              <div class="checkbox icheck"><label>
+                                                <input type="checkbox" class="deliverynote_all" id='deliverynote_view' name="permission[deliverynote_view]"> <?= $this->lang->line('view'); ?>
+                                              </label></div>
+                                          </td>
+                                        </tr>
                                         <!-- Sales Return-->
                                         <tr>
                                           <td><?= $i++;?></td>

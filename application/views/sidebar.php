@@ -63,6 +63,13 @@ $CI = &get_instance();
               </a>
             </li>
           <?php } ?>
+          <?php if ($CI->permissions('deliverynote_add')) { ?>
+            <li class="border_bottom">
+              <a href="<?php echo $base_url; ?>Delivery_note/add">
+                <h4><i class="fa fa-plus text-green"></i> Delivery Note</h4>
+              </a>
+            </li>
+          <?php } ?>
           <?php if ($CI->permissions('purchase_add')) { ?>
             <li class="border_bottom">
               <a href="<?php echo $base_url; ?>purchase/add">
@@ -459,6 +466,31 @@ $CI = &get_instance();
 
               <?php if ($CI->permissions('quotation_view')) { ?>
                 <li class="quotation_list-active-li"><a href="<?php echo $base_url; ?>quotation"><i class="fa fa-list "></i> <span><?= $this->lang->line('quotation_list'); ?></span></a></li>
+              <?php } ?>
+
+
+            </ul>
+          </li>
+        <?php } ?>
+      <?php } ?><!-- is_user() -->
+      
+      <?php if (!is_user()) { ?>
+        <?php if ($CI->permissions('deliverynote_add')  || $CI->permissions('deliverynote_view')) { ?>
+          <!-- <li class="header">DELIVERY NOTE</li> -->
+          <li class="pos-active-li delivery_note_list-active-li delivery_note-active-li treeview">
+            <a href="#">
+              <i class=" fa fa-truck text-aqua"></i> <span>Delivery Note</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu">
+              <?php if ($CI->permissions('deliverynote_add')) { ?>
+                <li class="delivery_note-active-li"><a href="<?php echo $base_url; ?>Delivery_note/add"><i class="fa fa-plus-square-o "></i> <span>New Delivery Note</span></a></li>
+              <?php } ?>
+
+              <?php if ($CI->permissions('deliverynote_view')) { ?>
+                <li class="delivery_note_list-active-li"><a href="<?php echo $base_url; ?>Delivery_note"><i class="fa fa-list "></i> <span>Delivery Note List</span></a></li>
               <?php } ?>
 
 

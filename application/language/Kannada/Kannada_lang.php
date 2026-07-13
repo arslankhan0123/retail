@@ -757,3 +757,19 @@ $lang['show_all_users_quotations'			] 	=  		'ಎಲ್ಲಾ ಬಳಕೆದಾ�
 /**/
 $lang['adjustment'							] 	=  		'ಹೊಂದಾಣಿಕೆ';
 $lang['transfer'							] 	=  		'ವರ್ಗಾವಣೆ';
+// Delivery Note Language Keys
+$lang['deliverynote'] = 'ಉದ್ಧರಣ';
+$lang['deliverynote_list'] = 'ಉದ್ಧರಣ ಪಟ್ಟಿ';
+$lang['deliverynote_report'] = 'ಉದ್ಧರಣ ವರದಿ';
+$lang['deliverynote_price'] = 'ಉದ್ಧರಣ ಬೆಲೆ';
+$lang['deliverynote_invoice'] = 'ಉದ್ಧರಣ ಸರಕುಪಟ್ಟಿ';
+$lang['deliverynote_date'] = 'ಉದ್ಧರಣ ದಿನಾಂಕ';
+$lang['deliverynote_summary'] = 'ಉದ್ಧರಣ ಸಾರಾಂಶ';
+$lang['deliverynote_code'] = 'ಉದ್ಧರಣ ಕೋಡ್';
+$lang['deliverynote_status'] = 'ಉದ್ಧರಣ ಸ್ಥಿತಿ';
+$lang['deliverynote_invoice_formats'] = 'ಉದ್ಧರಣ ಸರಕುಪಟ್ಟಿ ಸ್ವರೂಪಗಳು';
+$lang['deliverynote_invoice_footer_text'] = 'ಉದ್ಧರಣ ಸರಕುಪಟ್ಟಿ ಅಡಿಟಿಪ್ಪಣಿ ಪಠ್ಯ';
+$lang['deliverynote_tax_type'] = 'ಉದ್ಧರಣ ತೆರಿಗೆ ಪ್ರಕಾರ';
+$lang['deliverynote_quantity'] = 'ಉದ್ಧರಣ ಪ್ರಮಾಣ';
+$lang['deliverynote_to_sales_invoice'] = 'ಮಾರಾಟ ಸರಕುಪಟ್ಟಿಗೆ ಉಲ್ಲೇಖ';
+$lang['show_all_users_deliverynotes'] = 'ಎಲ್ಲಾ ಬಳಕೆದಾರರಿಗೆ ಉಲ್ಲೇಖಗಳನ್ನು ತೋರಿಸಿ';

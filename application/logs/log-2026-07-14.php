@@ -124,3 +124,16 @@ ERROR - 2026-07-14 01:20:52 --> Could not find the language line "deliverynote"
 ERROR - 2026-07-14 01:20:52 --> Could not find the language line "deliverynote_list"
 ERROR - 2026-07-14 01:20:52 --> Could not find the language line "deliverynote_date"
 ERROR - 2026-07-14 01:20:52 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 160
+ERROR - 2026-07-14 01:24:51 --> Could not find the language line "deliverynote"
+ERROR - 2026-07-14 01:24:51 --> Could not find the language line "deliverynote_list"
+ERROR - 2026-07-14 01:24:51 --> Could not find the language line "deliverynote_date"
+ERROR - 2026-07-14 01:24:51 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 160
+ERROR - 2026-07-14 01:25:09 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 160
+ERROR - 2026-07-14 01:25:15 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-14 01:25:20 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 160
+ERROR - 2026-07-14 02:13:29 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-14 02:13:40 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-14 02:13:45 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-14 02:13:53 --> Query error: Unknown column 'deliverynote_id' in 'where clause' - Invalid query: SELECT *
+FROM `db_sales`
+WHERE `deliverynote_id` in(1)

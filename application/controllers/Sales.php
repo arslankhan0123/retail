@@ -35,6 +35,15 @@ class Sales extends MY_Controller {
 		$this->load->view('sales',$data);
 	}
 
+	public function deliverynote($deliverynote_id){
+		$this->belong_to('db_deliverynote',$deliverynote_id);
+		$this->permission_check('sales_add');
+		$data=$this->data;
+		$data['page_title']=$this->lang->line('deliverynote_to_sales_invoice');
+		$data['deliverynote_id']=$deliverynote_id;
+		$this->load->view('sales',$data);
+	}
+
 	public function add()
 	{	
 		$this->permission_check('sales_add');
@@ -397,6 +406,10 @@ class Sales extends MY_Controller {
 
 	public function return_quotation_list($quotation_id){
 		echo $this->sales->return_quotation_list($quotation_id);
+	}
+
+	public function return_deliverynote_list($deliverynote_id){
+		echo $this->sales->return_deliverynote_list($deliverynote_id);
 	}
 	
 }

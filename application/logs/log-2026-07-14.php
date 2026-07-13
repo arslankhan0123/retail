@@ -137,3 +137,11 @@ ERROR - 2026-07-14 02:13:45 --> Could not find the language line "new_deliveryno
 ERROR - 2026-07-14 02:13:53 --> Query error: Unknown column 'deliverynote_id' in 'where clause' - Invalid query: SELECT *
 FROM `db_sales`
 WHERE `deliverynote_id` in(1)
+ERROR - 2026-07-14 02:16:15 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-14 02:17:43 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-14 02:18:29 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-14 02:19:37 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-14 02:20:57 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-14 02:21:56 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-14 02:22:26 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 160
+ERROR - 2026-07-14 02:22:40 --> Could not find the language line "new_deliverynote"

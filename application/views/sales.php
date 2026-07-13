@@ -82,6 +82,29 @@
 
          $store_details = get_store_details($store_id);
          $invoice_terms = $store_details->invoice_terms;
+      } else if (isset($deliverynote_id) && !empty($deliverynote_id)) {
+         $q2 = $this->db->query("select * from db_deliverynote where id=$deliverynote_id");
+         $customer_id = $q2->row()->customer_id;
+         $sales_date = show_date($q2->row()->deliverynote_date);
+         $due_date = '';
+         $sales_status = '';
+         $warehouse_id = $q2->row()->warehouse_id;
+         $reference_no = $q2->row()->reference_no;
+         $discount_input = store_number_format($q2->row()->discount_to_all_input, 0);
+         $discount_type = $q2->row()->discount_to_all_type;
+         $other_charges_input = store_number_format($q2->row()->other_charges_input, 0);
+         $other_charges_tax_id = $q2->row()->other_charges_tax_id;
+         $sales_note = $q2->row()->deliverynote_note;
+         $store_id = $q2->row()->store_id;
+
+         $init_code = get_only_init_code('sales');
+         $count_id = get_last_count_id('db_sales');
+
+         $items_count = $this->db->query("select count(*) as items_count from db_deliverynoteitems where deliverynote_id=$deliverynote_id")->row()->items_count;
+         $coupon_code = '';
+
+         $store_details = get_store_details($store_id);
+         $invoice_terms = $store_details->invoice_terms;
       } else {
          $customer_id  = $sales_date = $sales_status = $warehouse_id = $due_date =
             $reference_no  = $coupon_code =
@@ -148,6 +171,9 @@
 
                      <?php if (isset($quotation_id)) { ?>
                         <input type="hidden" id="quotation_id" name="quotation_id" value="<?php echo $quotation_id;; ?>">
+                     <?php } ?>
+                     <?php if (isset($deliverynote_id)) { ?>
+                        <input type="hidden" id="deliverynote_id" name="deliverynote_id" value="<?php echo $deliverynote_id;; ?>">
                      <?php } ?>
 
                      <div class="box-body">
@@ -1099,7 +1125,7 @@
 
    <!-- UPDATE OPERATIONS -->
    <script type="text/javascript">
-      <?php if (isset($sales_id) || isset($quotation_id) || isset($order_id)) { ?>
+      <?php if (isset($sales_id) || isset($quotation_id) || isset($deliverynote_id) || isset($order_id)) { ?>
          $(document).ready(function() {
             var base_url = '<?= base_url(); ?>';
             var path = '';
@@ -1111,7 +1137,10 @@
 
             <?php if (isset($quotation_id) && !empty($quotation_id)) { ?>
                var id = '<?= $quotation_id; ?>';
-               var path = 'return_quotation_list';
+               var path = "return_quotation_list";
+            <?php } elseif (isset($deliverynote_id) && !empty($deliverynote_id)) { ?>
+               var id = '<?= $deliverynote_id; ?>';
+               var path = "return_deliverynote_list";
             <?php } ?>
 
             $(".box").append('<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>');

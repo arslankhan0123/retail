@@ -38,3 +38,5 @@ ERROR - 2026-07-13 21:15:45 --> 404 Page Not Found: Deliverynote/return_delivery
 ERROR - 2026-07-13 21:17:29 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-07-13 21:18:40 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-07-13 21:25:35 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-13 22:17:54 --> 404 Page Not Found: Sales/deliverynote
+ERROR - 2026-07-13 22:22:33 --> 404 Page Not Found: Theme/plugins

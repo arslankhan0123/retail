@@ -944,6 +944,38 @@ class Sales_model extends CI_Model {
 		}
 		return $result;
 	}
+
+	public function return_deliverynote_list($deliverynote_id){
+		$q1=$this->db->select('*')->from('db_deliverynoteitems')->where("deliverynote_id=$deliverynote_id")->get();
+		$rowcount =1;
+		foreach ($q1->result() as $res1) {
+			$res2=$this->db->query("select * from db_items where id=".$res1->item_id)->row();
+			$q3=$this->db->query("select * from db_tax where id=".$res1->tax_id)->row();
+			
+			$info = array(
+							'item_id' 					=> $res1->item_id, 
+							'description' 				=> $res1->description, 
+							'item_name' 				=> $res2->item_name,
+							'item_available_qty' 		=> $res2->stock,
+							'item_price' 				=> $res2->price, 
+							'item_sales_price' 			=> $res1->price_per_unit, 
+							'item_tax_name' 			=> $q3->tax_name, 
+							'item_sales_qty' 			=> $res1->deliverynote_qty, 
+							'item_tax_id' 				=> $res1->tax_id, 
+							'item_tax' 					=> $q3->tax, 
+							'item_tax_type' 			=> $res1->tax_type, 
+							'item_tax_amt' 				=> $res1->tax_amt, 
+							'item_discount' 			=> $res1->discount_input, 
+							'item_discount_type' 		=> $res1->discount_type, 
+							'item_discount_input' 		=> $res1->discount_input, 
+							'service_bit' 				=> 1, 
+							'custom_barcode' 			=> $res2->custom_barcode, 
+						);
+
+			$result = $this->return_row_with_data($rowcount++,$info);
+		}
+		return $result;
+	}
 	/* For Purchase Items List Retrieve*/
 	public function return_sales_list($sales_id){
 		$q1=$this->db->select('*')->from('db_salesitems')->where("sales_id=$sales_id")->get();

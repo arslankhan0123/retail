@@ -53,6 +53,7 @@
                     <input type="checkbox" class="group_check checkbox" >
                   </th>
                   <!-- <th><?= $this->lang->line('store_name'); ?></th> -->
+                  <th>Code</th>
                   <th>Department Name</th>
                   <th><?= $this->lang->line('description'); ?></th>
                   <th><?= $this->lang->line('status'); ?></th>
@@ -106,11 +107,11 @@ $(document).ready(function() {
                     multi_delete();
                 }
             },
-            { extend: 'copy', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,2,3]} },
-            { extend: 'excel', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,2,3]} },
-            { extend: 'pdf', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,2,3]} },
-            { extend: 'print', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,2,3]} },
-            { extend: 'csv', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,2,3]} },
+            { extend: 'copy', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,2,3,4]} },
+            { extend: 'excel', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,2,3,4]} },
+            { extend: 'pdf', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,2,3,4]} },
+            { extend: 'print', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,2,3,4]} },
+            { extend: 'csv', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,2,3,4]} },
             { extend: 'colvis', className: 'btn bg-teal color-palette btn-flat',text:'Columns' },  
 
             ]
@@ -145,7 +146,7 @@ $(document).ready(function() {
         //Set column definition initialisation properties.
         "columnDefs": [
         { 
-            "targets": [ 0,4 ], //first column / numbering column
+            "targets": [ 0,5 ], //first column / numbering column
             "orderable": false, //set not orderable
         },
         {

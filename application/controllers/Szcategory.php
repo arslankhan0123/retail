@@ -81,7 +81,7 @@ public function ajax_list()
     $no++;
     $row = array();
     $row[] = '<input type="checkbox" name="checkbox[]" value='.$category->isid.' class="checkbox column_checkbox" >';
-      
+    $row[] = $category->isid;
     $row[] = $category->isName;
     $row[] = $category->isDetails;
 

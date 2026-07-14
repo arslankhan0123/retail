@@ -156,6 +156,12 @@ $(document).ready(function() {
             "targets" :[0],
             "className": "text-center",
         },
+        {
+            "targets" :[1],
+            "createdCell": function (td, cellData, rowData, row, col) {
+                $(td).addClass('text-center');
+            }
+        },
         
         ],
     });

@@ -626,12 +626,32 @@
 //LEFT SIDE: ON CLICK ITEM ADD TO INVOICE LIST
 function addrow(id='',item_obj=''){
 
-
     var item_id = (item_obj=='') ? $('#div_'+id).attr('data-item-id') : item_obj.item_id; 
 
     //CHECK SAME ITEM ALREADY EXIST IN ITEMS TABLE 
     var item_check=check_same_item(item_id);
-    if(!item_check){return false;}
+    if(item_check != -1){
+        swal({
+          title: "Are you sure?",
+          text: "This item is already added. Do you want to add it as a new row?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: false,
+        }).then((sure) => {
+          if(sure){
+            proceed_addrow(id, item_obj);
+          } else {
+            failed.currentTime = 0;
+            failed.play();
+          }
+        });
+        return false;
+    }
+    proceed_addrow(id, item_obj);
+}
+
+function proceed_addrow(id='',item_obj=''){
+    var item_id = (item_obj=='') ? $('#div_'+id).attr('data-item-id') : item_obj.item_id; 
     var rowcount        =$("#hidden_rowcount").val();//0,1,2...
     var item_name = (item_obj=='') ? $('#div_'+id).attr('data-item-name') : item_obj.item_name; 
 
@@ -974,20 +994,15 @@ $(document).ready(function(){
   get_coupon_details();
 });
 function check_same_item(item_id){
-
   if($(".items_table tr").length>1){
     var rowcount=$("#hidden_rowcount").val();
     for(i=0;i<=rowcount;i++){
             if($("#tr_item_id_"+i).val()==item_id){
-              if(confirm("This item is already added. Do you want to add it as a new row?")){
-                return true;
-              }else{
-                return false;
-              }
+              return i;
             }
       }//end for
   }
-  return true;
+  return -1;
 }
 
 $(document).ready(function(){

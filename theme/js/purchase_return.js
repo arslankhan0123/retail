@@ -211,28 +211,43 @@ $("#item_search").autocomplete({
 });
 
 function check_same_item(item_id){
-
   if($("#purchase_table tr").length>1){
     var rowcount=$("#hidden_rowcount").val();
     for(i=0;i<=rowcount;i++){
             if($("#tr_item_id_"+i).val()==item_id){
-              if(confirm("This item is already added. Do you want to add it as a new row?")){
-                return true;
-              }else{
-                return false;
-              }
+              return i;
             }
       }//end for
   }
-  return true;
+  return -1;
 }
 
 function return_row_with_data(item_id){
   //CHECK SAME ITEM ALREADY EXIST IN ITEMS TABLE 
   var item_check=check_same_item(item_id);
-  if(!item_check){return false;}
+  if(item_check != -1){
+    swal({
+      title: "Are you sure?",
+      text: "This item is already added. Do you want to add it as a new row?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: false,
+    }).then((sure) => {
+      if(sure){
+        add_row(item_id);
+      } else {
+        failed.currentTime = 0;
+        failed.play();
+      }
+    });
+    return false;
+  }
   //END
   
+  add_row(item_id);
+}
+
+function add_row(item_id) {
   /*Check purchase id avaialable or not*/
   if(!document.getElementById("purchase_id")){
     var purchase_id='';

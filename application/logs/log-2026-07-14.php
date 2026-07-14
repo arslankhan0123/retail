@@ -170,3 +170,14 @@ ERROR - 2026-07-14 15:55:48 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-07-14 19:56:01 --> Could not find the language line "sales_return_list"
 ERROR - 2026-07-14 19:58:37 --> Could not find the language line "purchase_return_list"
 ERROR - 2026-07-14 15:58:39 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 17:34:39 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-14 17:35:30 --> Severity: error --> Exception: No connection could be made because the target machine actively refused it F:\Projects\retail\system\database\drivers\mysqli\mysqli_driver.php 201
+ERROR - 2026-07-14 17:36:01 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 21:39:10 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 21:41:07 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 21:42:19 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 21:42:33 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 21:44:20 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-14 21:45:55 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 21:46:07 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 21:48:16 --> 404 Page Not Found: Faviconico/index

@@ -145,3 +145,28 @@ ERROR - 2026-07-14 02:20:57 --> Could not find the language line "new_deliveryno
 ERROR - 2026-07-14 02:21:56 --> Could not find the language line "new_deliverynote"
 ERROR - 2026-07-14 02:22:26 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 160
 ERROR - 2026-07-14 02:22:40 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-14 15:02:25 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 15:13:35 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 15:16:51 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 19:21:37 --> Could not find the language line "company_address"
+ERROR - 2026-07-14 19:22:26 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-14 19:23:13 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-14 19:23:38 --> Could not find the language line "company_address"
+ERROR - 2026-07-14 19:40:24 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-14 15:40:27 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 19:43:35 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-14 19:45:11 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-14 15:45:14 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 19:46:07 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-14 19:46:07 --> Severity: Notice --> Undefined property: stdClass::$custom_barcode F:\Projects\retail\application\models\Sales_return_model.php 878
+ERROR - 2026-07-14 19:46:07 --> Severity: Notice --> Undefined property: stdClass::$custom_barcode F:\Projects\retail\application\models\Sales_return_model.php 878
+ERROR - 2026-07-14 19:46:07 --> Severity: Notice --> Undefined property: stdClass::$custom_barcode F:\Projects\retail\application\models\Sales_return_model.php 878
+ERROR - 2026-07-14 19:48:54 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-14 19:55:07 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-14 19:55:14 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-14 19:55:29 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-14 19:55:42 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-14 15:55:48 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-14 19:56:01 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-14 19:58:37 --> Could not find the language line "purchase_return_list"
+ERROR - 2026-07-14 15:58:39 --> 404 Page Not Found: Theme/plugins

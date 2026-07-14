@@ -842,7 +842,7 @@ class Sales_return_model extends CI_Model {
 		$q1=$this->db->select('*')->from('db_salesitemsreturn')->where("return_id=$return_id")->get();
 		$rowcount =1;
 		foreach ($q1->result() as $res1) {
-			$q2=$this->db->query("select item_name,stock,tax_type,price,sales_price from db_items where id=".$res1->item_id);
+			$q2=$this->db->query("select item_name,stock,tax_type,price,sales_price,custom_barcode from db_items where id=".$res1->item_id);
 			$q3=$this->db->query("select * from db_tax where id=".$res1->tax_id)->row();
 			
 			

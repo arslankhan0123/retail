@@ -285,10 +285,11 @@ function check_same_item(item_id){
     var rowcount=$("#hidden_rowcount").val();
     for(i=0;i<=rowcount;i++){
             if($("#tr_item_id_"+i).val()==item_id){
-              increment_qty(i);
-              failed.currentTime = 0;
-              failed.play();
-              return false;
+              if(confirm("This item is already added. Do you want to add it as a new row?")){
+                return true;
+              }else{
+                return false;
+              }
             }
       }//end for
   }

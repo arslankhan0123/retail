@@ -542,8 +542,17 @@ class Sales extends MyPDF{
 		                        	$tbl .=nl2br($store->sales_invoice_footer_text);
 		                    		$tbl .='
 		                    </td>
-		                </tr>
-		            </tbody>
+		                </tr>';
+		        
+		        if(!empty($store->qr_image)){
+		        	$tbl .='<tr nobr="true">
+		                    <td colspan="18" class="text-center"><br>
+		                        <img src="'.base_url($store->qr_image).'" width="100" height="100">
+		                    </td>
+		                </tr>';
+		        }
+
+		        $tbl .='</tbody>
 		        </table>
 		       
 		        ';

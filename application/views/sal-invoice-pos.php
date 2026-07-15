@@ -480,7 +480,10 @@
 									echo $CI->print_qr($qr_data);
 								*/
 						?>
-                                <!-- Static QR code image --><div class="qr-box" style="display:inline-block;vertical-align:middle;line-height:0 !important;font-size:0;"><img src="<?= base_url('uploads/store/whatsapp_qr.jpeg'); ?>" alt="QR Code"></div>
+                                <!-- Static QR code image -->
+                                <?php if(!empty($res1->qr_image)): ?>
+                                <div class="qr-box" style="display:inline-block;vertical-align:middle;line-height:0 !important;font-size:0;"><img src="<?= base_url($res1->qr_image); ?>" alt="QR Code"></div>
+                                <?php endif; ?>
 
                             </td>
                         </tr>

@@ -21,7 +21,7 @@
                 $round_off='';
                 $mobile=$phone=$email=$country=$state=$city=
                 $postcode=$address=$gst_no=$vat_no=
-                $store_website=$pan_no=$bank_details=$store_logo='';
+                $store_website=$pan_no=$bank_details=$store_logo=$qr_image='';
 
                 $decimals=2;
                 $qty_decimals=2;
@@ -144,6 +144,26 @@
                                                    <div class="col-sm-8">
                                                       <input type="text" class="form-control" id="store_website" name="store_website" placeholder="" value="<?php print $store_website; ?>" onkeyup="shift_cursor(event,'country')">
                                                       <span id="website_msg" style="display:none" class="text-danger"></span>
+                                                   </div>
+                                                </div>
+                                                <div class="form-group">
+                                                   <label for="qr_image" class="col-sm-4 control-label">Whatsapp QR Image</label>
+                                                   <div class="col-sm-8">
+                                                      <input type="file" id="qr_image" name="qr_image">
+                                                      <span id="qr_image_msg" style="display:block;" class="text-danger">Max Width/Height: 1000px * 1000px & Size: 1024kb </span>
+                                                   </div>
+                                                </div>
+                                                <?php 
+                                                if(empty($qr_image)){
+                                                  $qr_logo = base_url('uploads/no_logo/nologo.png');
+                                                }
+                                                else{
+                                                  $qr_logo = base_url($qr_image);
+                                                }
+                                                ?>
+                                                <div class="form-group">
+                                                   <div class="col-sm-8 col-sm-offset-4">
+                                                      <img class='img-responsive' style='border:3px solid #d2d6de;' src="<?=$qr_logo;?>">
                                                    </div>
                                                 </div>
                                                 <!-- ########### -->

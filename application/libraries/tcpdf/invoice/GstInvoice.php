@@ -619,8 +619,17 @@ class GstInvoice extends MyPDF{
                 		</td>
 	                    <td colspan="2" style="border-left:none;vertical-align:bottom;text-align:center;min-height:60px;height:60px;"><div style="font-size:10px;"><span style="color:rgb(0, 0, 128);font-style:italic;vertical-align:bottom;"> SIGNATURE:</span><br/><br/> <hr width="120"></div>
 	                    		</td>
-	                </tr>
-	            </tbody>
+	                </tr>';
+	    
+	    if(!empty($store->qr_image)){
+	        $tbl .='<tr nobr="true">
+	                    <td colspan="8" class="text-center"><br>
+	                        <img src="'.base_url($store->qr_image).'" width="100" height="100">
+	                    </td>
+	                </tr>';
+	    }
+	    
+	    $tbl .='</tbody>
 	        </table>';
 		return $this->writeHTML($tbl, true, false, true, true, 'j');
 		//$this->IncludeJS("print(true);");
@@ -990,8 +999,17 @@ class GstInvoice extends MyPDF{
                 		</td>
 	                    <td colspan="2" style="border-left:none;vertical-align:bottom;text-align:center;min-height:60px;height:60px;"><div style="font-size:10px;"><span style="color:rgb(0, 0, 128);font-style:italic;vertical-align:bottom;"> SIGNATURE:</span><br/><br/> <hr width="120"></div>
 	                    		</td>
-	                </tr>
-	            </tbody>
+	                </tr>';
+
+	    if(!empty($store->qr_image)){
+	        $tbl .='<tr nobr="true">
+	                    <td colspan="8" class="text-center"><br>
+	                        <img src="'.base_url($store->qr_image).'" width="100" height="100">
+	                    </td>
+	                </tr>';
+	    }
+	    
+	    $tbl .='</tbody>
 	        </table>';
 		// above tr
 	// 	<tr style="display:none;" nobr="true">

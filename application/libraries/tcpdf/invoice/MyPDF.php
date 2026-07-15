@@ -309,22 +309,6 @@ class MyPDF extends TCPDF {
     {
         return null;
         $qr_data = $this->_get_qr_data();
-        
-        // new style
-        $style = array(
-            'border' => false,
-            'padding' => 0,
-            'fgcolor' => array( 38, 6, 108 ),
-            'bgcolor' => false
-        );
-
-        $w = $h = 30;
-        
-        // QRCODE,H : QR-CODE Best error correction
-        $x = ($this->_rtl) ? 203 : 174;// for RTL 203
-        $this->write2DBarcode($qr_data, 'QRCODE,H', $x, $y='', $w, $h, $style, 'N');
-        //$this->Text(140, 205, 'QRCODE H - NO PADDING');
-        return $this;
     }
 
     public function _get_hr()

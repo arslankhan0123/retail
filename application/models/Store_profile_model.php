@@ -40,6 +40,28 @@ class Store_profile_model extends CI_Model {
 	        }
 		}
 
+		$qr_image='';
+		if(!empty($_FILES['qr_image']['name'])){
+			$config['upload_path']          = './uploads/store/';
+	        $config['allowed_types']        = 'gif|jpg|jpeg|png';
+	        $config['max_size']             = 1000;
+	        $config['max_width']            = 1000;
+	        $config['max_height']           = 1000;
+
+	        $this->load->library('upload', $config);
+
+	        if ( ! $this->upload->do_upload('qr_image'))
+	        {
+	                $error = array('error' => $this->upload->display_errors());
+	                return $error['error'];
+	                exit();
+	        }
+	        else
+	        {
+	        	   $qr_image='uploads/store/'.$this->upload->data('file_name');
+	        }
+		}
+
 		$change_return = (isset($change_return)) ? 1 : 0;
 		$mrp_column = (isset($mrp_column)) ? 1 : 0;
 		$previous_balance_bit = (isset($previous_balance_bit)) ? 1 : 0;
@@ -103,6 +125,9 @@ class Store_profile_model extends CI_Model {
 
 		if(!empty($store_logo)){
 			$data['store_logo']=$store_logo;
+		}
+		if(!empty($qr_image)){
+			$data['qr_image']=$qr_image;
 		}
 		/*custom helper*/
 		if(gst_number()){

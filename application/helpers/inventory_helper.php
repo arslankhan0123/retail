@@ -511,3 +511,29 @@ function get_packages_select_list($select_id=''){
       }
 	  return $str;
  }
+function get_salesmans_select_list($select_id='',$store_id=''){
+      $CI =& get_instance();
+
+      //if not admin
+      if(!empty($store_id)){
+        $CI->db->where('store_id',$store_id);
+      }
+
+      $q1=$CI->db->select('*')->where('status=1')->from('db_salesman')->get();
+      $str='';
+       if($q1->num_rows($q1)>0)
+        {  
+            $str='';
+            foreach($q1->result() as $res1)
+          { 
+            $tot_advance = store_number_format($res1->tot_advance,0);
+            $selected = ($select_id==$res1->id)? 'selected' : '';
+            $str.="<option $selected data-tot_advance='".$tot_advance."' value='".$res1->id."'>".$res1->salesman_code."-".$res1->salesman_name."</option>";
+          }
+        }
+        else
+        {
+            $str.='<option value="">No Records Found</option>'; 
+        }
+        return $str;
+ }

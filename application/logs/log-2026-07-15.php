@@ -33,3 +33,6 @@ ERROR - 2026-07-15 21:31:56 --> Could not find the language line "company_addres
 ERROR - 2026-07-15 22:20:08 --> Could not find the language line "company_address"
 ERROR - 2026-07-15 23:52:18 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\quotation\quotation.php 160
 ERROR - 2026-07-15 23:59:24 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\quotation\quotation.php 160
+ERROR - 2026-07-15 21:09:58 --> 404 Page Not Found: Salesman_advance/index
+ERROR - 2026-07-15 21:09:58 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-15 21:35:18 --> 404 Page Not Found: Faviconico/index

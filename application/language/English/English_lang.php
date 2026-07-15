@@ -1059,3 +1059,9 @@ $lang['deliverynote_tax_type'] = 'Delivery Note Tax Type';
 $lang['deliverynote_quantity'] = 'Delivery Note Quantity';
 $lang['deliverynote_to_sales_invoice'] = 'Delivery Note to Sales Invoice';
 $lang['show_all_users_deliverynotes'] = 'Show all users Delivery Notes';
+
+$lang['salesman_name'] = 'Salesman Name';
+$lang['salesman_id'] = 'Salesman ID';
+$lang['salesman'] = 'Salesman';
+$lang['salesman_list'] = 'Salesman List';
+$lang['new_salesman'] = 'New Salesman';

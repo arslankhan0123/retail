@@ -1,5 +1,10 @@
 <?php
 $conn = new mysqli('localhost', 'root', '', 'retail');
-$res = $conn->query("ALTER TABLE db_sales ADD COLUMN deliverynote_id int(11) DEFAULT NULL AFTER quotation_id");
-if($res) echo "Column added"; else echo $conn->error;
+$result = $conn->query("SHOW COLUMNS FROM db_salesman LIKE 'tot_advance'");
+if($result->num_rows == 0) {
+    $conn->query("ALTER TABLE db_salesman ADD tot_advance double NOT NULL DEFAULT '0'");
+    echo "Added tot_advance column";
+} else {
+    echo "Column exists";
+}
 ?>

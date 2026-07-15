@@ -374,6 +374,14 @@ $CI = &get_instance();
                 <li class="suppliers-list-active-li"><a href="<?php echo $base_url; ?>suppliers"><i class="fa fa-list "></i> <span><?= $this->lang->line('suppliers_list'); ?></span></a></li>
               <?php } ?>
 
+              <?php if ($CI->permissions('salesman_add')) { ?>
+                <li class="salesman-active-li"><a href="<?php echo $base_url; ?>salesman/add"><i class="fa fa-plus-square-o "></i> <span>Add Salesman</span></a></li>
+              <?php } ?>
+
+              <?php if ($CI->permissions('salesman_view')) { ?>
+                <li class="salesman-view-active-li"><a href="<?php echo $base_url; ?>salesman"><i class="fa fa-list "></i> <span>Salesmen List</span></a></li>
+              <?php } ?>
+
               <?php if ($CI->permissions('import_customers')) { ?>
                 <li class="import_customers-active-li"><a href="<?php echo $base_url; ?>import/customers"><i class="fa fa-arrow-circle-o-left "></i> <span><?= $this->lang->line('import_customers'); ?></span>
                   </a></li>

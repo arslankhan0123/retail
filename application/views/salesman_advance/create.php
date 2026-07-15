@@ -68,12 +68,10 @@
                               <div class="form-group">
                                  <label for="salesman_id" class="col-sm-2 control-label"><?= $this->lang->line('salesman_name'); ?><label class="text-danger">*</label></label>
                                  <div class="col-sm-4">
-                                    <div class="input-group">
                                         <select class="form-control select2" id="salesman_id" name="salesman_id"  style="width: 100%;">
                                         <option value="">Select</option>
                                           <?= get_salesmans_select_list($salesman_id,get_current_store_id()); ?>
                                        </select>
-                                    </div>
                                     <span id="salesman_id_msg" style="display:none" class="text-danger"></span>
                                     
                                  </div>

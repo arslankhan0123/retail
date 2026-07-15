@@ -44,7 +44,7 @@
           <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title"><?=$page_title;?></h3>
-              <?php if(permissions('salesman_adv_payments_add')) { ?>
+              <?php if(permissions('cust_adv_payments_add')) { ?>
               <div class="box-tools">
                 <a class="btn btn-block btn-info" href="<?php echo $base_url; ?>salesman_advance/add">
                 <i class="fa fa-plus"></i> <?= $this->lang->line('add_advance'); ?></a>

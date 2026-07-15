@@ -38,6 +38,7 @@
           $return_id='';
           $q2 = $this->db->query("select * from db_sales where id=$sales_id");
           $customer_id=$q2->row()->customer_id;
+          $salesman_id=$q2->row()->salesman_id;
           $return_date=show_date(date("d-m-Y"));
           $sales_code=$q2->row()->sales_code;
           $return_status=$q2->row()->sales_status;
@@ -59,6 +60,7 @@
           $q2 = $this->db->query("select * from db_salesreturn where id=$return_id");
           $sales_id=$q2->row()->sales_id;
           $customer_id=$q2->row()->customer_id;
+          $salesman_id=$q2->row()->salesman_id;
           $return_date=show_date(date("d-m-Y"));
           $return_status=$q2->row()->return_status;
           $return_code=$q2->row()->return_code;
@@ -79,7 +81,7 @@
 
     }
     if($oper=='create_new_return'){
-          $customer_id  = $return_date = $return_status = $warehouse_id =
+          $customer_id  = $return_date = $return_status = $warehouse_id = $salesman_id = 
           $reference_no  =
           $other_charges_input          = $other_charges_tax_id =
           $discount_input = $discount_type  = $return_note= $store_id='';
@@ -221,6 +223,16 @@
                   <span id="reference_no_msg" style="display:none" class="text-danger"></span>
                                  </div>
                                  
+                              </div>
+                              
+                              <div class="form-group">
+                                 <label for="salesman_id" class="col-sm-2 control-label"><?= $this->lang->line('salesman'); ?></label>
+                                 <div class="col-sm-3">
+                                    <select class="form-control select2" id="salesman_id" name="salesman_id" style="width: 100%;">
+                                       <?= get_salesmans_select_list($salesman_id, get_current_store_id()); ?>
+                                    </select>
+                                    <span id="salesman_id_msg" style="display:none" class="text-danger"></span>
+                                 </div>
                               </div>
                               
                            </div>

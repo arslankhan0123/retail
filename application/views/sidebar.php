@@ -416,6 +416,14 @@ $CI = &get_instance();
                 <li class="list-active-li"><a href="<?php echo $base_url; ?>customers_advance"><i class="fa fa-list "></i> <span><?= $this->lang->line('advance_list'); ?></span></a></li>
               <?php } ?>
 
+              <?php if ($CI->permissions('salesman_adv_payments_add')) { ?>
+                <li class="salesman_adv_create-active-li"><a href="<?php echo $base_url; ?>salesman_advance/add"><i class="fa fa-plus-square-o "></i> <span>Add Salesman Advance</span></a></li>
+              <?php } ?>
+
+              <?php if ($CI->permissions('salesman_adv_payments_view')) { ?>
+                <li class="salesman_adv_list-active-li"><a href="<?php echo $base_url; ?>salesman_advance"><i class="fa fa-list "></i> <span>Salesman Advance List</span></a></li>
+              <?php } ?>
+
 
             </ul>
           </li>

@@ -37,6 +37,7 @@
       if (isset($sales_id)) {
          $q2 = $this->db->query("select * from db_sales where id=$sales_id");
          $customer_id = $q2->row()->customer_id;
+         $salesman_id = $q2->row()->salesman_id;
          $sales_date = show_date($q2->row()->sales_date);
          $due_date = (!empty($q2->row()->due_date)) ? show_date($q2->row()->due_date) : '';
          $sales_status = $q2->row()->sales_status;
@@ -61,6 +62,7 @@
       } else if (isset($quotation_id) && !empty($quotation_id)) {
          $q2 = $this->db->query("select * from db_quotation where id=$quotation_id");
          $customer_id = $q2->row()->customer_id;
+         $salesman_id = '';
          $sales_date = show_date($q2->row()->quotation_date);
          $due_date = '';
          $sales_status = '';
@@ -85,6 +87,7 @@
       } else if (isset($deliverynote_id) && !empty($deliverynote_id)) {
          $q2 = $this->db->query("select * from db_deliverynote where id=$deliverynote_id");
          $customer_id = $q2->row()->customer_id;
+         $salesman_id = '';
          $sales_date = show_date($q2->row()->deliverynote_date);
          $due_date = '';
          $sales_status = '';
@@ -106,7 +109,7 @@
          $store_details = get_store_details($store_id);
          $invoice_terms = $store_details->invoice_terms;
       } else {
-         $customer_id  = $sales_date = $sales_status = $warehouse_id = $due_date =
+         $customer_id  = $sales_date = $sales_status = $warehouse_id = $due_date = $salesman_id =
             $reference_no  = $coupon_code =
             $other_charges_input          = $other_charges_tax_id = $store_id =
             $discount_type  = $sales_note = '';
@@ -257,6 +260,15 @@
                                  <input type="text" class="form-control pull-right datepicker" id="due_date" name="due_date" value="<?= $due_date; ?>">
                               </div>
                               <span id="due_date_msg" style="display:none" class="text-danger"></span>
+                           </div>
+                        </div>
+                        <div class="form-group">
+                           <label for="salesman_id" class="col-sm-2 control-label"><?= $this->lang->line('salesman'); ?></label>
+                           <div class="col-sm-3">
+                              <select class="form-control select2" id="salesman_id" name="salesman_id" style="width: 100%;">
+                                 <?= get_salesmans_select_list($salesman_id, get_current_store_id()); ?>
+                              </select>
+                              <span id="salesman_id_msg" style="display:none" class="text-danger"></span>
                            </div>
                         </div>
 

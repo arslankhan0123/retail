@@ -271,6 +271,7 @@ class Sales_model extends CI_Model {
 		    				'due_date' 					=> $due_date,
 		    				'sales_status' 				=> $sales_status,
 		    				'customer_id' 				=> $customer_id,
+		    				'salesman_id' 				=> (empty($salesman_id)) ? null : $salesman_id,
 		    				/*'warehouse_id' 				=> $warehouse_id,*/
 		    				/*Other Charges*/
 		    				'other_charges_input' 		=> $other_charges_input,
@@ -320,6 +321,7 @@ class Sales_model extends CI_Model {
 		    				'due_date' 				=> $due_date,
 		    				'sales_status' 			=> $sales_status,
 		    				'customer_id' 				=> $customer_id,
+		    				'salesman_id' 				=> (empty($salesman_id)) ? null : $salesman_id,
 		    				/*'warehouse_id' 				=> $warehouse_id,*/
 		    				/*Other Charges*/
 		    				'other_charges_input' 		=> $other_charges_input,

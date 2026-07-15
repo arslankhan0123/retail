@@ -9,14 +9,14 @@ class Salesman_advance extends MY_Controller {
 	}
 
 	public function index() {
-		$this->permission_check('salesman_adv_payments_add');
+		$this->permission_check('cust_adv_payments_add');
 		$data = $this->data;
 		$data['page_title'] = $this->lang->line('advance_payments_list');
 		$this->load->view('salesman_advance/list', $data);
 	}
 
 	public function add() {
-		$this->permission_check('salesman_adv_payments_add');
+		$this->permission_check('cust_adv_payments_add');
 		$data = $this->data;
 		$data['page_title'] = $this->lang->line('new_advance');
 		$this->load->view('salesman_advance/create', $data);
@@ -37,7 +37,7 @@ class Salesman_advance extends MY_Controller {
 	}
 	public function update($id) {
 		$this->belong_to('db_salesmanadvance', $id);
-		$this->permission_check('salesman_adv_payments_edit');
+		$this->permission_check('cust_adv_payments_edit');
 		$data = $this->data;
 
 		$result = $this->advance->get_details($id, $data);
@@ -82,7 +82,7 @@ class Salesman_advance extends MY_Controller {
 										</a>
 										<ul role="menu" class="dropdown-menu dropdown-light pull-right">';
 
-										if ($this->permissions('salesman_adv_payments_edit')) {
+										if ($this->permissions('cust_adv_payments_edit')) {
 											$str2 .= '<li>
 												<a title="Edit Record ?" href="' . base_url() . 'salesman_advance/update/' . $rec->id . '">
 													<i class="fa fa-fw fa-edit text-blue"></i>Edit
@@ -90,7 +90,7 @@ class Salesman_advance extends MY_Controller {
 											</li>';
 										}
 
-										if ($this->permissions('salesman_adv_payments_delete')) {
+										if ($this->permissions('cust_adv_payments_delete')) {
 											$str2 .= '<li>
 												<a style="cursor:pointer" title="Delete Record ?" onclick="delete_advance(' . $rec->id . ')">
 													<i class="fa fa-fw fa-trash text-red"></i>Delete
@@ -115,7 +115,7 @@ class Salesman_advance extends MY_Controller {
 	}
 
 	public function update_status() {
-		$this->permission_check_with_msg('salesman_adv_payments_edit');
+		$this->permission_check_with_msg('cust_adv_payments_edit');
 		$id = $this->input->post('id');
 		$status = $this->input->post('status');
 
@@ -124,12 +124,12 @@ class Salesman_advance extends MY_Controller {
 	}
 
 	public function delete_advance() {
-		$this->permission_check_with_msg('salesman_adv_payments_delete');
+		$this->permission_check_with_msg('cust_adv_payments_delete');
 		$id = $this->input->post('q_id');
 		return $this->advance->delete_advance_from_table($id);
 	}
 	public function multi_delete() {
-		$this->permission_check_with_msg('salesman_adv_payments_delete');
+		$this->permission_check_with_msg('cust_adv_payments_delete');
 		$ids = implode(",", $_POST['checkbox']);
 		return $this->advance->delete_advance_from_table($ids);
 	}

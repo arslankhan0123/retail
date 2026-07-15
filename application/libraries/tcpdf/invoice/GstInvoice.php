@@ -53,7 +53,7 @@ class GstInvoice extends MyPDF{
         $pageWidth = $this->getPageWidth();
         $printableWidth = $pageWidth - 12;
         $w = $printableWidth * 0.74;
-        $h = 25;
+        $h = 32;
         
         $titleHTML = "";
         $titleHTML .= "<b>Customer</b><br/>";
@@ -116,7 +116,7 @@ class GstInvoice extends MyPDF{
         $w_customer = $printableWidth * 0.74;
         $w_invoice = $printableWidth * 0.26;
         $w = $w_invoice;
-        $h = 25;
+        $h = 32;
         
         $payment = $this->CI->db->from('db_salespayments')
                             ->where('sales_id',$sales->id)->order_by('id','desc')
@@ -136,7 +136,8 @@ class GstInvoice extends MyPDF{
         $titleHTML .= '<b>Invoice Date</b><br/>';
         
         $titleHTML .= '<b>'.$this->CI->lang->line('due_date').'</b><br/>';
-        $titleHTML .= '<b>Reference</b>';
+        $titleHTML .= '<b>Reference</b><br/>';
+        $titleHTML .= '<b>Printed on</b>';
         
 
         $this->writeHTMLCell($w, $h, $x = 6 + $w_customer, $y='', $titleHTML, [
@@ -163,7 +164,8 @@ class GstInvoice extends MyPDF{
 		}
         
         $invoice_details .= '<b>:</b> <span style="">'.((!empty($sales->due_date)) ? show_date($sales->due_date):'').'</span><br/>';
-        $invoice_details .= '<b>:</b> <span style="font-size:12px;">'.$sales->reference_no.'</span>';
+        $invoice_details .= '<b>:</b> <span style="font-size:12px;">'.$sales->reference_no.'</span><br/>';
+        $invoice_details .= '<b>:</b> <span style="font-size:12px;">'.date('d-m-Y h:i:s a').'</span>';
         
 
         $this->writeHTMLCell($w * 0.56, $h, $x = 6 + $w_customer + ($w * 0.44), $y='70', $invoice_details, [

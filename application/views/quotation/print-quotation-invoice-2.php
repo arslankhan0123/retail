@@ -212,7 +212,14 @@ body { margin: 5px; }
                             </span>
                           </td>
                         </tr>
-
+                        <tr>
+                          <td colspan="8">
+                            Printed on:<br>
+                            <span style="font-size: 10px;">
+                              <b><?php echo date('d-m-Y h:i:s a'); ?></b>
+                            </span>
+                          </td>
+                        </tr>
                         <tr>
                           <td colspan="8">
                             Reference No.<br>
@@ -220,7 +227,6 @@ body { margin: 5px; }
                               <b><?php echo "$reference_no"; ?></b>
                             </span>
                           </td>
-                          
                         </tr>
                         
                         

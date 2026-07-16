@@ -57,7 +57,11 @@ class MyPDF extends TCPDF {
 
     public function __construct()
     {
-        parent::__construct('L', 'mm', 'A3');
+        $store_data = get_store_details();
+        $format_str = (!empty($store_data->pdf_format)) ? $store_data->pdf_format : 'A4 Format';
+        $page_format = ($format_str == 'A5 Format') ? 'A5' : 'A4';
+        
+        parent::__construct('P', 'mm', $page_format);
         //Do your magic here
 
         $this->CI =& get_instance();
@@ -220,8 +224,12 @@ class MyPDF extends TCPDF {
         */
 
         $image_file = 'uploads/store/alkasir_logo.jpg';
+        
+        $pageWidth = $this->getPageWidth();
+        $logo_w = ($pageWidth < 160) ? 25 : 35;
+        $logo_x = ($pageWidth < 160) ? 6 : 15.5;
 
-        $this->Image($image_file, $x = 15.5, $y = 12, 35, '', '', '', 'T', false, 300, '', false, false, $border =0, false, false, false);
+        $this->Image($image_file, $x = $logo_x, $y = 12, $logo_w, '', '', '', 'T', false, 300, '', false, false, $border =0, false, false, false);
         return $this;
     }
     

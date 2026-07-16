@@ -52,7 +52,8 @@ class GstInvoice extends MyPDF{
 
         $pageWidth = $this->getPageWidth();
         $printableWidth = $pageWidth - 12;
-        $w = $printableWidth * 0.74;
+        $ratio_cust = ($pageWidth < 160) ? 0.55 : 0.74;
+        $w = $printableWidth * $ratio_cust;
         $h = 32;
         
         $titleHTML = "";
@@ -113,8 +114,10 @@ class GstInvoice extends MyPDF{
     	
         $pageWidth = $this->getPageWidth();
         $printableWidth = $pageWidth - 12;
-        $w_customer = $printableWidth * 0.74;
-        $w_invoice = $printableWidth * 0.26;
+        $ratio_cust = ($pageWidth < 160) ? 0.55 : 0.74;
+        $ratio_inv = 1 - $ratio_cust;
+        $w_customer = $printableWidth * $ratio_cust;
+        $w_invoice = $printableWidth * $ratio_inv;
         $w = $w_invoice;
         $h = 32;
         
@@ -241,8 +244,10 @@ class GstInvoice extends MyPDF{
         $w = $pageWidth - 12;
         $h = 15;
         
+        $title_fs = ($pageWidth < 160) ? '30px' : '50px';
+
         $html = "";
-        $html = "<div><span style='font-weight:bold;font-size:50px;'><b>TAX INVOICE</b></span><br/><span>TRN: " . $this->store->vat_no . "</span></div>";
+        $html = "<div><span style='font-weight:bold;font-size:".$title_fs.";'><b>TAX INVOICE</b></span><br/><span>TRN: " . $this->store->vat_no . "</span></div>";
         
         $this->setCellMargins(1,1,1,1);
         $this->setCellPaddings(2,1,1,1);
@@ -359,16 +364,30 @@ class GstInvoice extends MyPDF{
 		</style>
 		<table id="print" >';
 
-		$widthArray = array(
-			'sl_no' 		=> '5',
-			'description' 	=> '40',
-			'unit' 			=> '10',
-			'qty' 			=> '10',
-			'rate' 	        => '10',
-			'dis'           => '5',
-			'tax'           => '10',
-			'amount' 		=> '10',
-		);
+		$pageWidth = $this->getPageWidth();
+		if ($pageWidth < 160) {
+			$widthArray = array(
+				'sl_no' 		=> '5',
+				'description' 	=> '32',
+				'unit' 			=> '9',
+				'qty' 			=> '9',
+				'rate' 	        => '11',
+				'dis'           => '8',
+				'tax'           => '12',
+				'amount' 		=> '14',
+			);
+		} else {
+			$widthArray = array(
+				'sl_no' 		=> '5',
+				'description' 	=> '40',
+				'unit' 			=> '10',
+				'qty' 			=> '10',
+				'rate' 	        => '10',
+				'dis'           => '5',
+				'tax'           => '10',
+				'amount' 		=> '10',
+			);
+		}
 
 		//Sum the value
 		$sumOfWidth = 0;
@@ -503,7 +522,10 @@ class GstInvoice extends MyPDF{
 
 		$tbl .= '<tr>';
 
-		$tbl .= '<td colspan="3" style="border:none;padding-top:20px;width:72%;">';
+		$col_left = ($pageWidth < 160) ? 60 : 72;
+		$col_right = 100 - $col_left;
+
+		$tbl .= '<td colspan="3" style="border:none;padding-top:20px;width:'.$col_left.'%;">';
 		$tbl .= '<div style="font-size:12px;"><b>' . $this->CI->lang->line("termsAndConditions") . ':</b></div>';
 		$tbl .= '<div style="text-align:justify;font-size:11px;">';
 		$tbl .= html_entity_decode($sales->invoice_terms);
@@ -514,7 +536,7 @@ class GstInvoice extends MyPDF{
 		// 		$tbl .= "<b>Note</b>: " . $sales->sales_note;
 		// 		$tbl .= "</td>";
 
-		$tbl .= '<td style="border:none;width:28%;">';
+		$tbl .= '<td style="border:none;width:'.$col_right.'%;">';
 
 
 		$tbl .= '<table>
@@ -738,6 +760,19 @@ class GstInvoice extends MyPDF{
 		</style>
 		<table id="print" >';
 
+		$pageWidth = $this->getPageWidth();
+		if ($pageWidth < 160) {
+			$widthArray = array(
+				'sl_no' 		=> '5',
+				'description' 	=> '32',
+				'unit' 			=> '9',
+				'qty' 			=> '9',
+				'rate' 	        => '11',
+				'dis'           => '8',
+				'tax'           => '12',
+				'amount' 		=> '14',
+			);
+		} else {
 			$widthArray = array(
 				'sl_no' 		=> '5',
 				'description' 	=> '40',
@@ -748,6 +783,7 @@ class GstInvoice extends MyPDF{
 				'tax'           => '10',
 				'amount' 		=> '10',
 			);
+		}
 
 			//Sum the value
 			$sumOfWidth = 0;
@@ -883,7 +919,10 @@ class GstInvoice extends MyPDF{
 		
 		$tbl .= '<tr>';
 		
-		$tbl .= '<td colspan="3" style="border:none;padding-top:20px;width:72%;">';
+		$col_left = ($pageWidth < 160) ? 60 : 72;
+		$col_right = 100 - $col_left;
+
+		$tbl .= '<td colspan="3" style="border:none;padding-top:20px;width:'.$col_left.'%;">';
 		$tbl .= '<div style="font-size:12px;"><b>' . $this->CI->lang->line("termsAndConditions") . ':</b></div>';
 		$tbl .= '<div style="text-align:justify;font-size:11px;">';
     	$tbl .=html_entity_decode($sales->invoice_terms);
@@ -894,7 +933,7 @@ class GstInvoice extends MyPDF{
 // 		$tbl .= "<b>Note</b>: " . $sales->sales_note;
 // 		$tbl .= "</td>";
 		
-		$tbl .= '<td style="border:none;width:28%;">';
+		$tbl .= '<td style="border:none;width:'.$col_right.'%;">';
 
 
 		$tbl .='<table>

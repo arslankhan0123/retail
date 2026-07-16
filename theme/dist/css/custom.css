@@ -294,7 +294,7 @@ select[readonly].select2 + .select2-container {
     border-bottom: 0 solid transparent;
 }
 .skin-blue .main-header .logo:hover {
-    background-color: red !important;
+    background-color: #1090C2 !important;
     color: #fff;
     border-bottom: 0 solid transparent;
 }

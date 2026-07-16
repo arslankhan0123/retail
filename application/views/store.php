@@ -525,7 +525,7 @@
                                                    </div>
                                                 </div>
                                               </div>
-                                            <div class="col-md-12">
+                                             <div class="col-md-12">
                                              <div class="form-group">
                                                    <label for="pos_invoice_formats" class="col-sm-3 control-label"><?= $this->lang->line('pos_invoice_formats'); ?><label class="text-danger">*</label> </label>
                                                    <div class="col-sm-4">
@@ -534,6 +534,19 @@
                                                          <option value="2">GST Format</option>
                                                       </select>
                                                       <span id="pos_invoice_format_id_msg" style="display:none" class="text-danger"></span>
+                                                   </div>
+                                                </div>
+                                              </div>
+
+                                              <div class="col-md-12">
+                                                <div class="form-group">
+                                                   <label for="pdf_format" class="col-sm-3 control-label">PDF Format</label>
+                                                   <div class="col-sm-4">
+                                                      <select class="form-control select2" id="pdf_format" name="pdf_format"  style="width: 100%;">
+                                                         <option value="A4 Format">A4 Format</option>
+                                                         <option value="A5 Format">A5 Format</option>
+                                                      </select>
+                                                      <span id="pdf_format_msg" style="display:none" class="text-danger"></span>
                                                    </div>
                                                 </div>
                                               </div>
@@ -918,6 +931,12 @@
          $("#pos_invoice_format_id").val('<?= $pos_invoice_format_id;?>').select2();
        <?php }else{ ?>
          $("#pos_invoice_format_id").select2();
+       <?php } ?>
+
+       <?php if(!empty($pdf_format)) {?>
+         $("#pdf_format").val('<?= $pdf_format;?>').select2();
+       <?php }else{ ?>
+         $("#pdf_format").select2();
        <?php } ?>
 
        <?php if($t_and_c_status==1) {?>

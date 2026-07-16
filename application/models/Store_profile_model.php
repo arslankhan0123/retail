@@ -104,6 +104,7 @@ class Store_profile_model extends CI_Model {
 		    				'change_return'				=> $change_return,
 		    				'sales_invoice_format_id'	=> $sales_invoice_format_id,
 		    				'pos_invoice_format_id'		=> $pos_invoice_format_id,
+		    				'pdf_format'				=> $pdf_format,
 		    				'sales_invoice_footer_text'	=> $sales_invoice_footer_text,
 		    				'invoice_terms'				=> $invoice_terms,
 		    				'round_off'					=> $round_off,

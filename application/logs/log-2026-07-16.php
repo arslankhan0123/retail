@@ -230,3 +230,5 @@ ERROR - 2026-07-16 17:58:00 --> Could not find the language line "import_salesma
 ERROR - 2026-07-16 17:58:00 --> Could not find the language line "view_account_receivable_salesman"
 ERROR - 2026-07-16 17:59:47 --> Could not find the language line "import_salesman"
 ERROR - 2026-07-16 17:59:47 --> Could not find the language line "view_account_receivable_salesman"
+ERROR - 2026-07-16 18:07:42 --> Could not find the language line "import_salesman"
+ERROR - 2026-07-16 18:07:42 --> Could not find the language line "view_account_receivable_salesman"

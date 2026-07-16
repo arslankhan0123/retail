@@ -86,13 +86,11 @@
                   <th><?= $this->lang->line('salesman_name'); ?></th>
                   <th><?= $this->lang->line('mobile'); ?></th>
                   <th><?= $this->lang->line('email'); ?></th>
-                  <th><?= $this->lang->line('location'); ?></th>
+                  <!-- <th><?= $this->lang->line('location'); ?></th>
                   <th><?= $this->lang->line('credit_limit'); ?></th>
                   <th><?= $this->lang->line('previous_due'); ?></th>
-                  <!-- <th><?= $this->lang->line('sales_due'); ?>(-)</th> -->
                   <th><?= $this->lang->line('sales_return_due'); ?>(+)</th>
-                  <!-- <th><?= $this->lang->line('total'); ?>(+)</th> -->
-                  <th><?= $this->lang->line('advance'); ?></th>
+                  <th><?= $this->lang->line('advance'); ?></th> -->
                   <th><?= $this->lang->line('status'); ?></th>
                   <th><?= $this->lang->line('action'); ?></th> 
                 </tr>
@@ -103,11 +101,6 @@
                 <tfoot>
                   <tr class="bg-gray">
                       <th></th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th style="text-align:right">Total</th>
                       <th></th>
                       <th></th>
                       <th></th>
@@ -172,11 +165,11 @@ function load_datatable(show_account_receivable='unchecked'){
                     multi_delete();
                 }
             },
-            { extend: 'copy', className: 'btn bg-teal color-palette btn-flat',footer: true, exportOptions: { columns: [1,2,3,4,5,6,7,8,9,10]} },
-            { extend: 'excel', className: 'btn bg-teal color-palette btn-flat',footer: true, exportOptions: { columns: [1,2,3,4,5,6,7,8,9,10]} },
-            { extend: 'pdf', className: 'btn bg-teal color-palette btn-flat',footer: true, exportOptions: { columns: [1,2,3,4,5,6,7,8,9,10]} },
-            { extend: 'print', className: 'btn bg-teal color-palette btn-flat',footer: true, exportOptions: { columns: [1,2,3,4,5,6,7,8,9,10]} },
-            { extend: 'csv', className: 'btn bg-teal color-palette btn-flat',footer: true, exportOptions: { columns: [1,2,3,4,5,6,7,8,9,10]} },
+            { extend: 'copy', className: 'btn bg-teal color-palette btn-flat',footer: true, exportOptions: { columns: [1,2,3,4,5]} },
+            { extend: 'excel', className: 'btn bg-teal color-palette btn-flat',footer: true, exportOptions: { columns: [1,2,3,4,5]} },
+            { extend: 'pdf', className: 'btn bg-teal color-palette btn-flat',footer: true, exportOptions: { columns: [1,2,3,4,5]} },
+            { extend: 'print', className: 'btn bg-teal color-palette btn-flat',footer: true, exportOptions: { columns: [1,2,3,4,5]} },
+            { extend: 'csv', className: 'btn bg-teal color-palette btn-flat',footer: true, exportOptions: { columns: [1,2,3,4,5]} },
             { extend: 'colvis', className: 'btn bg-teal color-palette btn-flat',footer: true, text:'Columns' },  
 
             ]
@@ -213,7 +206,7 @@ function load_datatable(show_account_receivable='unchecked'){
         //Set column definition initialisation properties.
         "columnDefs": [
         { 
-            "targets": [ 0,11,6 ], //first column / numbering column
+            "targets": [ 0,6 ], //first column / numbering column
             "orderable": false, //set not orderable
         },
         {
@@ -224,36 +217,7 @@ function load_datatable(show_account_receivable='unchecked'){
         ],
         /*Start Footer Total*/
         "footerCallback": function ( row, data, start, end, display ) {
-            var api = this.api(), data;
-            // Remove the formatting to get integer data for summation
-            var intVal = function ( i ) {
-                return typeof i === 'string' ?
-                    i.replace(/[\$,]/g, '')*1 :
-                    typeof i === 'number' ?
-                        i : 0;
-            };
-            var invoice_total = api
-                .column( 7, { page: 'none'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            var sales_due = api
-                .column( 8, { page: 'none'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            /*var sales_return_due = api
-                .column( 8, { page: 'none'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );*/
-            //$( api.column( 0 ).footer() ).html('Total');
-            $( api.column( 6 ).footer() ).html(to_Fixed(invoice_total));
-            $( api.column( 8 ).footer() ).html(to_Fixed(sales_due));
-            //$( api.column( 8 ).footer() ).html((sales_return_due));
+            // Footer calculation commented out
         },
         /*End Footer Total*/
     });

@@ -79,12 +79,12 @@ class Salesman extends MY_Controller {
 			$row[] = $salesman->salesman_name;
 			$row[] = $salesman->mobile;
 			$row[] = $salesman->email;
-			$row[] = (!empty($salesman->location_link)) ? '<a target="_blank" title="Click to View Location!" href="'.$salesman->location_link.'"><i class="fa fa-fw fa-map-marker"></i> Link</a>' : '';
+			/*$row[] = (!empty($salesman->location_link)) ? '<a target="_blank" title="Click to View Location!" href="'.$salesman->location_link.'"><i class="fa fa-fw fa-map-marker"></i> Link</a>' : '';
 			$row[] = ($salesman->credit_limit==-1) ? "<span class='badge'>No Limit</span>" :store_number_format($salesman->credit_limit);
 			$row[] = store_number_format($opening_balance+$sales_due);
 			
 			$row[] = store_number_format($sales_return_due);
-			$row[] = store_number_format($salesman->tot_advance);
+			$row[] = store_number_format($salesman->tot_advance);*/
 			
 
 			 		if($salesman->status==1){ 

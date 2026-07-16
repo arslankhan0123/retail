@@ -99,12 +99,12 @@ class Salesman extends MY_Controller {
 										</a>
 										<ul role="menu" class="dropdown-menu dropdown-light pull-right">';
 
-											if(is_store_admin())
+											/*if(is_store_admin())
 											$str2.='<li>
 												<a title="Discount Coupon" href="'.base_url().'salesman_coupon/generate/'.$salesman->id.'">
 													<i class="fa fa-fw fa-tags text-blue"></i>Generate Discount Coupon
 												</a>
-											</li>';
+											</li>';*/
 
 											if($this->permissions('salesman_edit')&& $salesman->delete_bit!=1)
 											$str2.='<li>
@@ -113,7 +113,7 @@ class Salesman extends MY_Controller {
 												</a>
 											</li>';
 
-											if($this->permissions('cust_adv_payments_view'))
+											/*if($this->permissions('cust_adv_payments_view'))
 											$str2.='<li>
 												<a title="Advance Payments View" href="'.base_url().'salesman_advance">
 													<i class="fa fa-fw fa-edit text-blue"></i>Advance Payments
@@ -138,7 +138,7 @@ class Salesman extends MY_Controller {
 												<a title="Pay Return Due" class="pointer" onclick="pay_return_due('.$salesman->id.')" >
 													<i class="fa fa-fw fa-money text-blue"></i>Pay Return Due
 												</a>
-											</li>';
+											</li>';*/
 											if($this->permissions('salesman_delete') && $salesman->delete_bit!=1)
 											$str2.='<li>
 												<a style="cursor:pointer" title="Delete Record ?" onclick="delete_salesman('.$salesman->id.')">

@@ -223,3 +223,10 @@ ERROR - 2026-07-16 17:53:11 --> Severity: Notice --> Undefined variable: receive
 ERROR - 2026-07-16 17:53:13 --> Could not find the language line "new_deliverynote"
 ERROR - 2026-07-16 17:53:21 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 161
 ERROR - 2026-07-16 17:53:31 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-16 17:56:50 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-16 17:57:49 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 161
+ERROR - 2026-07-16 17:57:53 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-16 17:58:00 --> Could not find the language line "import_salesman"
+ERROR - 2026-07-16 17:58:00 --> Could not find the language line "view_account_receivable_salesman"
+ERROR - 2026-07-16 17:59:47 --> Could not find the language line "import_salesman"
+ERROR - 2026-07-16 17:59:47 --> Could not find the language line "view_account_receivable_salesman"

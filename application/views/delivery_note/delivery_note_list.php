@@ -125,9 +125,9 @@
                   <th class="text-center">
                     <input type="checkbox" class="group_check checkbox" >
                   </th>
+                  <th>Code</th>
                   <th><?= $this->lang->line('deliverynote_date'); ?></th>
                   <th><?= $this->lang->line('expire_date'); ?></th>
-                  <th><?= $this->lang->line('deliverynote_code'); ?></th>
                   <th><?= $this->lang->line('reference_no'); ?></th>
                   <th><?= $this->lang->line('customer_name'); ?></th>
                   <th><?= $this->lang->line('total'); ?></th>

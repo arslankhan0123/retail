@@ -66,6 +66,7 @@ class Delivery_note extends MY_Controller {
 			$no++;
 			$row = array();
 			$row[] = '<input type="checkbox" name="checkbox[]" value='.$deliverynote->id.' class="checkbox column_checkbox" >';
+			$row[] = $deliverynote->id;
 			
 			$str='';
 			        if($deliverynote->sales_status!='')
@@ -73,8 +74,6 @@ class Delivery_note extends MY_Controller {
 			$row[] = show_date($deliverynote->deliverynote_date)."<br>".$str;
 			$row[] = (!empty($deliverynote->expire_date)) ? show_date($deliverynote->expire_date) : '';
 
-			$row[] = $deliverynote->deliverynote_code;
-			
 			$row[] = $deliverynote->reference_no;
 			$row[] = $deliverynote->customer_name;
 			

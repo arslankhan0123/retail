@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="<?php echo $theme_link; ?>plugins/iCheck/square/orange.css">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--Custom Css File-->
-  <link rel="stylesheet" href="<?php echo $theme_link; ?>dist/css/custom.css">
+  <link rel="stylesheet" href="<?php echo $theme_link; ?>dist/css/custom.css?v=<?php echo time(); ?>">
   <!-- <link rel="stylesheet" href="<?php echo $theme_link; ?>dist/css/sidebar.css"> -->
 
   <!-- Autocomplete -->

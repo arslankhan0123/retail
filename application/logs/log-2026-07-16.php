@@ -232,3 +232,8 @@ ERROR - 2026-07-16 17:59:47 --> Could not find the language line "import_salesma
 ERROR - 2026-07-16 17:59:47 --> Could not find the language line "view_account_receivable_salesman"
 ERROR - 2026-07-16 18:07:42 --> Could not find the language line "import_salesman"
 ERROR - 2026-07-16 18:07:42 --> Could not find the language line "view_account_receivable_salesman"
+ERROR - 2026-07-16 15:24:50 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-16 15:24:51 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-16 15:25:33 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-16 15:26:16 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-16 15:37:38 --> 404 Page Not Found: Theme/plugins

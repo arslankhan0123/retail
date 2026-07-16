@@ -194,3 +194,32 @@ ERROR - 2026-07-16 03:03:35 --> Could not find the language line "salesman_detai
 ERROR - 2026-07-16 03:03:39 --> Could not find the language line "salesman_details"
 ERROR - 2026-07-16 03:04:03 --> Could not find the language line "import_salesman"
 ERROR - 2026-07-16 03:04:03 --> Could not find the language line "view_account_receivable_salesman"
+ERROR - 2026-07-16 11:08:00 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-16 15:08:17 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\quotation\quotation.php 160
+ERROR - 2026-07-16 11:08:19 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-16 11:09:14 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-16 15:09:35 --> Could not find the language line "import_salesman"
+ERROR - 2026-07-16 15:09:35 --> Could not find the language line "view_account_receivable_salesman"
+ERROR - 2026-07-16 15:09:42 --> Severity: Notice --> Undefined variable: price_level_type F:\Projects\retail\application\views\salesman.php 165
+ERROR - 2026-07-16 15:12:44 --> Could not find the language line "import_salesman"
+ERROR - 2026-07-16 15:12:44 --> Could not find the language line "view_account_receivable_salesman"
+ERROR - 2026-07-16 17:38:10 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-16 17:38:31 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 160
+ERROR - 2026-07-16 17:38:41 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-16 17:38:52 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-16 17:39:30 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-16 17:39:47 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 160
+ERROR - 2026-07-16 13:50:43 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-16 17:50:55 --> Could not find the language line "sales_return_list"
+ERROR - 2026-07-16 13:50:59 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-16 17:52:06 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 161
+ERROR - 2026-07-16 13:52:14 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-16 17:52:33 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-16 17:52:36 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 161
+ERROR - 2026-07-16 17:52:48 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-16 17:52:53 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 161
+ERROR - 2026-07-16 17:53:02 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-16 17:53:11 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 161
+ERROR - 2026-07-16 17:53:13 --> Could not find the language line "new_deliverynote"
+ERROR - 2026-07-16 17:53:21 --> Severity: Notice --> Undefined variable: received_select F:\Projects\retail\application\views\delivery_note\delivery_note.php 161
+ERROR - 2026-07-16 17:53:31 --> Could not find the language line "new_deliverynote"

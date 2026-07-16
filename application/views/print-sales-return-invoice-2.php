@@ -94,7 +94,7 @@ body { margin: 5px; }
     $q3=$this->db->query("SELECT b.coupon_id,b.coupon_amt,a.customer_name,a.mobile,a.phone,a.gstin,a.tax_number,a.email,
                            a.opening_balance,a.country_id,a.state_id,a.created_by,
                            a.postcode,a.address,b.return_date,b.created_time,b.reference_no,
-                           b.return_code,b.return_note,b.return_status,
+                           b.return_code,b.return_note,b.return_status,b.salesman_id,
                            coalesce(b.grand_total,0) as grand_total,
                            coalesce(b.subtotal,0) as subtotal,
                            coalesce(b.paid_amount,0) as paid_amount,
@@ -162,7 +162,10 @@ body { margin: 5px; }
     $round_off=$res3->round_off;
     $payment_status=$res3->payment_status;
     
-    
+    $salesman_name='';
+    if(!empty($res3->salesman_id)){
+      $salesman_name=$this->db->query("select salesman_name from db_salesman where id=".$res3->salesman_id)->row()->salesman_name;
+    }
 
     
 
@@ -237,6 +240,14 @@ body { margin: 5px; }
                             Reference No.<br>
                             <span style="font-size: 10px;">
                               <b><?php echo "$reference_no"; ?></b>
+                            </span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="8">
+                            Salesman<br>
+                            <span style="font-size: 10px;">
+                              <b><?php echo "$salesman_name"; ?></b>
                             </span>
                           </td>
                         </tr>

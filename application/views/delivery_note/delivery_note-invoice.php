@@ -39,7 +39,7 @@
     $q3=$this->db->query("SELECT b.expire_date, b.sales_status, b.store_id,a.customer_name,a.mobile,a.phone,a.gstin,a.tax_number,a.email,
                            a.opening_balance,a.country_id,a.state_id,a.city,
                            a.postcode,a.address,b.deliverynote_date,b.created_time,b.reference_no,
-                           b.deliverynote_code,b.deliverynote_status,b.deliverynote_note,
+                           b.deliverynote_code,b.deliverynote_status,b.deliverynote_note,b.salesman_id,
                            coalesce(b.grand_total,0) as grand_total,
                            coalesce(b.subtotal,0) as subtotal,
                            coalesce(b.paid_amount,0) as paid_amount,
@@ -98,6 +98,10 @@
     $round_off=$res3->round_off;
     $payment_status=$res3->payment_status;
     $pos=$res3->pos;
+    $salesman_name='';
+    if(!empty($res3->salesman_id)){
+      $salesman_name=$this->db->query("select salesman_name from db_salesman where id=".$res3->salesman_id)->row()->salesman_name;
+    }
     
     
 
@@ -188,6 +192,7 @@
 
           <b><?= $this->lang->line('reference_no'); ?> :<?php echo  $reference_no; ?></b><br>
           <b><?= $this->lang->line('expire_date'); ?> :<?php echo  $expire_date; ?></b><br>
+          <b>Salesman :<?php echo  $salesman_name; ?></b><br>
          
         </div>
         <!-- /.col -->

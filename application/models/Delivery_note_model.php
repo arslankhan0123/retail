@@ -177,6 +177,7 @@ class Delivery_note_model extends CI_Model {
 		    				'expire_date' 				=> $expire_date,
 		    				'deliverynote_status' 				=> $deliverynote_status,
 		    				'customer_id' 				=> $customer_id,
+		    				'salesman_id' 				=> (empty($salesman_id)) ? null : $salesman_id,
 		    				/*'warehouse_id' 				=> $warehouse_id,*/
 		    				/*Other Charges*/
 		    				'other_charges_input' 		=> $other_charges_input,
@@ -211,6 +212,7 @@ class Delivery_note_model extends CI_Model {
 		    				'expire_date' 				=> $expire_date,
 		    				'deliverynote_status' 			=> $deliverynote_status,
 		    				'customer_id' 				=> $customer_id,
+		    				'salesman_id' 				=> (empty($salesman_id)) ? null : $salesman_id,
 		    				/*'warehouse_id' 				=> $warehouse_id,*/
 		    				/*Other Charges*/
 		    				'other_charges_input' 		=> $other_charges_input,

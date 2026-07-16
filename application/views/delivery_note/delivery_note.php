@@ -35,7 +35,7 @@ padding-right: 2px;
  $CI =& get_instance();
     if(!isset($deliverynote_id)){
       $customer_id  = $deliverynote_date = $deliverynote_status = $warehouse_id =
-      $reference_no  =
+      $reference_no  = $salesman_id = 
       $other_charges_input          = $other_charges_tax_id = $store_id =
       $discount_type  = $deliverynote_note = '';
       $deliverynote_date=show_date(date("d-m-Y"));
@@ -57,6 +57,7 @@ padding-right: 2px;
       $other_charges_tax_id=$q2->row()->other_charges_tax_id;
       $deliverynote_note=$q2->row()->deliverynote_note;
       $store_id=$q2->row()->store_id;
+      $salesman_id=$q2->row()->salesman_id;
 
       $items_count = $this->db->query("select count(*) as items_count from db_deliverynoteitems where deliverynote_id=$deliverynote_id")->row()->items_count;
     }
@@ -180,6 +181,15 @@ padding-right: 2px;
                   <span id="reference_no_msg" style="display:none" class="text-danger"></span>
                                  </div>
                                 
+                              </div>
+                              <div class="form-group">
+                                 <label for="salesman_id" class="col-sm-2 control-label"><?= $this->lang->line('salesman'); ?></label>
+                                 <div class="col-sm-3">
+                                    <select class="form-control select2" id="salesman_id" name="salesman_id" style="width: 100%;">
+                                       <?= get_salesmans_select_list($salesman_id, get_current_store_id()); ?>
+                                    </select>
+                                    <span id="salesman_id_msg" style="display:none" class="text-danger"></span>
+                                 </div>
                               </div>
                               
                            </div>

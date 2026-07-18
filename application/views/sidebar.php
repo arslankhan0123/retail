@@ -349,8 +349,8 @@ $CI = &get_instance();
 
       <?php if (!is_user()) { ?>
         <!--<li class="header">CUSTOMERS</li>-->
-        <?php if ($CI->permissions('customers_add') || $CI->permissions('customers_view') || $CI->permissions('import_customers') || $CI->permissions('suppliers_add') || $CI->permissions('suppliers_view') || $CI->permissions('import_suppliers')) { ?>
-          <li class="customers-view-active-li customers-active-li import_customers-active-li suppliers-list-active-li suppliers-active-li import_suppliers-active-li treeview">
+        <?php if ($CI->permissions('customers_add') || $CI->permissions('customers_view') || $CI->permissions('import_customers') || $CI->permissions('suppliers_add') || $CI->permissions('suppliers_view') || $CI->permissions('import_suppliers') || $CI->permissions('employees_view')) { ?>
+          <li class="customers-view-active-li customers-active-li import_customers-active-li suppliers-list-active-li suppliers-active-li import_suppliers-active-li employees-list-active-li employees-active-li treeview">
             <a href="#">
               <i class="fa fa-group text-aqua"></i> <span><?= $this->lang->line('contacts'); ?></span>
               <span class="pull-right-container">
@@ -380,6 +380,10 @@ $CI = &get_instance();
 
               <?php if ($CI->permissions('salesman_view')) { ?>
                 <li class="salesman-view-active-li"><a href="<?php echo $base_url; ?>salesman"><i class="fa fa-list "></i> <span>Salesmen List</span></a></li>
+              <?php } ?>
+
+              <?php if ($CI->permissions('employees_view')) { ?>
+                <li class="employees-list-active-li employees-active-li"><a href="<?php echo $base_url; ?>employees"><i class="fa fa-list "></i> <span>Employees</span></a></li>
               <?php } ?>
 
               <?php if ($CI->permissions('import_customers')) { ?>
@@ -554,26 +558,7 @@ $CI = &get_instance();
         <?php } ?>
       <?php } ?><!-- is_user() -->
 
-      <?php if (!is_user()) { ?>
-        <?php if ($CI->permissions('employees_view') || $CI->permissions('employees_add')) { ?>
-          <li class="employees-list-active-li employees-active-li treeview treeview2">
-            <a href="#">
-              <i class="fa fa-users text-aqua"></i> <span>HRM</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-            </a>
-            <ul class="treeview-menu">
-              <?php if ($CI->permissions('employees_add')) { ?>
-                <li class="employees-active-li"><a href="<?php echo $base_url; ?>employees/add"><i class="fa fa-plus-square-o "></i> <span>New Employee</span></a></li>
-              <?php } ?>
-              <?php if ($CI->permissions('employees_view')) { ?>
-                <li class="employees-list-active-li"><a href="<?php echo $base_url; ?>employees"><i class="fa fa-list "></i> <span>Employee List</span></a></li>
-              <?php } ?>
-            </ul>
-          </li>
-        <?php } ?>
-      <?php } ?>
+
 
       <?php if (!is_user()) { ?>
         <?php if (($CI->permissions('accounts_add') || $CI->permissions('accounts_view') || $CI->permissions('journal_add') || $CI->permissions('journal_view')) && accounts_module()) { ?>

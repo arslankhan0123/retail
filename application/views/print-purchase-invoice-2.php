@@ -391,7 +391,7 @@ body { margin: 5px; }
   <tr>
     <td colspan="16">
       <span class='amt-in-word'>Amount in words: 
-        <i style='font-weight:bold;'><?=$this->session->userdata('currency_code')." ".no_to_words($grand_total)?>
+        <i style='font-weight:bold;'><?php $CI =& get_instance(); echo $CI->currency(); ?> <?=no_to_words($grand_total)?>
         </i>
     </span>  
     </td>

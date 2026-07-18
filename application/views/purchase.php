@@ -178,14 +178,14 @@
                                                    <th rowspan='2' style="width:10%">Barcode</th>
                                                    <th rowspan='2' style="width:15%"><?= $this->lang->line('item_name'); ?></th>
                                                    <th rowspan='2' style="width:15%;min-width: 180px;"><?= $this->lang->line('quantity'); ?></th>
-                                                   <th rowspan='2' style="width:10%"><?= $this->lang->line('purchase_price'); ?>(<?=$CURRENCY;?>)</th>
+                                                   <th rowspan='2' style="width:10%"><?= $this->lang->line('purchase_price'); ?>(<?= $CI->currency(); ?>)</th>
                                                   <!--  <th rowspan='2' style="width:7.5%"><?= $this->lang->line('tax'); ?> %</th> -->
-                                                   <th rowspan='2' style="width:10%"><?= $this->lang->line('discount'); ?>(<?=$CURRENCY;?>)</th>
+                                                   <th rowspan='2' style="width:10%"><?= $this->lang->line('discount'); ?>(<?= $CI->currency(); ?>)</th>
                                                    <th rowspan='2' style="width:7.5%"><?= $this->lang->line('tax_amount'); ?></th>
                                                    <th rowspan='2' style="width:7.5%"><?= $this->lang->line('unit_cost'); ?></th>
                                                    <th rowspan='2' style="width:7.5%"><?= $this->lang->line('total_amount'); ?></th>
                                                    <!-- <th rowspan='2' style="width:7.5%"><?= $this->lang->line('profit_margin'); ?>(%)</th>
-                                                   <th rowspan='2' style="width:7.5%"><?= $this->lang->line('unit_sales_price'); ?>(<?=$CURRENCY;?>)</th> -->
+                                                   <th rowspan='2' style="width:7.5%"><?= $this->lang->line('unit_sales_price'); ?>(<?= $CI->currency(); ?>)</th> -->
                                                    <th rowspan='2' style="width:7.5%"><?= $this->lang->line('action'); ?></th>
                                                 </tr>
                                              </thead>

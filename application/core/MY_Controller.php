@@ -137,19 +137,21 @@ class MY_Controller extends CI_Controller{
         if(!empty($value) && is_numeric($value)){
           $value= ($with_comma) ? store_number_format($value) : store_number_format($value,false);
         }
+        
+        $currency_symbol = '<img src="'.base_url().'uploads/logo.png" style="height:1em; width:auto; display:inline-block; vertical-align:middle;" alt="logo" />';
 
         if($this->session->userdata('currency_placement')=='Left'){
           if(!empty($value)){
-            return $this->session->userdata('currency')." ".$value;
+            return $currency_symbol." ".$value;
           }
-          return $this->session->userdata('currency')."".$value;
+          return $currency_symbol."".$value;
           
         }
         else{
           if(!empty($value)){
-            return $value." ".$this->session->userdata('currency');    
+            return $value." ".$currency_symbol;    
           }
-         return $value."".$this->session->userdata('currency'); 
+         return $value."".$currency_symbol; 
         }
       }
 
@@ -158,7 +160,7 @@ class MY_Controller extends CI_Controller{
       public function store_wise_currency($store_id,$value=''){
 
         $q1=$this->db->query("SELECT a.currency_name,a.currency,a.currency_code,a.symbol,b.currency_placement FROM db_currency a,db_store b WHERE a.id=b.currency_id AND b.id=".$store_id);
-              $currency = $q1->row()->currency;
+              $currency = '<img src="'.base_url().'uploads/logo.png" style="height:1em; width:auto; display:inline-block; vertical-align:middle;" alt="logo" />';
               $currency_placement = $q1->row()->currency_placement;
               $currency_code = $q1->row()->currency_code;
 
@@ -182,12 +184,13 @@ class MY_Controller extends CI_Controller{
       }
       
       public function currency_code($value=''){
+        $currency_symbol = '<img src="'.base_url().'uploads/logo.png" style="height:1em; width:auto; display:inline-block; vertical-align:middle;" alt="logo" />';
         if(!empty($this->session->userdata('currency_code'))){
           if($this->session->userdata('currency_placement')=='Left'){
-            return $this->session->userdata('currency_code')." ".$value;
+            return $currency_symbol." ".$value;
           }
           else{
-           return $value." ".$this->session->userdata('currency'); 
+           return $value." ".$currency_symbol; 
           }
         }
         else{

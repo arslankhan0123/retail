@@ -784,6 +784,9 @@ class Orders_model extends CI_Model {
 
 	public function save_payment(){
 		extract($this->xss_html_filter(array_merge($this->data,$_POST,$_GET)));
+		if (isset($purchase_id)) {
+			$order_id = $purchase_id;
+		}
     	if($amount=='' || $amount==0){$amount=null;}
 		if($amount>0 && !empty($payment_type)){
 

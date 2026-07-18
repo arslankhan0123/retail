@@ -554,6 +554,16 @@
       $maxid=get_count_id('db_custadvance');
       return $query->cust_advance_init.str_pad($maxid, 4, '0', STR_PAD_LEFT);
     }
+    if($value=='order'){
+      $maxid=get_count_id('db_orders');
+      $prefix = "OR/" . date('Y') . "/";
+      return $prefix.str_pad($maxid, 4, '0', STR_PAD_LEFT);
+    }
+    if($value=='order_payment'){
+      $maxid=get_count_id('db_orderpayments');
+      $prefix = "OP/" . date('Y') . "/";
+      return $prefix.str_pad($maxid, 4, '0', STR_PAD_LEFT);
+    }
   }
   function get_store_name($id=''){
     if(empty($id)){ return true;}

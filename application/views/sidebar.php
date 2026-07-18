@@ -518,9 +518,9 @@ $CI = &get_instance();
 
 
       <?php if (!is_user()) { ?>
-        <?php if ($CI->permissions('purchase_add') || $CI->permissions('purchase_view') || $CI->permissions('purchase_return_view') || $CI->permissions('new_purchase_return')) { ?>
+        <?php if ($CI->permissions('purchase_add') || $CI->permissions('purchase_view') || $CI->permissions('purchase_return_view') || $CI->permissions('new_purchase_return') || $CI->permissions('order_view') || $CI->permissions('order_add')) { ?>
           <!-- <li class="header">PURCHASE</li> -->
-          <li class="purchase-list-active-li purchase-active-li purchase-returns-active-li purchase-returns-list-active-li treeview treeview2 ">
+          <li class="orders-list-active-li orders-active-li purchase-list-active-li purchase-active-li purchase-returns-active-li purchase-returns-list-active-li treeview treeview2 ">
             <a href="#">
               <i class="fa fa-cube text-aqua"></i> <span><?= $this->lang->line('purchase'); ?></span>
               <span class="pull-right-container">
@@ -529,6 +529,14 @@ $CI = &get_instance();
             </a>
             <ul class="treeview-menu">
 
+              <?php if ($CI->permissions('order_add')) { ?>
+                <li class="orders-active-li"><a href="<?php echo $base_url; ?>orders/add"><i class="fa fa-plus-square-o "></i> <span>New Order</span></a></li>
+              <?php } ?>
+
+              <?php if ($CI->permissions('order_view')) { ?>
+                <li class="orders-list-active-li"><a href="<?php echo $base_url; ?>orders"><i class="fa fa-list "></i> <span>Order List</span></a></li>
+              <?php } ?>
+
               <?php if ($CI->permissions('purchase_add')) { ?>
                 <li class="purchase-active-li"><a href="<?php echo $base_url; ?>purchase/add"><i class="fa fa-plus-square-o "></i> <span><?= $this->lang->line('new_purchase'); ?></span></a></li>
               <?php } ?>
@@ -536,7 +544,6 @@ $CI = &get_instance();
               <?php if ($CI->permissions('purchase_view')) { ?>
                 <li class="purchase-list-active-li"><a href="<?php echo $base_url; ?>purchase"><i class="fa fa-list "></i> <span><?= $this->lang->line('purchase_list'); ?></span></a></li>
               <?php } ?>
-
 
               <?php if ($CI->permissions('purchase_return_view')) { ?>
                 <li class="purchase-returns-list-active-li"><a href="<?php echo $base_url; ?>purchase_return"><i class="fa fa-list "></i> <span><?= $this->lang->line('purchase_returns_list'); ?></span>

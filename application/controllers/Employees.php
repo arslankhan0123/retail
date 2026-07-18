@@ -49,6 +49,16 @@ class Employees extends MY_Controller {
 		$this->load->view('employee-view', $data);
 	}
 
+	public function print_employee($id){
+		$this->belong_to('db_employees',$id);
+		$this->permission_check('employees_view');
+		$data=$this->data;
+		$result=$this->employees->get_details($id,$data);
+		$data=array_merge($data,$result);
+		$data['page_title']="Print Employee Details";
+		$this->load->view('print-employee', $data);
+	}
+
 	public function update($id){
 		$this->belong_to('db_employees',$id);
 		$this->permission_check('employees_edit');
@@ -106,12 +116,18 @@ class Employees extends MY_Controller {
 						</a>
 						<ul role="menu" class="dropdown-menu dropdown-light pull-right">';
 
-							if($this->permissions('employees_view'))
-							$str2.='<li>
-								<a title="View Profile" href="'.base_url().'employees/view/'.$employee->id.'">
-									<i class="fa fa-fw fa-eye text-blue"></i>View Profile
-								</a>
-							</li>';
+							if($this->permissions('employees_view')) {
+								$str2.='<li>
+									<a title="View Profile" href="'.base_url().'employees/view/'.$employee->id.'">
+										<i class="fa fa-fw fa-eye text-blue"></i>View Profile
+									</a>
+								</li>';
+								$str2.='<li>
+									<a title="Download PDF" target="_blank" href="'.base_url().'employees/print_employee/'.$employee->id.'">
+										<i class="fa fa-fw fa-file-pdf-o text-red"></i>Download PDF
+									</a>
+								</li>';
+							}
 
 							if($this->permissions('employees_edit'))
 							$str2.='<li>

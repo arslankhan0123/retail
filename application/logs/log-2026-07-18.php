@@ -15,3 +15,6 @@ ERROR - 2026-07-18 18:50:12 --> Severity: Notice --> Trying to get property 'sto
 ERROR - 2026-07-18 17:46:44 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-07-18 18:35:48 --> 404 Page Not Found: Faviconico/index
 ERROR - 2026-07-18 20:29:58 --> 404 Page Not Found: Theme/images
+ERROR - 2026-07-18 20:33:43 --> 404 Page Not Found: Uploads/employees
+ERROR - 2026-07-18 20:34:08 --> 404 Page Not Found: Theme/images
+ERROR - 2026-07-18 20:34:19 --> 404 Page Not Found: Theme/images

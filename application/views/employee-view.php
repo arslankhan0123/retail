@@ -180,6 +180,7 @@
                         </div>
                         <div class="box-footer text-center">
                            <a href="<?php echo base_url('employees'); ?>" class="btn btn-warning">Close / Go Back</a>
+                           <a href="<?php echo base_url('employees/print_employee/' . $q_id); ?>" target="_blank" class="btn btn-primary"><i class="fa fa-print"></i> Print / Save PDF</a>
                            <?php if($CI->permissions('employees_edit')) { ?>
                               <a href="<?php echo base_url('employees/update/' . $q_id); ?>" class="btn btn-info">Edit Employee Profile</a>
                            <?php } ?>

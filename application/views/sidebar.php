@@ -555,6 +555,27 @@ $CI = &get_instance();
       <?php } ?><!-- is_user() -->
 
       <?php if (!is_user()) { ?>
+        <?php if ($CI->permissions('employees_view') || $CI->permissions('employees_add')) { ?>
+          <li class="employees-list-active-li employees-active-li treeview treeview2">
+            <a href="#">
+              <i class="fa fa-users text-aqua"></i> <span>HRM</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu">
+              <?php if ($CI->permissions('employees_add')) { ?>
+                <li class="employees-active-li"><a href="<?php echo $base_url; ?>employees/add"><i class="fa fa-plus-square-o "></i> <span>New Employee</span></a></li>
+              <?php } ?>
+              <?php if ($CI->permissions('employees_view')) { ?>
+                <li class="employees-list-active-li"><a href="<?php echo $base_url; ?>employees"><i class="fa fa-list "></i> <span>Employee List</span></a></li>
+              <?php } ?>
+            </ul>
+          </li>
+        <?php } ?>
+      <?php } ?>
+
+      <?php if (!is_user()) { ?>
         <?php if (($CI->permissions('accounts_add') || $CI->permissions('accounts_view') || $CI->permissions('journal_add') || $CI->permissions('journal_view')) && accounts_module()) { ?>
           <!-- <li class="header">ACCOUNTING</li> -->
           <li class="accounts_list-active-li accounts-active-li journal-active-li journal_list-active-li money_transfer-active-li money_transfer_list-active-li money_deposit-active-li money_deposit_list-active-li cash_transactions-active-li treeview">

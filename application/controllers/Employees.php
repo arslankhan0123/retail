@@ -39,6 +39,16 @@ class Employees extends MY_Controller {
 		}
 	}
 
+	public function view($id){
+		$this->belong_to('db_employees',$id);
+		$this->permission_check('employees_view');
+		$data=$this->data;
+		$result=$this->employees->get_details($id,$data);
+		$data=array_merge($data,$result);
+		$data['page_title']="View Employee Details";
+		$this->load->view('employee-view', $data);
+	}
+
 	public function update($id){
 		$this->belong_to('db_employees',$id);
 		$this->permission_check('employees_edit');
@@ -95,6 +105,13 @@ class Employees extends MY_Controller {
 							Action <span class="caret"></span>
 						</a>
 						<ul role="menu" class="dropdown-menu dropdown-light pull-right">';
+
+							if($this->permissions('employees_view'))
+							$str2.='<li>
+								<a title="View Profile" href="'.base_url().'employees/view/'.$employee->id.'">
+									<i class="fa fa-fw fa-eye text-blue"></i>View Profile
+								</a>
+							</li>';
 
 							if($this->permissions('employees_edit'))
 							$str2.='<li>
@@ -153,3 +170,4 @@ class Employees extends MY_Controller {
 		echo $this->employees->delete_document($doc_id);
 	}
 }
+?>

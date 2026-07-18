@@ -12,3 +12,4 @@ ERROR - 2026-07-18 18:50:01 --> Severity: Notice --> Trying to get property 'sto
 ERROR - 2026-07-18 18:50:12 --> Severity: Notice --> Undefined variable: order_id F:\Projects\retail\application\models\Orders_model.php 795
 ERROR - 2026-07-18 18:50:12 --> Severity: Notice --> Undefined variable: order_id F:\Projects\retail\application\models\Orders_model.php 809
 ERROR - 2026-07-18 18:50:12 --> Severity: Notice --> Trying to get property 'store_id' of non-object F:\Projects\retail\application\models\Orders_model.php 809
+ERROR - 2026-07-18 17:46:44 --> 404 Page Not Found: Theme/plugins

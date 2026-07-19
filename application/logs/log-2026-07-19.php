@@ -29,3 +29,5 @@ ERROR - 2026-07-19 18:19:58 --> Severity: Notice --> Undefined variable: tax_id 
 ERROR - 2026-07-19 14:20:59 --> 404 Page Not Found: Uploads/items
 ERROR - 2026-07-19 14:21:32 --> 404 Page Not Found: Uploads/items
 ERROR - 2026-07-19 14:22:09 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-19 14:32:47 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-19 14:34:13 --> 404 Page Not Found: Theme/plugins

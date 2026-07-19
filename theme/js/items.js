@@ -23,7 +23,9 @@ $('#save,#update').on("click",function (e) {
     var item_group = $("#item_group").val();
     //Validate Input box or selection box should not be blank or empty
 	check_field("item_name");
-	check_field("custom_barcode");
+	if (typeof barcode_type !== 'undefined' && barcode_type === 'Manual') {
+		check_field("custom_barcode");
+	}
 	check_field("category_id");
 	check_field("unit_id");//units of measurments
 	//check_field("alert_qty");
@@ -603,7 +605,12 @@ $("#item_group").on("change",function(event) {
 		$(".variant_div").show();
 	}
 	else{
-		$("#price,#purchase_price,#profit_margin,#sales_price,#mrp,#hsn,#sku,#custom_barcode,#adjustment_qty").parent().removeClass('hide');
+		$("#price,#purchase_price,#profit_margin,#sales_price,#mrp,#hsn,#sku,#adjustment_qty").parent().removeClass('hide');
+		if (typeof barcode_type !== 'undefined' && barcode_type === 'Manual') {
+			$("#custom_barcode").parent().removeClass('hide');
+		} else {
+			$("#custom_barcode").parent().addClass('hide');
+		}
 		$(".variant_div").hide();
 	}
 });

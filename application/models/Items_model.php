@@ -228,18 +228,30 @@ class Items_model extends CI_Model {
 
 		$alert_qty = empty(trim($alert_qty)) ? '0' : $alert_qty;
 
+		$barcode_row = $this->db->select('barcode_type')->where('id', $store_id)->get('db_store')->row();
+		$barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $barcode_row->barcode_type : 'Automatic';
+
 		if($item_group=='Single'){
 			$initial = array();
 			if ( $command == 'save' ) {
+				$item_code_val = get_init_code('item');
 				$initial = array(
 			    				'store_id' 					=> $store_id,
 								'count_id' 					=> get_count_id('db_items'), 
-			    				'item_code' 				=> get_init_code('item'), 
+			    				'item_code' 				=> $item_code_val, 
 			    				'status' 					=> 1,
 			    			);
 				$initial = array_merge($initial,$this->log_details());
-
+				if ($barcode_type == 'Automatic') {
+					$custom_barcode = $item_code_val;
+				}
 			}//Command SAVE
+			else {
+				if ($barcode_type == 'Automatic') {
+					$item_code_row = $this->db->select('item_code')->where('id', $q_id)->get('db_items')->row();
+					$custom_barcode = !empty($item_code_row) ? $item_code_row->item_code : '';
+				}
+			}
 			$profit_margin = (empty(trim($profit_margin))) ? 'null' : $profit_margin;
 			$info = array(
 			    				'item_name' 				=> $item_name,
@@ -335,22 +347,28 @@ class Items_model extends CI_Model {
 						
 						$initial = array();
 						if ( $command == 'save' ) {
+							$item_code_val = get_init_code('item');
 							$initial = array(
 						    				'store_id' 					=> $store_id,
 											'count_id' 					=> get_count_id('db_items'), 
-						    				'item_code' 				=> get_init_code('item'), 
+						    				'item_code' 				=> $item_code_val, 
 						    				'status' 					=> 1,
 						    			);
 							$initial = array_merge($initial,$this->log_details());
-
+							if ($barcode_type == 'Automatic') {
+								$custom_barcode = $item_code_val;
+							}
 						}//Command SAVE
 						else{
 							$count_id 			=$this->xss_html_filter(trim($_REQUEST['count_id_'.$i]));
-							$item_code 			=$this->xss_html_filter(trim($_REQUEST['item_code_'.$i]));
+							$item_code_val 			=$this->xss_html_filter(trim($_REQUEST['item_code_'.$i]));
 							$initial = array(
 											'count_id' 					=> $count_id, 
-						    				'item_code' 				=> $item_code,
+						    				'item_code' 				=> $item_code_val,
 						    			);
+							if ($barcode_type == 'Automatic') {
+								$custom_barcode = $item_code_val;
+							}
 						}
 
 						$info = array(

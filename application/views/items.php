@@ -39,10 +39,11 @@
          else{
             $opening_stock_readonly = 'readonly';
          }
-         //For new or update
-         //$opening_stock ='0';
-         
-         ?>
+          //For new or update
+          //$opening_stock ='0';
+          $barcode_row = $this->db->select('barcode_type')->where('id', get_current_store_id())->get('db_store')->row();
+          $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $barcode_row->barcode_type : 'Automatic';
+          ?>
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
         <!-- **********************MODALS***************** -->
@@ -282,9 +283,9 @@
                                  <input type="text" class="form-control only_currency" id="seller_points" name="seller_points" placeholder=""  value="<?php print $seller_points; ?>" >
                                  <span id="seller_points_msg" style="display:none" class="text-danger"></span>
                               </div>
-                              <div class="form-group col-md-4">
+                              <div class="form-group col-md-4 <?= ($barcode_type=='Automatic')?'hide':''; ?>">
                                  <label for="custom_barcode" ><?= $this->lang->line('barcode'); ?><span class="text-danger">*</span></label>
-                                 <input type="text" class="form-control " id="custom_barcode" name="custom_barcode" placeholder=""  value="<?php print $custom_barcode; ?>" required >
+                                 <input type="text" class="form-control " id="custom_barcode" name="custom_barcode" placeholder=""  value="<?php print $custom_barcode; ?>" <?= ($barcode_type=='Automatic')?'':'required'; ?> >
                                  <span id="custom_barcode_msg" style="display:none" class="text-danger"></span>
                               </div>
                               <div class="form-group col-md-4">
@@ -494,6 +495,7 @@
       <?php include"comman/code_js_sound.php"; ?>
       <!-- TABLES CODE -->
       <?php include"comman/code_js.php"; ?>
+      <script>var barcode_type = '<?= $barcode_type; ?>';</script>
       <script src="<?php echo $theme_link; ?>js/items.js"></script>
       <script src="<?php echo $theme_link; ?>js/modals.js"></script>
       <script type="text/javascript">

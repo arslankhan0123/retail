@@ -1,6 +1,11 @@
-<?php $CI =& get_instance(); ?>
+<?php 
+$CI =& get_instance(); 
+$barcode_row = $CI->db->select('barcode_type')->where('id', get_current_store_id())->get('db_store')->row();
+$barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $barcode_row->barcode_type : 'Automatic';
+?>
 <div class="modal fade " id="item-modal" tabindex='-1'>
                 <?= form_open('#', array('class' => '', 'id' => 'item-form','enctype'=>'multipart/form-data', 'method'=>'POST')); ?>
+                <input type="hidden" id="barcode_type" value="<?= $barcode_type; ?>">
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
                     <div class="modal-header header-custom">
@@ -203,12 +208,12 @@
                             </div>
                           </div>
                           
-                          <div class="col-md-4">
+                          <div class="col-md-4 <?= ($barcode_type=='Automatic')?'hide':''; ?>">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="m_custom_barcode"><?= $this->lang->line('barcode'); ?><span class="text-danger">*</span></label>
                                 <span id="m_custom_barcode_msg" class="text-danger text-right pull-right"></span>
-                                <input type="text" class="form-control maxlength  " id="m_custom_barcode" name="m_custom_barcode" placeholder="" required >
+                                <input type="text" class="form-control maxlength  " id="m_custom_barcode" name="m_custom_barcode" placeholder="" <?= ($barcode_type=='Automatic')?'':'required'; ?> >
                               </div>
                             </div>
                           </div>

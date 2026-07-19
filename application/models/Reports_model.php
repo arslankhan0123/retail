@@ -627,7 +627,6 @@ class Reports_model extends CI_Model {
 						$str .= "<td>".$res1->brand_name."</td>";
 						$str .= "<td>".$res1->category_name."</td>";
 						$str .= "<td class='text-right'>".store_number_format($res1->purchase_price)."</td>";
-						$str .= "<td>".$res1->tax_name."[".$tax_type."]</td>";
 						$str .= "<td class='text-right'>".store_number_format($res1->sales_price)."</td>";
 						$str .= "<td>".store_number_format($res1->opening_stock)."</td>";
 						$str .= "<td>".format_qty($available_qty_wh)."</td>";
@@ -639,7 +638,7 @@ class Reports_model extends CI_Model {
 					/*}*/
 
 			}
-			$total_columns_count=9;
+			$total_columns_count=8;
 			if(store_module() && is_admin()){
 				$total_columns_count ++;
 			}
@@ -650,7 +649,7 @@ class Reports_model extends CI_Model {
 				  </tr>";
 		}
 		else{
-			$total_columns_count=11;
+			$total_columns_count=10;
 			if(store_module() && is_admin()){
 				$total_columns_count ++;
 			}

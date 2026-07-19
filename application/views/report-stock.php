@@ -125,9 +125,8 @@
                                               <th style=""><?= $this->lang->line('item_name'); ?></th>
                                               <th style=""><?= $this->lang->line('brand'); ?></th>
                                               <th style=""><?= $this->lang->line('category'); ?></th>
-                                              <th style=""><?= $this->lang->line('unit_price'); ?>(<?= $CI->currency(); ?>)</th>
-                                              <th style=""><?= $this->lang->line('tax'); ?></th>
-                                              <th style=""><?= $this->lang->line('sales_price'); ?>(<?= $CI->currency(); ?>)</th>
+                                              <th style=""><?= $this->lang->line('unit_price'); ?></th>
+                                              <th style=""><?= $this->lang->line('sales_price'); ?></th>
                                               <th style=""><?= $this->lang->line('opening_stock'); ?></th>
                                               <th style=""><?= $this->lang->line('current_stock'); ?></th>
                                               <th style=""><?= $this->lang->line('value'); ?></th>

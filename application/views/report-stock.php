@@ -114,7 +114,7 @@
                                           <?php $this->load->view('components/export_btn',array('tableId' => 'report-data'));?>
                                           <br><br>
                                           <div class="table-responsive">
-                                          <table class="table table-bordered table-hover " id="report-data" >
+                                          <table class="table table-hover " id="report-data" >
                                             <thead>
                                             <tr class="bg-blue">
                                               <th style="">#</th>
@@ -154,7 +154,7 @@
                                           <?php $this->load->view('components/export_btn',array('tableId' => 'brand_wise_stock'));?>
                                           <br><br>
                                           <div class="table-responsive">
-                                          <table class="table table-bordered table-hover " id="brand_wise_stock" >
+                                          <table class="table table-hover " id="brand_wise_stock" >
                                               <thead>
                                               <tr class="bg-blue">
                                                 <th style="">#</th>

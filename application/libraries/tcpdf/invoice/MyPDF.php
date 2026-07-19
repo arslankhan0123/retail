@@ -218,12 +218,15 @@ class MyPDF extends TCPDF {
 
     public function _get_logo()
     {
+        if (empty($this->store->store_logo)) {
+            return $this;
+        }
 
-        /* Original dynamic logo - disabled, replaced with static AL KASIR logo below
-        $image_file=(!empty($this->store->store_logo)) ? $this->store->store_logo : store_demo_logo();
-        */
+        $image_file = $this->store->store_logo;
 
-        $image_file = 'uploads/store/alkasir_logo.jpg';
+        if (!file_exists($image_file)) {
+            return $this;
+        }
         
         $pageWidth = $this->getPageWidth();
         $logo_w = ($pageWidth < 160) ? 25 : 35;
@@ -238,35 +241,49 @@ class MyPDF extends TCPDF {
         $store = $this->store;
         $warehouse = $this->warehouse;
 
-        // Dynamic header - centered across page width, logo stays on left
         $this->setFont($this->get_font_name(), '', 14, '', true);
         $pageWidth = $this->getPageWidth();
+
+        // Check if logo exists and is shown
+        $has_logo = (!empty($store->store_logo) && file_exists($store->store_logo));
+
+        if ($has_logo) {
+            $logo_w = ($pageWidth < 160) ? 25 : 35;
+            $logo_x = ($pageWidth < 160) ? 6 : 15.5;
+            $x = $logo_x + $logo_w + 5; // Start company details after the logo
+            $w = $pageWidth - $x - 10;
+            $align = 'L'; // Left-align next to the logo
+        } else {
+            $x = 0;
+            $w = $pageWidth;
+            $align = 'C'; // Center-align when there is no logo
+        }
 
         $store_name = strtoupper($store->store_name);
         $store_name = str_replace('&AMP;', '&amp;', $store_name);
 
         $txt = '<span style="font-size:22px;font-weight:bold;">'.$store_name.'</span>';
-        $this->writeHTMLCell($w =$pageWidth, $h='', $x=0, $y='14', $txt, $border = 0, 0, 0, true, 'C', true);
+        $this->writeHTMLCell($w, $h='', $x, $y='14', $txt, $border = 0, 0, 0, true, $align, true);
 
         $email_txt = '';
         if(!empty($store->email)){
             $email_txt = '<span style="font-size:13px;font-weight:bold;">Email: '.$store->email.'</span>';
         }
-        $this->writeHTMLCell($w =$pageWidth, $h='', $x=0, $y='21', $email_txt, $border = 0, 0, 0, true, 'C', true);
+        $this->writeHTMLCell($w, $h='', $x, $y='21', $email_txt, $border = 0, 0, 0, true, $align, true);
 
         $address_txt = $store->address;
         if(!empty($store->city)){
             $address_txt .= ', '.$store->city;
         }
         $txt = '<span style="font-size:12px;">'.$address_txt.'</span>';
-        $this->writeHTMLCell($w =$pageWidth, $h='', $x=0, $y='27', $txt, $border = 0, 0, 0, true, 'C', true);
+        $this->writeHTMLCell($w, $h='', $x, $y='27', $txt, $border = 0, 0, 0, true, $align, true);
 
         $phones = [];
         if(!empty($store->mobile)) $phones[] = $store->mobile;
         if(!empty($store->phone)) $phones[] = $store->phone;
         $phone_str = implode(", ", $phones);
         $txt = '<span style="font-size:12px;">Mob.: '.$phone_str.'</span>';
-        $this->writeHTMLCell($w =$pageWidth, $h='', $x=0, $y='32', $txt, $border = 0, 0, 0, true, 'C', true);
+        $this->writeHTMLCell($w, $h='', $x, $y='32', $txt, $border = 0, 0, 0, true, $align, true);
 
         return $this;
     }

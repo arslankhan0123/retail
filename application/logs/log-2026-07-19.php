@@ -31,3 +31,9 @@ ERROR - 2026-07-19 14:21:32 --> 404 Page Not Found: Uploads/items
 ERROR - 2026-07-19 14:22:09 --> 404 Page Not Found: Uploads/items
 ERROR - 2026-07-19 14:32:47 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-07-19 14:34:13 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-19 14:51:52 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-19 14:53:44 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-19 18:53:58 --> Severity: Warning --> implode(): Invalid arguments passed F:\Projects\retail\application\helpers\custom_helper.php 744
+ERROR - 2026-07-19 14:55:14 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-19 18:57:35 --> Could not find the language line "company_address"
+ERROR - 2026-07-19 18:57:56 --> Could not find the language line "sales_return_list"

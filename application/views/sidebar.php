@@ -674,7 +674,7 @@ $CI = &get_instance();
       <?php if (!is_user()) { ?>
         <?php if ($CI->permissions('stock_adjustment_add')  || $CI->permissions('stock_adjustment_view') || $CI->permissions('stock_transfer_add') || $CI->permissions('stock_transfer_view')) { ?>
           <!-- <li class="header">STOCK ADJUSTMENT</li> -->
-          <li class="pos-active-li stock_adjustment_list-active-li stock_adjustment-active-li stock_adjustment-return-active-li stock_adjustment-return-list-active-li stock_transfer-active-li stock_transfer_list-active-li treeview">
+          <li class="pos-active-li stock_adjustment_list-active-li stock_adjustment-active-li stock_adjustment-return-active-li stock_adjustment-return-list-active-li stock_transfer-active-li stock_transfer_list-active-li damaged_list-active-li damaged-active-li treeview">
             <a href="#">
               <i class=" fa fa-hourglass text-aqua"></i> <span><?= $this->lang->line('stock'); ?></span>
               <span class="pull-right-container">
@@ -685,6 +685,10 @@ $CI = &get_instance();
 
               <?php if ($CI->permissions('stock_adjustment_view')) { ?>
                 <li class="stock_adjustment_list-active-li stock_adjustment-active-li"><a href="<?php echo $base_url; ?>stock_adjustment"><i class="fa fa-list "></i> <span><?= $this->lang->line('adjustment_list'); ?></span></a></li>
+              <?php } ?>
+
+              <?php if ($CI->permissions('damaged_view')) { ?>
+                <li class="damaged_list-active-li damaged-active-li"><a href="<?php echo $base_url; ?>damaged"><i class="fa fa-list "></i> <span>Damaged List</span></a></li>
               <?php } ?>
 
               <?php if ($CI->permissions('stock_transfer_view') && warehouse_module()) { ?>

@@ -534,6 +534,32 @@
                                               
                                           </td>
                                         </tr>
+                                        <!-- DAMAGED STOCK -->
+                                        <tr>
+                                          <td><?= $i++;?></td>
+                                          <td>Damaged Stock</td>
+                                          <td>
+                                              <div class="checkbox icheck"><label>
+                                                <input type="checkbox" class="change_me" id="damaged" > <?= $this->lang->line('select_all'); ?>
+                                              </label></div>
+                                          </td>
+                                          <td>
+                                              <input type="hidden" name="module[damaged]" value="on">
+                                              <div class="checkbox icheck"><label>
+                                                <input type="checkbox" class="damaged_all" id='damaged_add' name="permission[damaged_add]" > <?= $this->lang->line('add'); ?>
+                                              </label></div>
+                                              <div class="checkbox icheck"><label>
+                                                <input type="checkbox" class="damaged_all" id='damaged_edit' name="permission[damaged_edit]"> <?= $this->lang->line('edit'); ?>
+                                              </label></div>
+                                              <div class="checkbox icheck"><label>
+                                                <input type="checkbox" class="damaged_all" id='damaged_delete' name="permission[damaged_delete]"> <?= $this->lang->line('delete'); ?>
+                                              </label></div>
+                                              <div class="checkbox icheck"><label>
+                                                <input type="checkbox" class="damaged_all" id='damaged_view' name="permission[damaged_view]"> <?= $this->lang->line('view'); ?>
+                                              </label></div>
+                                              
+                                          </td>
+                                        </tr>
                                         <!-- Brands -->
                                         <tr>
                                           <td><?= $i++;?></td>

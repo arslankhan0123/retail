@@ -613,7 +613,11 @@ class Pos_model extends CI_Model {
 		$q6=$this->db->query("select COALESCE(SUM(return_qty),0) as sl_return_tot_qty from db_salesitemsreturn where item_id='$item_id' ");/*and sales_id is null */
 		$sl_return_tot_qty=$q6->row()->sl_return_tot_qty;
 
-		$stock=((($stock_qty+$pu_tot_qty)-$sl_tot_qty)+$sl_return_tot_qty)-$pu_return_tot_qty;
+		/*Find Damaged Items Count*/
+		$q_dmg=$this->db->query("select COALESCE(SUM(damaged_qty),0) as damaged_tot_qty from db_damageditems where item_id='$item_id'");
+		$damaged_tot_qty=$q_dmg->row()->damaged_tot_qty;
+
+		$stock=((($stock_qty+$pu_tot_qty)-$sl_tot_qty)+$sl_return_tot_qty)-$pu_return_tot_qty-$damaged_tot_qty;
 		$q7=$this->db->query("update db_items set stock=$stock where id='$item_id'");
 		if($q7){
 			return true;

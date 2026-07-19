@@ -105,45 +105,6 @@
                         </ul>
                         <div class="tab-content">
                            <div class="tab-pane active" id="tab_1">
-                              <!-- Summary Cards -->
-                              <div class="row" id="summary-cards" style="display: none; margin-top: 15px; margin-bottom: 5px;">
-                                 <!-- Total Stock Card -->
-                                 <div class="col-md-4 col-sm-6 col-xs-12">
-                                    <div class="info-box bg-aqua" style="background-color: #28ACE2 !important; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                       <span class="info-box-icon" style="background: rgba(0,0,0,0.1); border-top-left-radius: 6px; border-bottom-left-radius: 6px;"><i class="fa fa-cubes"></i></span>
-                                       <div class="info-box-content" style="padding-top: 15px;">
-                                          <span class="info-box-text" style="font-weight: 600; text-transform: uppercase; font-size: 11px;">Total Stock</span>
-                                          <span class="info-box-number" id="card-total-stock" style="font-size: 22px; font-weight: 700;">0</span>
-                                       </div>
-                                    </div>
-                                 </div>
-                                 
-                                 <!-- Total Value Card -->
-                                 <div class="col-md-4 col-sm-6 col-xs-12">
-                                    <div class="info-box bg-green" style="background-color: #2fc296 !important; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                       <span class="info-box-icon" style="background: rgba(0,0,0,0.1); border-top-left-radius: 6px; border-bottom-left-radius: 6px;"><i class="fa fa-money"></i></span>
-                                       <div class="info-box-content" style="padding-top: 15px;">
-                                          <span class="info-box-text" style="font-weight: 600; text-transform: uppercase; font-size: 11px;">Stock Value</span>
-                                          <span class="info-box-number" id="card-total-value" style="font-size: 22px; font-weight: 700;">0.00</span>
-                                       </div>
-                                    </div>
-                                 </div>
-
-                                 <!-- Active Filters Card -->
-                                 <div class="col-md-4 col-sm-12 col-xs-12">
-                                    <div class="info-box bg-purple" style="background-color: #7952b3 !important; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: white;">
-                                       <span class="info-box-icon" style="background: rgba(0,0,0,0.1); border-top-left-radius: 6px; border-bottom-left-radius: 6px;"><i class="fa fa-filter"></i></span>
-                                       <div class="info-box-content" style="padding-top: 8px;">
-                                          <span class="info-box-text" style="font-weight: 600; text-transform: uppercase; font-size: 11px; margin-bottom: 2px;">Active Filters</span>
-                                          <div style="font-size: 11px; line-height: 1.3;" id="card-filters">
-                                             <div><strong>Wh:</strong> <span id="filt-wh">-</span></div>
-                                             <div><strong>Brand:</strong> <span id="filt-brand">-</span></div>
-                                             <div><strong>Cat:</strong> <span id="filt-cat">-</span></div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
                             
                               <div class="row">
                                  <!-- right column -->
@@ -153,7 +114,7 @@
                                           <?php $this->load->view('components/export_btn',array('tableId' => 'report-data'));?>
                                           <br><br>
                                           <div class="table-responsive">
-                                          <table class="table table-hover " id="report-data" >
+                                          <table class="table table-bordered table-hover " id="report-data" >
                                             <thead>
                                             <tr class="bg-blue">
                                               <th style="">#</th>
@@ -164,8 +125,9 @@
                                               <th style=""><?= $this->lang->line('item_name'); ?></th>
                                               <th style=""><?= $this->lang->line('brand'); ?></th>
                                               <th style=""><?= $this->lang->line('category'); ?></th>
-                                              <th style=""><?= $this->lang->line('unit_price'); ?></th>
-                                              <th style=""><?= $this->lang->line('sales_price'); ?></th>
+                                              <th style=""><?= $this->lang->line('unit_price'); ?>(<?= $CI->currency(); ?>)</th>
+                                              <th style=""><?= $this->lang->line('tax'); ?></th>
+                                              <th style=""><?= $this->lang->line('sales_price'); ?>(<?= $CI->currency(); ?>)</th>
                                               <th style=""><?= $this->lang->line('opening_stock'); ?></th>
                                               <th style=""><?= $this->lang->line('current_stock'); ?></th>
                                               <th style=""><?= $this->lang->line('value'); ?></th>
@@ -193,7 +155,7 @@
                                           <?php $this->load->view('components/export_btn',array('tableId' => 'brand_wise_stock'));?>
                                           <br><br>
                                           <div class="table-responsive">
-                                          <table class="table table-hover " id="brand_wise_stock" >
+                                          <table class="table table-bordered table-hover " id="brand_wise_stock" >
                                               <thead>
                                               <tr class="bg-blue">
                                                 <th style="">#</th>
@@ -267,36 +229,19 @@
               $.each( result, function( key, val ) {
                 if(key=='item_wise_report'){
                     $("#tbodyid").empty().append(val);
-                    
-                    var totalStock = $("#tbodyid tr:last td:eq(1)").text() || "0";
-                    var totalValue = $("#tbodyid tr:last td:eq(2)").text() || "0.00";
-                    
-                    if ($("#tbodyid tr:first td").hasClass("text-danger")) {
-                       totalStock = "0";
-                       totalValue = "0.00";
-                    }
-                    
-                    $("#card-total-stock").text(totalStock);
-                    $("#card-total-value").text(totalValue);
-                    
-                    var whVal = $("#warehouse_id").val();
-                    var brandVal = $("#brand_id").val();
-                    var catVal = $("#category_id").val();
-                    
-                    $("#filt-wh").text(whVal ? $("#warehouse_id option:selected").text() : "");
-                    $("#filt-brand").text(brandVal ? $("#brand_id option:selected").text() : "");
-                    $("#filt-cat").text(catVal ? $("#category_id option:selected").text() : "");
-                    
-                    $("#summary-cards").fadeIn();
                 }
                 if(key=='brand_wise_stock'){
                     $("#brand_wise_stock tbody").empty().append(val);     
                 }
+                /*if(key=='category_wise_stock'){
+                    $("#category_wise_stock tbody").empty().append(val);     
+                }*/
+
               });
               $(".overlay").remove();
            });
 
-    }
+    }//function end
 </script>
 <script>
     $("#view").on("click",function(){
@@ -342,126 +287,6 @@
     }
 
       </script>
-
-<script type="text/javascript">
-  function downloadPdf(tableId) {
-      $('#' + tableId).tableExport({
-          type: 'pdf',
-          escape: 'false',
-          jspdf: {
-              orientation: 'l', // Landscape mode for wider table space and better layout
-              format: 'a4',
-              unit: 'pt',
-              margins: { left: 30, right: 30, top: 120, bottom: 40 },
-              autotable: {
-                  theme: 'striped',
-                  styles: {
-                      fontSize: 8,
-                      cellPadding: 6,
-                      overflow: 'linebreak',
-                      halign: 'left',
-                      valign: 'middle'
-                  },
-                  headerStyles: {
-                      fillColor: [40, 172, 226], // Matches sidebar #28ACE2
-                      textColor: [255, 255, 255],
-                      fontStyle: 'bold',
-                      fontSize: 9
-                  },
-                  alternateRowStyles: {
-                      fillColor: [248, 249, 250]
-                  },
-                  margin: { left: 30, right: 30, top: 120, bottom: 40 },
-                  beforePageContent: function(data) {
-                      // Original tableExport fix for row height
-                      if ( data.pageCount === 1 ) {
-                        var all = data.table.rows.concat(data.table.headerRow);
-                        $.each(all, function () {
-                          var row = this;
-                          if ( row.height > 0 ) {
-                            row.height += (2 - 1.15) / 2 * row.styles.fontSize;
-                            data.table.height += (2 - 1.15) / 2 * row.styles.fontSize;
-                          }
-                        });
-                      }
-
-                      var doc = data.settings.tableExport.doc;
-                      doc.setFont("helvetica");
-                      
-                      // Active Filters and Values
-                      var whVal = $("#warehouse_id").val();
-                      var brandVal = $("#brand_id").val();
-                      var catVal = $("#category_id").val();
-                      
-                      var whText = whVal ? $("#warehouse_id option:selected").text() : "";
-                      var brandText = brandVal ? $("#brand_id option:selected").text() : "";
-                      var catText = catVal ? $("#category_id option:selected").text() : "";
-                      
-                      // Draw Banner Background
-                      doc.setFillColor(40, 172, 226); // Brand Color #28ACE2
-                      doc.rect(30, 20, doc.internal.pageSize.width - 60, 80, 'F');
-                      
-                      // Left Column Text (Company & Report details)
-                      doc.setTextColor(255, 255, 255);
-                      
-                      // Company Name
-                      doc.setFontSize(16);
-                      doc.setFontStyle('bold');
-                      var companyName = "<?= get_store_name(get_current_store_id()); ?>";
-                      doc.text(companyName, 45, 48);
-                      
-                      // Report Name
-                      doc.setFontSize(11);
-                      doc.setFontStyle('normal');
-                      doc.text("Stock Report", 45, 68);
-                      
-                      // Generated date
-                      doc.setFontSize(8);
-                      doc.setFontStyle('italic');
-                      var today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-                      doc.text("Generated on: " + today, 45, 85);
-                      
-                      // Right Column Text (Filters info)
-                      var rightX = doc.internal.pageSize.width - 320;
-                      var lineY = 42;
-                      var lineHeight = 16;
-                      
-                      doc.setFontSize(9);
-                      
-                      // Warehouse:
-                      doc.setFontStyle('bold');
-                      doc.text("Warehouse:", rightX, lineY);
-                      doc.setFontStyle('normal');
-                      doc.text(whText || "-", rightX + 80, lineY);
-                      
-                      lineY += lineHeight;
-                      
-                      // Brands:
-                      doc.setFontStyle('bold');
-                      doc.text("Brands:", rightX, lineY);
-                      doc.setFontStyle('normal');
-                      doc.text(brandText || "-", rightX + 80, lineY);
-                      
-                      lineY += lineHeight;
-                      
-                      // Category:
-                      doc.setFontStyle('bold');
-                      doc.text("Category:", rightX, lineY);
-                      doc.setFontStyle('normal');
-                      doc.text(catText || "-", rightX + 80, lineY);
-                  },
-                  afterPageContent: function(data) {
-                      var doc = data.settings.tableExport.doc;
-                      doc.setFontSize(8);
-                      doc.setTextColor(150, 150, 150);
-                      doc.setFontStyle('normal');
-                      doc.text("Page " + data.pageCount, doc.internal.pageSize.width - 60, doc.internal.pageSize.height - 20);
-                  }
-              }
-          }
-      });
-  }
-</script>
 
 <!-- Make sidebar menu hughlighter/selector -->
 <script>$(".<?php echo basename(__FILE__,'.php');?>-active-li").addClass("active");</script>

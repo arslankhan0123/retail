@@ -109,6 +109,7 @@ class Store_profile_model extends CI_Model {
 		    				'invoice_terms'				=> $invoice_terms,
 		    				'round_off'					=> $round_off,
 		    				'language_id'				=> $language_id,
+		    				'barcode_type'				=> $barcode_type,
 		    				'decimals'					=> $decimals,
 		    				'qty_decimals'					=> $qty_decimals,
 		    				'sales_payment_init'		=> $sales_payment_init,

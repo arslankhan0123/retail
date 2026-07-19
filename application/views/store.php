@@ -440,6 +440,17 @@
                                                    </div>
                                                 </div>
                                                 
+                                                <div class="form-group">
+                                                   <label for="barcode_type" class="col-sm-4 control-label">Barcode</label>
+                                                   <div class="col-sm-8">
+                                                      <select class="form-control select2" id="barcode_type" name="barcode_type"  style="width: 100%;">
+                                                         <option <?= (isset($barcode_type) && $barcode_type=='Automatic')?'selected':'';?> value="Automatic">Automatic</option>
+                                                         <option <?= (isset($barcode_type) && $barcode_type=='Manual')?'selected':'';?> value="Manual">Manual</option>
+                                                      </select>
+                                                      <span id="barcode_type_msg" style="display:none" class="text-danger"></span>
+                                                   </div>
+                                                </div>
+                                                
                                                 <?php 
                                                $round_off_checkbox ='';
                                                if($round_off==1){

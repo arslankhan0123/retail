@@ -122,6 +122,10 @@ $('#save,#update,#save_and_print,#update_and_print').on("click", function (e) {
 					{
 						location.href=base_url+"sales/invoice/"+result[1];
           }
+          else if(result[0]=="success" && this_id=='update')
+					{
+						location.href=base_url+"sales/invoice/"+result[1];
+					}
           else if(result[0]=="success" && this_id=='save_and_print')
 					{
 						location.href=base_url+"pdf/sales/"+result[1];

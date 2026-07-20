@@ -205,7 +205,7 @@ class Sales extends MyPDF{
 		<style type="text/css">
 			table, td, th {
 			    border-collapse: collapse;
-			    border: 0.01px solid    #26066c  ;
+			    border: 0.5px solid    #000000  ;
 			    
 			}
 			

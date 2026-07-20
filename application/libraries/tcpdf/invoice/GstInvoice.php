@@ -97,9 +97,9 @@ class GstInvoice extends MyPDF{
         $this->setFillColor(255, 255, 255);
 
         $this->writeHTMLCell($w - 17, $h, $x ='23', $y='70', $custmer_details, [
-            'R' => ['width' => 0.1, 'color' => [204,204,204]],
-            'T' => ['width' => 0.1, 'color' => [204,204,204]],
-            'B' => ['width' => 0.1, 'color' => [204,204,204]],
+            'R' => ['width' => 0.1, 'color' => [0,0,0]],
+            'T' => ['width' => 0.1, 'color' => [0,0,0]],
+            'B' => ['width' => 0.1, 'color' => [0,0,0]],
             ], 0, 0, true, 'J', true);
         
         return $this;
@@ -144,9 +144,9 @@ class GstInvoice extends MyPDF{
         
 
         $this->writeHTMLCell($w, $h, $x = 6 + $w_customer, $y='', $titleHTML, [
-            'R' => ['width' => 0.1,'color' => [204,204,204]],
-            'T' => ['width' => 0.1,'color' => [204,204,204]],
-            'B' => ['width' => 0.1,'color' => [204,204,204]],
+            'R' => ['width' => 0.1,'color' => [0,0,0]],
+            'T' => ['width' => 0.1,'color' => [0,0,0]],
+            'B' => ['width' => 0.1,'color' => [0,0,0]],
             ], 1, 1, true, 'J', true);
 
         $invoice_details = "";
@@ -172,9 +172,9 @@ class GstInvoice extends MyPDF{
         
 
         $this->writeHTMLCell($w * 0.56, $h, $x = 6 + $w_customer + ($w * 0.44), $y='70', $invoice_details, [
-            'R' => ['width' => 0.1,'color' => [204,204,204]],
-            'T' => ['width' => 0.1,'color' => [204,204,204]],
-            'B' => ['width' => 0.1,'color' => [204,204,204]],
+            'R' => ['width' => 0.1,'color' => [0,0,0]],
+            'T' => ['width' => 0.1,'color' => [0,0,0]],
+            'B' => ['width' => 0.1,'color' => [0,0,0]],
             ], 1, 1, true, 'J', true);
             
         return $this;
@@ -341,7 +341,7 @@ class GstInvoice extends MyPDF{
 		<style type="text/css">
 			table, td, th {
 			    border-collapse: collapse;
-			    border: 0.01px solid #cccccc;
+			    border: 0.5px solid #000000;
 			    
 			}
 			
@@ -737,7 +737,7 @@ class GstInvoice extends MyPDF{
 		<style type="text/css">
 			table, td, th {
 			    border-collapse: collapse;
-			    border: 0.01px solid #cccccc;
+			    border: 0.5px solid #000000;
 			    
 			}
 			

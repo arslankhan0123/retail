@@ -491,8 +491,8 @@ class MyPDF extends TCPDF {
         // set auto page breaks
         $this->setAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
-        // light gray for all default-color lines/borders (boxes, hr rules)
-        $this->setDrawColor(204, 204, 204);
+        // dark for all default-color lines/borders (boxes, hr rules)
+        $this->setDrawColor(0, 0, 0);
 
         // set image scale factor
         $this->setImageScale(PDF_IMAGE_SCALE_RATIO);

@@ -664,6 +664,23 @@ class GstInvoice extends MyPDF{
 	    
 	    $tbl .='</tbody>
 	        </table>';
+
+	    $tbl .='<br/><br/><br/><br/><br/><br/><br/><br/>
+	        <table border="0" nobr="true" style="border:none; width:100%;">
+	            <tbody>
+	                <tr nobr="true">
+	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px; width:33%;">Receiver\'s Sign<br/><br/><br/>______________________</td>
+	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px; width:34%;">Prepared By<br/><br/><br/>______________________</td>
+	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px; width:33%;">Checked By<br/><br/><br/>______________________</td>
+	                </tr>
+	                <tr nobr="true">
+	                    <td colspan="3" style="border:none; text-align:center; font-weight:bold; font-size:11px;"><br/><br/>Return and Exchange Policy</td>
+	                </tr>
+	                <tr nobr="true">
+	                    <td colspan="3" style="border:none; text-align:center; font-size:10px;">For Exchange/return of goods, the invoice is required and the goods should be in good condition.</td>
+	                </tr>
+	            </tbody>
+	        </table>';
 		return $this->writeHTML($tbl, true, false, true, true, 'j');
 		//$this->IncludeJS("print(true);");
 		//return $this->Output('invoice_100.pdf', 'I');
@@ -1060,6 +1077,23 @@ class GstInvoice extends MyPDF{
 	    }
 	    
 	    $tbl .='</tbody>
+	        </table>';
+
+	    $tbl .='<br/><br/><br/><br/><br/><br/><br/><br/>
+	        <table border="0" nobr="true" style="border:none; width:100%;">
+	            <tbody>
+	                <tr nobr="true">
+	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px; width:33%;">Receiver\'s Sign<br/><br/><br/>______________________</td>
+	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px; width:34%;">Prepared By<br/><br/><br/>______________________</td>
+	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px; width:33%;">Checked By<br/><br/><br/>______________________</td>
+	                </tr>
+	                <tr nobr="true">
+	                    <td colspan="3" style="border:none; text-align:center; font-weight:bold; font-size:11px;"><br/><br/>Return and Exchange Policy</td>
+	                </tr>
+	                <tr nobr="true">
+	                    <td colspan="3" style="border:none; text-align:center; font-size:10px;">For Exchange/return of goods, the invoice is required and the goods should be in good condition.</td>
+	                </tr>
+	            </tbody>
 	        </table>';
 		// above tr
 	// 	<tr style="display:none;" nobr="true">

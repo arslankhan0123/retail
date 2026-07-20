@@ -639,7 +639,7 @@ class GstInvoice extends MyPDF{
 		$tbl .= '</table>';
 
 
-		$tbl .= '<table nobr="true">
+		$tbl .= '<table cellpadding="8" nobr="true">
 	            <tbody>
 	                <tr nobr="true">
 	                    <td colspan="2" style="border-right:none;"><div style="font-size:10px;border-right:none;"><span style="color:rgb(0, 0, 128);font-style:italic;">RECIEVER’S NAME:</span><br><br/>';
@@ -668,15 +668,15 @@ class GstInvoice extends MyPDF{
 	        if ($show_paid_img) {
 	            $tbl .= '
 	                    <td colspan="4" class="text-center"><br>
-	                        <img src="'.base_url($store->qr_image).'" width="100" height="100">
+	                        <img src="'.base_url($store->qr_image).'" width="80" height="80">
 	                    </td>
 	                    <td colspan="4" class="text-center"><br>
-	                        <img src="'.base_url('uploads/paid.png').'" width="100" height="100">
+	                        <img src="'.base_url('uploads/paid.png').'" width="80" height="80">
 	                    </td>';
 	        } else {
 	            $tbl .= '
 	                    <td colspan="8" class="text-center"><br>
-	                        <img src="'.base_url($store->qr_image).'" width="100" height="100">
+	                        <img src="'.base_url($store->qr_image).'" width="80" height="80">
 	                    </td>';
 	        }
 	        $tbl .= '</tr>';
@@ -1073,7 +1073,7 @@ class GstInvoice extends MyPDF{
 	$tbl .= '</table>';
 
 		
-	$tbl .='<table nobr="true">
+	$tbl .='<table cellpadding="8" nobr="true">
 	            <tbody>
 	                <tr nobr="true">
 	                    <td colspan="2" style="border-right:none;"><div style="font-size:10px;border-right:none;"><span style="color:rgb(0, 0, 128);font-style:italic;">RECIEVER’S NAME:</span><br><br/>';
@@ -1102,15 +1102,15 @@ class GstInvoice extends MyPDF{
 	        if ($show_paid_img) {
 	            $tbl .= '
 	                    <td colspan="4" class="text-center"><br>
-	                        <img src="'.base_url($store->qr_image).'" width="100" height="100">
+	                        <img src="'.base_url($store->qr_image).'" width="80" height="80">
 	                    </td>
 	                    <td colspan="4" class="text-center"><br>
-	                        <img src="'.base_url('uploads/paid.png').'" width="100" height="100">
+	                        <img src="'.base_url('uploads/paid.png').'" width="80" height="80">
 	                    </td>';
 	        } else {
 	            $tbl .= '
 	                    <td colspan="8" class="text-center"><br>
-	                        <img src="'.base_url($store->qr_image).'" width="100" height="100">
+	                        <img src="'.base_url($store->qr_image).'" width="80" height="80">
 	                    </td>';
 	        }
 	        $tbl .= '</tr>';

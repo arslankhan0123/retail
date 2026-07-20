@@ -665,17 +665,20 @@ class GstInvoice extends MyPDF{
 	        }
 
 	        $tbl .='<tr nobr="true">';
+	        $bank_html = !empty($store->bank_details) ? '<div style="font-size:10px;text-align:left;"><span style="color:rgb(0, 0, 128);font-style:italic;font-weight:bold;">Bank Details:</span><br/>'.nl2br($store->bank_details).'</div>' : '';
 	        if ($show_paid_img) {
 	            $tbl .= '
-	                    <td colspan="4" class="text-center"><br>
+	                    <td colspan="3" valign="middle">'.$bank_html.'</td>
+	                    <td colspan="2" class="text-center"><br>
 	                        <img src="'.base_url($store->qr_image).'" width="80" height="80">
 	                    </td>
-	                    <td colspan="4" class="text-center"><br>
+	                    <td colspan="3" class="text-center"><br>
 	                        <img src="'.base_url('uploads/paid.png').'" width="80" height="80">
 	                    </td>';
 	        } else {
 	            $tbl .= '
-	                    <td colspan="8" class="text-center"><br>
+	                    <td colspan="4" valign="middle">'.$bank_html.'</td>
+	                    <td colspan="4" class="text-center"><br>
 	                        <img src="'.base_url($store->qr_image).'" width="80" height="80">
 	                    </td>';
 	        }
@@ -1099,17 +1102,20 @@ class GstInvoice extends MyPDF{
 	        }
 
 	        $tbl .='<tr nobr="true">';
+	        $bank_html = !empty($store->bank_details) ? '<div style="font-size:10px;text-align:left;"><span style="color:rgb(0, 0, 128);font-style:italic;font-weight:bold;">Bank Details:</span><br/>'.nl2br($store->bank_details).'</div>' : '';
 	        if ($show_paid_img) {
 	            $tbl .= '
-	                    <td colspan="4" class="text-center"><br>
+	                    <td colspan="3" valign="middle">'.$bank_html.'</td>
+	                    <td colspan="2" class="text-center"><br>
 	                        <img src="'.base_url($store->qr_image).'" width="80" height="80">
 	                    </td>
-	                    <td colspan="4" class="text-center"><br>
+	                    <td colspan="3" class="text-center"><br>
 	                        <img src="'.base_url('uploads/paid.png').'" width="80" height="80">
 	                    </td>';
 	        } else {
 	            $tbl .= '
-	                    <td colspan="8" class="text-center"><br>
+	                    <td colspan="4" valign="middle">'.$bank_html.'</td>
+	                    <td colspan="4" class="text-center"><br>
 	                        <img src="'.base_url($store->qr_image).'" width="80" height="80">
 	                    </td>';
 	        }

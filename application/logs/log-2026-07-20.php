@@ -12,3 +12,7 @@ ERROR - 2026-07-20 15:46:36 --> 404 Page Not Found: Faviconico/index
 ERROR - 2026-07-20 20:00:24 --> Could not find the language line "import_salesman"
 ERROR - 2026-07-20 20:00:24 --> Could not find the language line "view_account_receivable_salesman"
 ERROR - 2026-07-20 20:00:36 --> Severity: error --> Exception: Call to undefined function get_salesman_details() F:\Projects\retail\application\models\Salesman_model.php 370
+ERROR - 2026-07-20 21:05:07 --> Could not find the language line "company_address"
+ERROR - 2026-07-20 21:09:58 --> Could not find the language line "company_address"
+ERROR - 2026-07-20 21:14:42 --> Could not find the language line "company_address"
+ERROR - 2026-07-20 17:30:12 --> 404 Page Not Found: Faviconico/index

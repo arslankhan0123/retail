@@ -655,11 +655,31 @@ class GstInvoice extends MyPDF{
 	                </tr>';
 	    
 	    if(!empty($store->qr_image)){
-	        $tbl .='<tr nobr="true">
-	                    <td colspan="8" class="text-center"><br>
+	        $show_paid_img = false;
+	        $payment_query = $this->CI->db->from('db_salespayments')->where('sales_id', $sales->id)->order_by('id','desc')->get();
+	        if ($payment_query->num_rows() > 0) {
+	            $payment_row = $payment_query->first_row();
+	            if (!empty($payment_row) && strtoupper($payment_row->payment_type) == 'CASH') {
+	                $show_paid_img = true;
+	            }
+	        }
+
+	        $tbl .='<tr nobr="true">';
+	        if ($show_paid_img) {
+	            $tbl .= '
+	                    <td colspan="4" class="text-center"><br>
 	                        <img src="'.base_url($store->qr_image).'" width="100" height="100">
 	                    </td>
-	                </tr>';
+	                    <td colspan="4" class="text-center"><br>
+	                        <img src="'.base_url('uploads/paid.png').'" width="100" height="100">
+	                    </td>';
+	        } else {
+	            $tbl .= '
+	                    <td colspan="8" class="text-center"><br>
+	                        <img src="'.base_url($store->qr_image).'" width="100" height="100">
+	                    </td>';
+	        }
+	        $tbl .= '</tr>';
 	    }
 	    
 	    $tbl .='</tbody>
@@ -1069,11 +1089,31 @@ class GstInvoice extends MyPDF{
 	                </tr>';
 
 	    if(!empty($store->qr_image)){
-	        $tbl .='<tr nobr="true">
-	                    <td colspan="8" class="text-center"><br>
+	        $show_paid_img = false;
+	        $payment_query = $this->CI->db->from('db_salespayments')->where('sales_id', $sales->id)->order_by('id','desc')->get();
+	        if ($payment_query->num_rows() > 0) {
+	            $payment_row = $payment_query->first_row();
+	            if (!empty($payment_row) && strtoupper($payment_row->payment_type) == 'CASH') {
+	                $show_paid_img = true;
+	            }
+	        }
+
+	        $tbl .='<tr nobr="true">';
+	        if ($show_paid_img) {
+	            $tbl .= '
+	                    <td colspan="4" class="text-center"><br>
 	                        <img src="'.base_url($store->qr_image).'" width="100" height="100">
 	                    </td>
-	                </tr>';
+	                    <td colspan="4" class="text-center"><br>
+	                        <img src="'.base_url('uploads/paid.png').'" width="100" height="100">
+	                    </td>';
+	        } else {
+	            $tbl .= '
+	                    <td colspan="8" class="text-center"><br>
+	                        <img src="'.base_url($store->qr_image).'" width="100" height="100">
+	                    </td>';
+	        }
+	        $tbl .= '</tr>';
 	    }
 	    
 	    $tbl .='</tbody>

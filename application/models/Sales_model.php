@@ -449,6 +449,24 @@ class Sales_model extends CI_Model {
 		
 		}//for end
 
+		if((empty($amount) || $amount=='' || $amount==0) && !empty($payment_type)){
+			if($command=='update'){
+				$tot_payment = $this->db->select('coalesce(sum(payment),0) as payment')->where('sales_id',$sales_id)->get('db_salespayments')->row()->payment;
+				$amount = $tot_total_amt - $tot_payment;
+			}
+			else{
+				$amount = $tot_total_amt;
+			}
+		}
+
+		if(!empty($payment_type) && ($command=='update' || $command=='update_and_print')){
+			$q_pay_exist = $this->db->select('id')->where('sales_id', $sales_id)->order_by('id', 'asc')->get('db_salespayments');
+			if ($q_pay_exist->num_rows() > 0) {
+				$exist_payment_id = $q_pay_exist->row()->id;
+				$this->db->set('payment_type', $payment_type)->where('id', $exist_payment_id)->update('db_salespayments');
+			}
+		}
+
 		if($amount=='' || $amount==0){$amount=null;}
 		if($amount>0 && !empty($payment_type)){
 

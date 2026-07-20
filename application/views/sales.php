@@ -604,11 +604,19 @@
                                                    <label for="payment_type"><?= $this->lang->line('payment_type'); ?></label>
                                                    <select class="form-control select2" id='payment_type' name="payment_type">
                                                       <?php
+                                                      $default_payment_type = '';
+                                                      if (isset($sales_id)) {
+                                                          $q_pay = $this->db->query("select payment_type from db_salespayments where sales_id=$sales_id order by id asc limit 1");
+                                                          if ($q_pay->num_rows() > 0) {
+                                                              $default_payment_type = $q_pay->row()->payment_type;
+                                                          }
+                                                      }
                                                       $q1 = $this->db->query("select * from db_paymenttypes where status=1 and store_id=" . get_current_store_id());
                                                       if ($q1->num_rows() > 0) {
                                                          echo "<option value=''>-Select-</option>";
                                                          foreach ($q1->result() as $res1) {
-                                                            echo "<option value='" . $res1->payment_type . "'>" . $res1->payment_type . "</option>";
+                                                            $selected = ($res1->payment_type == $default_payment_type) ? 'selected' : '';
+                                                            echo "<option value='" . $res1->payment_type . "' $selected>" . $res1->payment_type . "</option>";
                                                          }
                                                       } else {
                                                          echo "<option value=''>None</option>";

@@ -177,10 +177,10 @@ class GstInvoice extends MyPDF{
         
         $invoice_details .= '<b>:</b> <span style="">'.((!empty($sales->due_date)) ? show_date($sales->due_date):'').'</span><br/>';
         $invoice_details .= '<b>:</b> <span style="font-size:12px;">'.$sales->reference_no.'</span><br/>';
-        $invoice_details .= '<b>:</b> <span style="font-size:12px;">'.date('d-m-Y h:i:s a').'</span>';
+        $invoice_details .= '<b>:</b> <span style="font-size:9px;">'.date('d-m-Y h:i:s a').'</span>';
         
 
-        $this->writeHTMLCell($w * 0.56, $h, $x = 6 + $w_customer + ($w * 0.44), $y='70', $invoice_details, [
+        $this->writeHTMLCell($w * 0.67, $h, $x = 6 + $w_customer + ($w * 0.33), $y='70', $invoice_details, [
             'R' => ['width' => 0.1,'color' => [0,0,0]],
             'T' => ['width' => 0.1,'color' => [0,0,0]],
             'B' => ['width' => 0.1,'color' => [0,0,0]],
@@ -424,8 +424,8 @@ class GstInvoice extends MyPDF{
 			        <th colspan="1" style="text-align:center;width: ' . $colW['qty'] . '">' . $this->CI->lang->line("qty") . '</th>
 			        <th colspan="1" class="text-center" style="width: ' . $colW['rate'] . '">Rate</th>
 					 <th colspan="1" class="text-center" style="width: ' . $colW['dis'] . '">Dis </th>
-			        <th colspan="1" class="text-center" style="width: ' . $colW['tax'] . '">Tax(5%)</th>
-			        <th colspan="1" class="text-right" style="width: ' . $colW['amount'] . '">' . $this->CI->lang->line("amount") . '</th>
+			        <th colspan="1" class="text-center" style="width: ' . $colW['tax'] . '">Tax(5%) (<img src="'.base_url('uploads/logo.png').'" width="8" height="8">)</th>
+			        <th colspan="1" class="text-right" style="width: ' . $colW['amount'] . '">' . $this->CI->lang->line("amount") . ' (<img src="'.base_url('uploads/logo.png').'" width="8" height="8">)</th>
 		        </tr>
 		    </thead>
 		    <tbody>';
@@ -857,8 +857,8 @@ class GstInvoice extends MyPDF{
 			        <th colspan="1" style="text-align:center;width: '.$colW['qty'].'">'.$this->CI->lang->line("qty").'</th>
 			        <th colspan="1" class="text-center" style="width: '.$colW['rate'].'">Rate</th>
 					 <th colspan="1" class="text-center" style="width: '.$colW['dis'].'">Dis </th>
-			        <th colspan="1" class="text-center" style="width: '.$colW['tax'].'">Tax(5%)</th>
-			        <th colspan="1" class="text-right" style="width: '.$colW['amount'].'">'.$this->CI->lang->line("amount").'</th>
+			        <th colspan="1" class="text-center" style="width: '.$colW['tax'].'">Tax(5%) (<img src="'.base_url('uploads/logo.png').'" width="8" height="8">)</th>
+			        <th colspan="1" class="text-right" style="width: '.$colW['amount'].'">'.$this->CI->lang->line("amount").' (<img src="'.base_url('uploads/logo.png').'" width="8" height="8">)</th>
 		        </tr>
 		    </thead>
 		    <tbody>';

@@ -56,11 +56,20 @@ class GstInvoice extends MyPDF{
         $w = $printableWidth * $ratio_cust;
         $h = 32;
         
+        $salesman_name = '';
+        if (!empty($sales->salesman_id)) {
+            $salesman_query = $this->CI->db->query("select salesman_name from db_salesman where id=" . $sales->salesman_id);
+            if ($salesman_query->num_rows() > 0) {
+                $salesman_name = $salesman_query->row()->salesman_name;
+            }
+        }
+        
         $titleHTML = "";
         $titleHTML .= "<b>Customer</b><br/>";
         $titleHTML .= "<b>Mobile</b><br/>";
         $titleHTML .= "<b>Address</b><br/>";
-        $titleHTML .= "<b>TRN</b>";
+        $titleHTML .= "<b>TRN</b><br/>";
+        $titleHTML .= "<b>Salesman</b>";
         
         
         
@@ -89,7 +98,7 @@ class GstInvoice extends MyPDF{
         // print_r($customer_details);
         
         $custmer_details .= $customer->id!=2?"<b>:</b><span style='font-size:12px;'> $customer->tax_number </span><br/>": '<b>:</b><br/>';
-        
+        $custmer_details .= "<b>:</b><span style='font-size:12px;'> " . $salesman_name . " </span>";
         
         //$this->setCellMargins(1,1,1,1);
         $this->setCellPaddings(2,1,1,1);

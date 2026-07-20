@@ -498,24 +498,21 @@ class GstInvoice extends MyPDF{
 
 		$mCount = count($q2->result());
 
-		/* Fixed 25-row padding disabled - item rows are now dynamic to item count
-		if ($mCount < 25) {
-			for ($i = $mCount; $i < 25; $i++) {
+		// Padding to minimum of 9 rows to fill the empty space nicely without overflowing to page 2
+		if ($mCount < 9) {
+			for ($i = $mCount; $i < 9; $i++) {
 				$tbl .= '<tr style="" nobr="true" style="width: 100%;">';
 				$tbl .= '<td colspan="1" style="text-align:center;width: ' . $colW['sl_no'] . ';font-size:12px;">' . ($i + 1) . '</td>';
-				$tbl .= '<td colspan="1" style="width: ' . $colW['description'] . ';font-size:12px;border:none;border-right: 1px solid #cccccc;" >';
-				$tbl .= '</td>';
-				$tbl .= '<td colspan="1" style="width: ' . $colW['unit'] . ';border:none;border-right: 1px solid #cccccc;"></td>';
-				$tbl .= '<td colspan="1" style="text-align:center;width: ' . $colW['qty'] . ';font-size:12px;border:none;border-right: 1px solid #cccccc;"></td>';
-				$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['rate'] . ';font-size:12px;border:none;border-right: 1px solid #cccccc;"></td>';
-				$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['dis'] . ';font-size:12px;border:none;border-right: 1px solid #cccccc;"></td>';
-				$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['tax'] . ';font-size:12px;border:none;border-right: 1px solid #cccccc;"></td>';
-				$tbl .= '<td colspan="1" class="text-right" style="width: ' . $colW['amount'] . ';font-size:12px;border:none;border-right: 1px solid #cccccc;"></td>';
-
+				$tbl .= '<td colspan="1" style="width: ' . $colW['description'] . ';font-size:12px;">&nbsp;</td>';
+				$tbl .= '<td colspan="1" style="width: ' . $colW['unit'] . '">&nbsp;</td>';
+				$tbl .= '<td colspan="1" style="text-align:center;width: ' . $colW['qty'] . ';font-size:12px;">&nbsp;</td>';
+				$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['rate'] . ';font-size:12px;">&nbsp;</td>';
+				$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['dis'] . ';font-size:12px;">&nbsp;</td>';
+				$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['tax'] . ';font-size:12px;">&nbsp;</td>';
+				$tbl .= '<td colspan="1" class="text-right" style="width: ' . $colW['amount'] . ';font-size:12px;">&nbsp;</td>';
 				$tbl .= '</tr>';
 			}
 		}
-		*/
 
 		$tbl .= '</tbody>
 		    
@@ -688,7 +685,7 @@ class GstInvoice extends MyPDF{
 	    $tbl .='</tbody>
 	        </table>';
 
-	    $tbl .='<br/><br/><br/><br/><br/><br/><br/><br/>
+	    $tbl .='<br/><br/><br/><br/>
 	        <table border="0" nobr="true" style="border:none; width:100%;">
 	            <tbody>
 	                <tr nobr="true">
@@ -934,25 +931,21 @@ class GstInvoice extends MyPDF{
               
               $mCount = count($q2->result());
               
-            /* Fixed 25-row padding disabled - item rows are now dynamic to item count
-            if($mCount < 25){
-            for ($i = $mCount; $i < 25; $i++) {
-                 $tbl .='<tr style="" nobr="true" style="width: 100%;">';
-				      $tbl .='<td colspan="1" style="text-align:center;width: '.$colW['sl_no'].';font-size:12px;">'.($i+1).'</td>';
-				      $tbl .='<td colspan="1" style="width: '.$colW['description'].';font-size:12px;border:none;border-right: 1px solid #cccccc;" >';
-				      $tbl .= '</td>';
-				      $tbl .='<td colspan="1" style="width: '.$colW['unit'].';border:none;border-right: 1px solid #cccccc;"></td>';
-				      $tbl .='<td colspan="1" style="text-align:center;width: '.$colW['qty'].';font-size:12px;border:none;border-right: 1px solid #cccccc;"></td>';
-				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['rate'].';font-size:12px;border:none;border-right: 1px solid #cccccc;"></td>';
-				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['dis'].';font-size:12px;border:none;border-right: 1px solid #cccccc;"></td>';
-				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['tax'].';font-size:12px;border:none;border-right: 1px solid #cccccc;"></td>';
-				      $tbl .='<td colspan="1" class="text-right" style="width: '.$colW['amount'].';font-size:12px;border:none;border-right: 1px solid #cccccc;"></td>';
-
-		          $tbl .='</tr>';
+            // Padding to minimum of 9 rows to fill the empty space nicely without overflowing to page 2
+            if($mCount < 9){
+				for ($i = $mCount; $i < 9; $i++) {
+					$tbl .='<tr style="" nobr="true" style="width: 100%;">';
+					$tbl .='<td colspan="1" style="text-align:center;width: '.$colW['sl_no'].';font-size:12px;">'.($i+1).'</td>';
+					$tbl .='<td colspan="1" style="width: '.$colW['description'].';font-size:12px;">&nbsp;</td>';
+					$tbl .='<td colspan="1" style="width: '.$colW['unit'].'">&nbsp;</td>';
+					$tbl .='<td colspan="1" style="text-align:center;width: '.$colW['qty'].';font-size:12px;">&nbsp;</td>';
+					$tbl .='<td colspan="1" class="text-center" style="width: '.$colW['rate'].';font-size:12px;">&nbsp;</td>';
+					$tbl .='<td colspan="1" class="text-center" style="width: '.$colW['dis'].';font-size:12px;">&nbsp;</td>';
+					$tbl .='<td colspan="1" class="text-center" style="width: '.$colW['tax'].';font-size:12px;">&nbsp;</td>';
+					$tbl .='<td colspan="1" class="text-right" style="width: '.$colW['amount'].';font-size:12px;">&nbsp;</td>';
+					$tbl .='</tr>';
+				}
             }
-
-            }
-            */
 
 		    $tbl .='</tbody>
 		    
@@ -1125,7 +1118,7 @@ class GstInvoice extends MyPDF{
 	    $tbl .='</tbody>
 	        </table>';
 
-	    $tbl .='<br/><br/><br/><br/><br/><br/><br/><br/>
+	    $tbl .='<br/><br/><br/><br/>
 	        <table border="0" nobr="true" style="border:none; width:100%;">
 	            <tbody>
 	                <tr nobr="true">

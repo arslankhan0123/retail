@@ -168,9 +168,12 @@
 					<thead>
 					<tr style="border-top-style: dashed;border-bottom-style: dashed;border-width: 0.1px;">
 						<th style="font-size: 11px; text-align: left;padding-left: 2px; padding-right: 2px;">#</th>
-						<th colspan=3 style="font-size: 11px; text-align: left;padding-left: 2px; padding-right: 2px;"><?= $this->lang->line('payment_type'); ?></th>
-						<th style="font-size: 11px; text-align: right;padding-left: 2px; padding-right: 2px;"><?= $this->lang->line('payment'); ?></th>
-					
+						<th style="font-size: 11px; text-align: left;padding-left: 2px; padding-right: 2px;"><?= $this->lang->line('payment_date'); ?></th>
+						<th style="font-size: 11px; text-align: left;padding-left: 2px; padding-right: 10px;"><?= $this->lang->line('payment'); ?></th>
+						<th style="font-size: 11px; text-align: left;padding-left: 2px; padding-right: 2px;"><?= $this->lang->line('payment_type'); ?></th>
+						<th style="font-size: 11px; text-align: left;padding-left: 2px; padding-right: 2px;"><?= $this->lang->line('account'); ?></th>
+						<th style="font-size: 11px; text-align: left;padding-left: 2px; padding-right: 2px;"><?= $this->lang->line('payment_note'); ?></th>
+						<th style="font-size: 11px; text-align: left;padding-left: 2px; padding-right: 2px;"><?= $this->lang->line('created_by'); ?></th>
 					</tr>
 					</thead>
 					<tbody style="border-bottom-style: dashed;border-width: 0.1px;">
@@ -182,14 +185,22 @@
 			              $q2=$this->db->query("select * from db_salespayments where id=$payment_id");
 			              foreach ($q2->result() as $res2) {
 			                  echo "<tr>";  
-			                  echo "<td style='padding-left: 2px; padding-right: 2px;' valign='top'>".++$i."</td>";
-			                  echo "<td colspan=3 style='padding-left: 2px; padding-right: 2px;'>".$res2->payment_type."</td>";
-			                  
-			                  echo "<td style='text-align: right;padding-left: 2px; padding-right: 2px;'>".number_format(($res2->payment),2,'.','')."</td>";
+			                  echo "<td style='font-size: 11px; padding-left: 2px; padding-right: 2px;' valign='top'>".++$i."</td>";
+			                  echo "<td style='font-size: 11px; padding-left: 2px; padding-right: 2px;' valign='top'>".show_date($res2->payment_date)."</td>";
+			                  echo "<td style='font-size: 11px; text-align: left; padding-left: 2px; padding-right: 10px;' valign='top'>".number_format(($res2->payment),2,'.','')."</td>";
+			                  echo "<td style='font-size: 11px; padding-left: 2px; padding-right: 2px;' valign='top'>";
+			                  echo $res2->payment_type;
+			                  if(!empty($res2->cheque_number)){
+			                      echo "<br>Cheque no.:".$res2->cheque_number;
+			                      echo "<br>Period:".$res2->cheque_period;
+			                  }
+			                  echo "</td>";
+			                  echo "<td style='font-size: 11px; padding-left: 2px; padding-right: 2px;' valign='top'>".get_account_name($res2->account_id)."</td>";
+			                  echo "<td style='font-size: 11px; padding-left: 2px; padding-right: 2px;' valign='top'>".$res2->payment_note."</td>";
+			                  echo "<td style='font-size: 11px; padding-left: 2px; padding-right: 2px;' valign='top'>".ucfirst($res2->created_by)."</td>";
 			                  echo "</tr>";  
 			              }
 			              ?>
-					
 				   </tbody>
 				</table>
 			</td>

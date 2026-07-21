@@ -253,7 +253,6 @@ class GstInvoice extends MyPDF{
         
         $title_fs = ($pageWidth < 160) ? '30px' : '50px';
 
-        $html = "";
         $html = "<div><span style='font-weight:bold;font-size:".$title_fs.";'><b>TAX INVOICE</b></span><br/><span>TRN: " . $this->store->vat_no . "</span></div>";
         
         $this->setCellMargins(1,1,1,1);
@@ -262,8 +261,22 @@ class GstInvoice extends MyPDF{
         $this->setFillColor(255, 255, 255);
 
         $this->writeHTMLCell($w, $h, $x ='6', $y='52', $html, 1, 0, 1, true, 'C', true);
+
+        // Place pagination independently so it sits at the extreme right of the title box.
+        $pageNumber = 'Page ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages();
+        $this->setFont($this->get_font_name(), '', 14);
+        $this->setXY($pageWidth - 32, 56);
+        $this->Cell(26, 8, $pageNumber, 0, 0, 'R', 0, '', 0, false, 'T', 'M');
         
         return $this;
+    }
+
+    // Keep the print timestamp at the bottom; pagination is shown in the title box.
+    public function Footer()
+    {
+        $this->setY(-8);
+        $this->setFont($this->get_font_name(), 'I', 8);
+        $this->Cell(0, 10, $this->_document_name.' : '.$this->_document_number, 0, false, 'R', 0, '', 0, false, 'T', 'M');
     }
 
    

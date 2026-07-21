@@ -262,28 +262,28 @@ class MyPDF extends TCPDF {
         $store_name = strtoupper($store->store_name);
         $store_name = str_replace('&AMP;', '&amp;', $store_name);
 
-        $txt = '<span style="font-size:25px;font-weight:bold;">'.$store_name.'</span>';
+        $txt = '<span style="font-size:28px;font-weight:bold;">'.$store_name.'</span>';
         $this->writeHTMLCell($w, $h='', $x, $y='14', $txt, $border = 0, 0, 0, true, $align, true);
 
         $email_txt = '';
         if(!empty($store->email)){
-            $email_txt = '<span style="font-size:16px;font-weight:bold;">Email: '.$store->email.'</span>';
+            $email_txt = '<span style="font-size:18px;font-weight:bold;">Email: '.$store->email.'</span>';
         }
-        $this->writeHTMLCell($w, $h='', $x, $y='24', $email_txt, $border = 0, 0, 0, true, $align, true);
+        $this->writeHTMLCell($w, $h='', $x, $y='25', $email_txt, $border = 0, 0, 0, true, $align, true);
 
         $address_txt = $store->address;
         if(!empty($store->city)){
             $address_txt .= ', '.$store->city;
         }
-        $txt = '<span style="font-size:15px;">'.$address_txt.'</span>';
-        $this->writeHTMLCell($w, $h='', $x, $y='31', $txt, $border = 0, 0, 0, true, $align, true);
+        $txt = '<span style="font-size:17px;">'.$address_txt.'</span>';
+        $this->writeHTMLCell($w, $h='', $x, $y='32', $txt, $border = 0, 0, 0, true, $align, true);
 
         $phones = [];
         if(!empty($store->mobile)) $phones[] = $store->mobile;
         if(!empty($store->phone)) $phones[] = $store->phone;
         $phone_str = implode(", ", $phones);
-        $txt = '<span style="font-size:15px;">Mob.: '.$phone_str.'</span>';
-        $this->writeHTMLCell($w, $h='', $x, $y='37', $txt, $border = 0, 0, 0, true, $align, true);
+        $txt = '<span style="font-size:17px;">Mob.: '.$phone_str.'</span>';
+        $this->writeHTMLCell($w, $h='', $x, $y='39', $txt, $border = 0, 0, 0, true, $align, true);
 
         return $this;
     }

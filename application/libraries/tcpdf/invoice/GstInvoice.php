@@ -422,8 +422,8 @@ class GstInvoice extends MyPDF{
 			        <th colspan="1" style="text-align:center;width: ' . $colW['qty'] . '">' . $this->CI->lang->line("qty") . '</th>
 			        <th colspan="1" class="text-center" style="width: ' . $colW['rate'] . '">Rate</th>
 					 <th colspan="1" class="text-center" style="width: ' . $colW['dis'] . '">Dis </th>
-			        <th colspan="1" class="text-center" style="width: ' . $colW['tax'] . '">Tax(5%) (<img src="'.base_url('uploads/logo.png').'" width="8" height="8">)</th>
-			        <th colspan="1" class="text-right" style="width: ' . $colW['amount'] . '">' . $this->CI->lang->line("amount") . ' (<img src="'.base_url('uploads/logo.png').'" width="8" height="8">)</th>
+			        <th colspan="1" class="text-center" style="width: ' . $colW['tax'] . '">Tax(5%) (<img src="'.base_url('uploads/logo-black.png').'" width="8" height="8">)</th>
+			        <th colspan="1" class="text-right" style="width: ' . $colW['amount'] . '">' . $this->CI->lang->line("amount") . ' (<img src="'.base_url('uploads/logo-black.png').'" width="8" height="8">)</th>
 		        </tr>
 		    </thead>
 		    <tbody>';
@@ -836,8 +836,8 @@ class GstInvoice extends MyPDF{
 			        <th colspan="1" style="text-align:center;width: '.$colW['qty'].'">'.$this->CI->lang->line("qty").'</th>
 			        <th colspan="1" class="text-center" style="width: '.$colW['rate'].'">Rate</th>
 					 <th colspan="1" class="text-center" style="width: '.$colW['dis'].'">Dis </th>
-			        <th colspan="1" class="text-center" style="width: '.$colW['tax'].'">Tax(5%) (<img src="'.base_url('uploads/logo.png').'" width="8" height="8">)</th>
-			        <th colspan="1" class="text-right" style="width: '.$colW['amount'].'">'.$this->CI->lang->line("amount").' (<img src="'.base_url('uploads/logo.png').'" width="8" height="8">)</th>
+			        <th colspan="1" class="text-center" style="width: '.$colW['tax'].'">Tax(5%) (<img src="'.base_url('uploads/logo-black.png').'" width="8" height="8">)</th>
+			        <th colspan="1" class="text-right" style="width: '.$colW['amount'].'">'.$this->CI->lang->line("amount").' (<img src="'.base_url('uploads/logo-black.png').'" width="8" height="8">)</th>
 		        </tr>
 		    </thead>
 		    <tbody>';

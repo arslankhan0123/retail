@@ -52,9 +52,9 @@ class GstInvoice extends MyPDF{
 
         $pageWidth = $this->getPageWidth();
         $printableWidth = $pageWidth - 12;
-        $ratio_cust = ($pageWidth < 160) ? 0.55 : 0.74;
+        $ratio_cust = ($pageWidth < 160) ? 0.55 : 0.65;
         $w = $printableWidth * $ratio_cust;
-        $h = 25;
+        $h = 30;
         
         $salesman_name = '';
         if (!empty($sales->salesman_id)) {
@@ -75,37 +75,37 @@ class GstInvoice extends MyPDF{
         
         //$this->setCellMargins(1,1,1,1);
         $this->setCellPaddings(2,1,1,1);
-        $this->setFont($this->get_font_name(), '', 9);
+        $this->setFont($this->get_font_name(), '', 11);
         $this->setFillColor(255, 255, 255);
 
         $this->writeHTMLCell($w, $h, $x ='6', $y='70', $titleHTML, 1, 0, 1, true, 'J', true);
         
         
-        $custmer_details = '<b>:</b> <span style="font-size:12px;font-weight:bold;"> '.$customer->customer_name."</span><br/>";
+        $custmer_details = '<b>:</b> <span style="font-size:15px;font-weight:bold;"> '.$customer->customer_name."</span><br/>";
 
         if($customer->mobile){
-        $custmer_details .= '<b>:</b> <span style="font-size:12px;">'.$customer->mobile."</span><br/>"; 
+        $custmer_details .= '<b>:</b> <span style="font-size:15px;">'.$customer->mobile."</span><br/>"; 
         }else if($customer->phone){
-            $custmer_details .= '<b>:</b> <span style="font-size:12px;">'.$customer->phone."</span><br/>"; 
+            $custmer_details .= '<b>:</b> <span style="font-size:15px;">'.$customer->phone."</span><br/>"; 
         }else{
             $custmer_details .= "<b>:</b> <br/>";
         }
         
         
-        $custmer_details .= '<b>:</b><span style="font-size:12px;"> '.nl2br(substr($customer->address,0,56))."</span><br/>";
+        $custmer_details .= '<b>:</b><span style="font-size:15px;"> '.nl2br(substr($customer->address,0,56))."</span><br/>";
         
         $this->writeHTMLCell($w * 0.4, 6, $x = 6 + ($w * 0.6), $y = '82', substr($customer->address,56,300),0,0,0, true,'J', true);
         // print_r($customer_details);
         
-        $custmer_details .= $customer->id!=2?"<b>:</b><span style='font-size:12px;'> $customer->tax_number </span><br/>": '<b>:</b><br/>';
-        $custmer_details .= "<b>:</b><span style='font-size:12px;'> " . $salesman_name . " </span>";
+        $custmer_details .= $customer->id!=2?"<b>:</b><span style='font-size:15px;'> $customer->tax_number </span><br/>": '<b>:</b><br/>';
+        $custmer_details .= "<b>:</b><span style='font-size:15px;'> " . $salesman_name . " </span>";
         
         //$this->setCellMargins(1,1,1,1);
         $this->setCellPaddings(2,1,1,1);
-        $this->setFont($this->get_font_name(), '', 9);
+        $this->setFont($this->get_font_name(), '', 11);
         $this->setFillColor(255, 255, 255);
 
-        $this->writeHTMLCell($w - 17, $h, $x ='23', $y='70', $custmer_details, [
+        $this->writeHTMLCell($w - 21, $h, $x ='27', $y='70', $custmer_details, [
             'R' => ['width' => 0.1, 'color' => [0,0,0]],
             'T' => ['width' => 0.1, 'color' => [0,0,0]],
             'B' => ['width' => 0.1, 'color' => [0,0,0]],
@@ -123,12 +123,12 @@ class GstInvoice extends MyPDF{
     	
         $pageWidth = $this->getPageWidth();
         $printableWidth = $pageWidth - 12;
-        $ratio_cust = ($pageWidth < 160) ? 0.55 : 0.74;
+        $ratio_cust = ($pageWidth < 160) ? 0.55 : 0.65;
         $ratio_inv = 1 - $ratio_cust;
         $w_customer = $printableWidth * $ratio_cust;
         $w_invoice = $printableWidth * $ratio_inv;
         $w = $w_invoice;
-        $h = 25;
+        $h = 30;
         
         $payment = $this->CI->db->from('db_salespayments')
                             ->where('sales_id',$sales->id)->order_by('id','desc')
@@ -158,9 +158,9 @@ class GstInvoice extends MyPDF{
             ], 1, 1, true, 'J', true);
 
         $invoice_details = "";
-        $invoice_details .= '<b>:</b> <span style="font-size:12px;">'.$sales->sales_code.'</span><br/>';
-        $invoice_details .= '<b>:</b> <span style="font-size:12px;">'.$inv_type.'</span><br/>';
-        $invoice_details .= '<b>:</b> <span style="font-size:12px;">'.show_date($sales->sales_date).'</span><br/>';
+        $invoice_details .= '<b>:</b> <span style="font-size:15px;">'.$sales->sales_code.'</span><br/>';
+        $invoice_details .= '<b>:</b> <span style="font-size:15px;">'.$inv_type.'</span><br/>';
+        $invoice_details .= '<b>:</b> <span style="font-size:15px;">'.show_date($sales->sales_date).'</span><br/>';
         
         
         if($inv_type == 'CASH'){
@@ -174,11 +174,11 @@ class GstInvoice extends MyPDF{
 			
 		}
         
-        $invoice_details .= '<b>:</b> <span style="">'.((!empty($sales->due_date)) ? show_date($sales->due_date):'').'</span><br/>';
-        $invoice_details .= '<b>:</b> <span style="font-size:12px;">'.$sales->reference_no.'</span>';
+        $invoice_details .= '<b>:</b> <span style="font-size:15px;">'.((!empty($sales->due_date)) ? show_date($sales->due_date):'').'</span><br/>';
+        $invoice_details .= '<b>:</b> <span style="font-size:15px;">'.$sales->reference_no.'</span>';
         
 
-        $this->writeHTMLCell($w * 0.67, $h, $x = 6 + $w_customer + ($w * 0.33), $y='70', $invoice_details, [
+        $this->writeHTMLCell($w * 0.60, $h, $x = 6 + $w_customer + ($w * 0.40), $y='70', $invoice_details, [
             'R' => ['width' => 0.1,'color' => [0,0,0]],
             'T' => ['width' => 0.1,'color' => [0,0,0]],
             'B' => ['width' => 0.1,'color' => [0,0,0]],
@@ -496,9 +496,9 @@ class GstInvoice extends MyPDF{
 
 		$mCount = count($q2->result());
 
-		// Padding to minimum of 9 rows to fill the empty space nicely without overflowing to page 2
-		if ($mCount < 9) {
-			for ($i = $mCount; $i < 9; $i++) {
+		// Padding to minimum of 15 rows to fill the empty space nicely without overflowing to page 2
+		if ($mCount < 20) {
+			for ($i = $mCount; $i < 20; $i++) {
 				$tbl .= '<tr style="" nobr="true" style="width: 100%;">';
 				$tbl .= '<td colspan="1" style="text-align:center;width: ' . $colW['sl_no'] . ';font-size:12px;">' . ($i + 1) . '</td>';
 				$tbl .= '<td colspan="1" style="width: ' . $colW['description'] . ';font-size:12px;">&nbsp;</td>';
@@ -910,9 +910,9 @@ class GstInvoice extends MyPDF{
               
               $mCount = count($q2->result());
               
-            // Padding to minimum of 9 rows to fill the empty space nicely without overflowing to page 2
-            if($mCount < 9){
-				for ($i = $mCount; $i < 9; $i++) {
+            // Padding to minimum of 15 rows to fill the empty space nicely without overflowing to page 2
+            if($mCount < 20){
+				for ($i = $mCount; $i < 20; $i++) {
 					$tbl .='<tr style="" nobr="true" style="width: 100%;">';
 					$tbl .='<td colspan="1" style="text-align:center;width: '.$colW['sl_no'].';font-size:12px;">'.($i+1).'</td>';
 					$tbl .='<td colspan="1" style="width: '.$colW['description'].';font-size:12px;">&nbsp;</td>';

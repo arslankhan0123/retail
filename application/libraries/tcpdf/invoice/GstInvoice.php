@@ -64,52 +64,21 @@ class GstInvoice extends MyPDF{
             }
         }
         
-        $titleHTML = "";
-        $titleHTML .= "<b>Customer</b><br/>";
-        $titleHTML .= "<b>Mobile</b><br/>";
-        $titleHTML .= "<b>Address</b><br/>";
-        $titleHTML .= "<b>TRN</b><br/>";
-        $titleHTML .= "<b>Salesman</b>";
-        
-        
-        
-        //$this->setCellMargins(1,1,1,1);
+        $customer_phone = !empty($customer->mobile) ? $customer->mobile : $customer->phone;
+        $customer_trn = ($customer->id != 2) ? $customer->tax_number : '';
+        $customer_details = '<table border="0" cellpadding="0" cellspacing="0" style="width:100%;">';
+        $customer_details .= '<tr><td style="width:24%;"><b>Customer</b></td><td style="width:3%;"><b>:</b></td><td style="width:73%; font-weight:bold;">'.$customer->customer_name.'</td></tr>';
+        $customer_details .= '<tr><td style="width:24%;"><b>Mobile</b></td><td style="width:3%;"><b>:</b></td><td style="width:73%;">'.$customer_phone.'</td></tr>';
+        $customer_details .= '<tr><td style="width:24%;"><b>Address</b></td><td style="width:3%;"><b>:</b></td><td style="width:73%;">'.nl2br($customer->address).'</td></tr>';
+        $customer_details .= '<tr><td style="width:24%;"><b>TRN</b></td><td style="width:3%;"><b>:</b></td><td style="width:73%;">'.$customer_trn.'</td></tr>';
+        $customer_details .= '<tr><td style="width:24%;"><b>Salesman</b></td><td style="width:3%;"><b>:</b></td><td style="width:73%;">'.$salesman_name.'</td></tr>';
+        $customer_details .= '</table>';
+
         $this->setCellPaddings(2,1,1,1);
         $this->setFont($this->get_font_name(), '', 11);
         $this->setFillColor(255, 255, 255);
 
-        $this->writeHTMLCell($w, $h, $x ='6', $y='70', $titleHTML, 1, 0, 1, true, 'J', true);
-        
-        
-        $custmer_details = '<b>:</b> <span style="font-size:15px;font-weight:bold;"> '.$customer->customer_name."</span><br/>";
-
-        if($customer->mobile){
-        $custmer_details .= '<b>:</b> <span style="font-size:15px;">'.$customer->mobile."</span><br/>"; 
-        }else if($customer->phone){
-            $custmer_details .= '<b>:</b> <span style="font-size:15px;">'.$customer->phone."</span><br/>"; 
-        }else{
-            $custmer_details .= "<b>:</b> <br/>";
-        }
-        
-        
-        $custmer_details .= '<b>:</b><span style="font-size:15px;"> '.nl2br(substr($customer->address,0,56))."</span><br/>";
-        
-        $this->writeHTMLCell($w * 0.4, 6, $x = 6 + ($w * 0.6), $y = '82', substr($customer->address,56,300),0,0,0, true,'J', true);
-        // print_r($customer_details);
-        
-        $custmer_details .= $customer->id!=2?"<b>:</b><span style='font-size:15px;'> $customer->tax_number </span><br/>": '<b>:</b><br/>';
-        $custmer_details .= "<b>:</b><span style='font-size:15px;'> " . $salesman_name . " </span>";
-        
-        //$this->setCellMargins(1,1,1,1);
-        $this->setCellPaddings(2,1,1,1);
-        $this->setFont($this->get_font_name(), '', 11);
-        $this->setFillColor(255, 255, 255);
-
-        $this->writeHTMLCell($w - 21, $h, $x ='27', $y='70', $custmer_details, [
-            'R' => ['width' => 0.1, 'color' => [0,0,0]],
-            'T' => ['width' => 0.1, 'color' => [0,0,0]],
-            'B' => ['width' => 0.1, 'color' => [0,0,0]],
-            ], 0, 0, true, 'J', true);
+        $this->writeHTMLCell($w, $h, $x ='6', $y='70', $customer_details, 1, 0, 1, true, 'L', true);
         
         return $this;
     } 
@@ -140,29 +109,6 @@ class GstInvoice extends MyPDF{
             $inv_type = $payment->payment_type;
         }
   
-        $titleHTML = "";
-        $titleHTML .= '<b>'.$this->CI->lang->line('invoice_no').'</b><br/>';
-        
-        $titleHTML .= '<b>Invoice Type</b><br/>';
-        
-        $titleHTML .= '<b>Invoice Date</b><br/>';
-        
-        $titleHTML .= '<b>'.$this->CI->lang->line('due_date').'</b><br/>';
-        $titleHTML .= '<b>Reference</b>';
-        
-
-        $this->writeHTMLCell($w, $h, $x = 6 + $w_customer, $y='', $titleHTML, [
-            'R' => ['width' => 0.1,'color' => [0,0,0]],
-            'T' => ['width' => 0.1,'color' => [0,0,0]],
-            'B' => ['width' => 0.1,'color' => [0,0,0]],
-            ], 1, 1, true, 'J', true);
-
-        $invoice_details = "";
-        $invoice_details .= '<b>:</b> <span style="font-size:15px;">'.$sales->sales_code.'</span><br/>';
-        $invoice_details .= '<b>:</b> <span style="font-size:15px;">'.$inv_type.'</span><br/>';
-        $invoice_details .= '<b>:</b> <span style="font-size:15px;">'.show_date($sales->sales_date).'</span><br/>';
-        
-        
         if($inv_type == 'CASH'){
 			// $sales->due_date = $sales->sales_date;
 			$sales->due_date = '';
@@ -173,16 +119,20 @@ class GstInvoice extends MyPDF{
 				}
 			
 		}
-        
-        $invoice_details .= '<b>:</b> <span style="font-size:15px;">'.((!empty($sales->due_date)) ? show_date($sales->due_date):'').'</span><br/>';
-        $invoice_details .= '<b>:</b> <span style="font-size:15px;">'.$sales->reference_no.'</span>';
-        
 
-        $this->writeHTMLCell($w * 0.60, $h, $x = 6 + $w_customer + ($w * 0.40), $y='70', $invoice_details, [
-            'R' => ['width' => 0.1,'color' => [0,0,0]],
-            'T' => ['width' => 0.1,'color' => [0,0,0]],
-            'B' => ['width' => 0.1,'color' => [0,0,0]],
-            ], 1, 1, true, 'J', true);
+        $due_date = !empty($sales->due_date) ? show_date($sales->due_date) : '';
+        $invoice_details = '<table border="0" cellpadding="0" cellspacing="0" style="width:100%;">';
+        $invoice_details .= '<tr><td style="width:38%;"><b>'.$this->CI->lang->line('invoice_no').'</b></td><td style="width:4%;"><b>:</b></td><td style="width:58%;">'.$sales->sales_code.'</td></tr>';
+        $invoice_details .= '<tr><td style="width:38%;"><b>Invoice Type</b></td><td style="width:4%;"><b>:</b></td><td style="width:58%;">'.$inv_type.'</td></tr>';
+        $invoice_details .= '<tr><td style="width:38%;"><b>Invoice Date</b></td><td style="width:4%;"><b>:</b></td><td style="width:58%;">'.show_date($sales->sales_date).'</td></tr>';
+        $invoice_details .= '<tr><td style="width:38%;"><b>'.$this->CI->lang->line('due_date').'</b></td><td style="width:4%;"><b>:</b></td><td style="width:58%;">'.$due_date.'</td></tr>';
+        $invoice_details .= '<tr><td style="width:38%;"><b>Reference</b></td><td style="width:4%;"><b>:</b></td><td style="width:58%;">'.$sales->reference_no.'</td></tr>';
+        $invoice_details .= '</table>';
+
+        $this->setCellPaddings(2,1,1,1);
+        $this->setFont($this->get_font_name(), '', 11);
+        $this->setFillColor(255, 255, 255);
+        $this->writeHTMLCell($w, $h, $x = 6 + $w_customer, $y='70', $invoice_details, 1, 1, 1, true, 'L', true);
             
         return $this;
     }
@@ -399,11 +349,11 @@ class GstInvoice extends MyPDF{
 		} else {
 			$widthArray = array(
 				'sl_no' 		=> '5',
-				'description' 	=> '40',
+				'description' 	=> '38',
 				'unit' 			=> '10',
 				'qty' 			=> '10',
 				'rate' 	        => '10',
-				'dis'           => '5',
+				'dis'           => '7',
 				'tax'           => '10',
 				'amount' 		=> '10',
 			);
@@ -531,6 +481,8 @@ class GstInvoice extends MyPDF{
 		';
 
 		$tax_perchantage = round(store_number_format(($tot_tax_amt / $tot_total_cost) * 100));
+		$invoice_discount_amt = $tot_discount_amt + (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0);
+		$invoice_net_total = (float) $sales->grand_total;
 
 
 		$tbl .= '<div style="font-size:20px;line-height:20px;">&nbsp;</div>';
@@ -577,7 +529,7 @@ class GstInvoice extends MyPDF{
 		$tbl .= "Discount";
 		$tbl .= '</td>';
 		$tbl .= '<td  class="text-right" style="height:20px; font-size:12px; width: 40%;">';
-		$tbl .= store_number_format($tot_discount_amt);
+		$tbl .= store_number_format($invoice_discount_amt);
 		$tbl .= '</td>';
 		$tbl .= '</tr>';
 
@@ -615,7 +567,7 @@ class GstInvoice extends MyPDF{
 		$tbl .= "Net Total";
 		$tbl .= '</b></td>';
 		$tbl .= '<td class="text-right" style="height:24px; font-size:15px; width: 40%;"><b>';
-		$tbl .= store_number_format($tot_total_cost);
+		$tbl .= store_number_format($invoice_net_total);
 		$tbl .= '</b></td>';
 		$tbl .= '</tr>';
 
@@ -626,8 +578,8 @@ class GstInvoice extends MyPDF{
 		$tbl .= '</tr>';
 		$tbl .= "<tr>";
 		$tbl .= '<td colspan="3"><div style="font-size:12px;"><b>' . $this->CI->lang->line("amount_in_words") . ':</b> ';
-		$tbl .= no_to_words($tot_total_cost);
-		$tot_expl = explode('.', $tot_total_cost);
+		$tbl .= no_to_words($invoice_net_total);
+		$tot_expl = explode('.', store_number_format($invoice_net_total));
 		if (!empty($tot_expl[1])) {
 			$tbl .= " and " . no_to_words($tot_expl[1]) . " Fills";
 		}
@@ -656,27 +608,26 @@ class GstInvoice extends MyPDF{
 	            }
 	        }
 	    }
+	    $signature_box_width = $show_paid_img ? '25%' : '33.3333%';
 	    
 	    $tbl .='<tr nobr="true">';
 	    // Box 1: Receiver's Sign
-	    $tbl .= '<td style="border:1px solid #333; text-align:center; font-weight:bold; font-size:11px; width:25%; vertical-align:bottom;"><br><br><br><br><br>Receiver\'s Sign<br>___________________</td>';
+	    $tbl .= '<td style="border:1px solid #333; text-align:center; font-weight:bold; font-size:11px; width:'.$signature_box_width.'; vertical-align:bottom;"><br><br><br><br><br>Receiver\'s Sign<br>___________________</td>';
 	    
-	    // Box 2: Prepared By
-	    $tbl .= '<td style="border:1px solid #333; text-align:center; font-weight:bold; font-size:11px; width:25%; vertical-align:bottom;"><br><br><br><br><br>Prepared By<br>___________________</td>';
+        // Box 2: Paid
+        if ($show_paid_img) {
+            $tbl .= '<td class="text-center" style="border:1px solid #333; width:'.$signature_box_width.'; vertical-align:middle;"><br><img src="'.base_url('uploads/paid.png').'" width="80" height="80"></td>';
+        }
 
         // Box 3: QR Code
         if(!empty($store->qr_image)) {
-            $tbl .= '<td class="text-center" style="border:1px solid #333; width:25%; vertical-align:middle;"><br><img src="'.base_url($store->qr_image).'" width="80" height="80"></td>';
+            $tbl .= '<td class="text-center" style="border:1px solid #333; width:'.$signature_box_width.'; vertical-align:middle;"><br><img src="'.base_url($store->qr_image).'" width="80" height="80"></td>';
         } else {
-            $tbl .= '<td style="border:1px solid #333; width:25%;"></td>';
+            $tbl .= '<td style="border:1px solid #333; width:'.$signature_box_width.';"></td>';
         }
 
-        // Box 4: Paid
-        if ($show_paid_img) {
-            $tbl .= '<td class="text-center" style="border:1px solid #333; width:25%; vertical-align:middle;"><br><img src="'.base_url('uploads/paid.png').'" width="80" height="80"></td>';
-        } else {
-            $tbl .= '<td style="border:1px solid #333; width:25%;"></td>';
-        }
+        // Box 4: Prepared By
+        $tbl .= '<td style="border:1px solid #333; text-align:center; font-weight:bold; font-size:11px; width:'.$signature_box_width.'; vertical-align:bottom;"><br><br><br><br><br>Prepared By<br>___________________</td>';
         $tbl .= '</tr>';
 	    
 	    $tbl .='</tbody>
@@ -813,11 +764,11 @@ class GstInvoice extends MyPDF{
 		} else {
 			$widthArray = array(
 				'sl_no' 		=> '5',
-				'description' 	=> '40',
+				'description' 	=> '38',
 				'unit' 			=> '10',
 				'qty' 			=> '10',
 				'rate' 	        => '10',
-				'dis'           => '5',
+				'dis'           => '7',
 				'tax'           => '10',
 				'amount' 		=> '10',
 			);
@@ -945,6 +896,8 @@ class GstInvoice extends MyPDF{
 		';
 		
 		$tax_perchantage = round(store_number_format( ($tot_tax_amt / $tot_total_cost) * 100)) ;
+		$invoice_discount_amt = $tot_discount_amt + (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0);
+		$invoice_net_total = (float) $sales->grand_total;
 		
 		
 		$tbl .= '<div style="font-size:20px;line-height:20px;">&nbsp;</div>';
@@ -991,7 +944,7 @@ class GstInvoice extends MyPDF{
 		                	$tbl .= "Discount";
 		                	$tbl .='</td>';
 		                	$tbl .='<td  class="text-right" style="height:20px; font-size:12px; width: 40%;">';
-		                	$tbl .=store_number_format($tot_discount_amt);
+					$tbl .=store_number_format($invoice_discount_amt);
 		                	$tbl .='</td>';
 		                $tbl .='</tr>';
 
@@ -1029,7 +982,7 @@ class GstInvoice extends MyPDF{
 		               	$tbl .= "Net Total";
 		               	$tbl .='</td>';
 		               	$tbl .='<td class="text-right text-bold" style="height:24px; font-size:15px; width: 40%;">';
-		               	$tbl .=store_number_format($tot_total_cost);
+				$tbl .=store_number_format($invoice_net_total);
 		               	$tbl .='</td>';
 		               $tbl .='</tr>';
 
@@ -1040,8 +993,8 @@ class GstInvoice extends MyPDF{
 	$tbl .= '</tr>';
 	$tbl .= "<tr>";
 	$tbl .= '<td colspan="3"><div style="font-size:12px;"><b>'.$this->CI->lang->line("amount_in_words").':</b> ';
-		                        	$tbl .=no_to_words($tot_total_cost);
-                            		$tot_expl = explode('.', $tot_total_cost);
+				$tbl .=no_to_words($invoice_net_total);
+				$tot_expl = explode('.', store_number_format($invoice_net_total));
                             		if(!empty($tot_expl[1])){
                             		    $tbl .= " and ". no_to_words($tot_expl[1]). " Fills";
                             		}
@@ -1070,27 +1023,26 @@ class GstInvoice extends MyPDF{
 	            }
 	        }
 	    }
+	    $signature_box_width = $show_paid_img ? '25%' : '33.3333%';
 	    
 	    $tbl .='<tr nobr="true">';
 	    // Box 1: Receiver's Sign
-	    $tbl .= '<td style="border:1px solid #333; text-align:center; font-weight:bold; font-size:11px; width:25%; vertical-align:bottom;"><br><br><br><br><br>Receiver\'s Sign<br>___________________</td>';
+	    $tbl .= '<td style="border:1px solid #333; text-align:center; font-weight:bold; font-size:11px; width:'.$signature_box_width.'; vertical-align:bottom;"><br><br><br><br><br>Receiver\'s Sign<br>___________________</td>';
 	    
-	    // Box 2: Prepared By
-	    $tbl .= '<td style="border:1px solid #333; text-align:center; font-weight:bold; font-size:11px; width:25%; vertical-align:bottom;"><br><br><br><br><br>Prepared By<br>___________________</td>';
+        // Box 2: Paid
+        if ($show_paid_img) {
+            $tbl .= '<td class="text-center" style="border:1px solid #333; width:'.$signature_box_width.'; vertical-align:middle;"><br><img src="'.base_url('uploads/paid.png').'" width="80" height="80"></td>';
+        }
 
         // Box 3: QR Code
         if(!empty($store->qr_image)) {
-            $tbl .= '<td class="text-center" style="border:1px solid #333; width:25%; vertical-align:middle;"><br><img src="'.base_url($store->qr_image).'" width="80" height="80"></td>';
+            $tbl .= '<td class="text-center" style="border:1px solid #333; width:'.$signature_box_width.'; vertical-align:middle;"><br><img src="'.base_url($store->qr_image).'" width="80" height="80"></td>';
         } else {
-            $tbl .= '<td style="border:1px solid #333; width:25%;"></td>';
+            $tbl .= '<td style="border:1px solid #333; width:'.$signature_box_width.';"></td>';
         }
 
-        // Box 4: Paid
-        if ($show_paid_img) {
-            $tbl .= '<td class="text-center" style="border:1px solid #333; width:25%; vertical-align:middle;"><br><img src="'.base_url('uploads/paid.png').'" width="80" height="80"></td>';
-        } else {
-            $tbl .= '<td style="border:1px solid #333; width:25%;"></td>';
-        }
+        // Box 4: Prepared By
+        $tbl .= '<td style="border:1px solid #333; text-align:center; font-weight:bold; font-size:11px; width:'.$signature_box_width.'; vertical-align:bottom;"><br><br><br><br><br>Prepared By<br>___________________</td>';
         $tbl .= '</tr>';
 	    
 	    $tbl .='</tbody>

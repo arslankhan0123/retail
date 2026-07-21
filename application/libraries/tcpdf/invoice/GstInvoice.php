@@ -54,7 +54,7 @@ class GstInvoice extends MyPDF{
         $printableWidth = $pageWidth - 12;
         $ratio_cust = ($pageWidth < 160) ? 0.55 : 0.74;
         $w = $printableWidth * $ratio_cust;
-        $h = 32;
+        $h = 25;
         
         $salesman_name = '';
         if (!empty($sales->salesman_id)) {
@@ -128,7 +128,7 @@ class GstInvoice extends MyPDF{
         $w_customer = $printableWidth * $ratio_cust;
         $w_invoice = $printableWidth * $ratio_inv;
         $w = $w_invoice;
-        $h = 32;
+        $h = 25;
         
         $payment = $this->CI->db->from('db_salespayments')
                             ->where('sales_id',$sales->id)->order_by('id','desc')
@@ -148,8 +148,7 @@ class GstInvoice extends MyPDF{
         $titleHTML .= '<b>Invoice Date</b><br/>';
         
         $titleHTML .= '<b>'.$this->CI->lang->line('due_date').'</b><br/>';
-        $titleHTML .= '<b>Reference</b><br/>';
-        $titleHTML .= '<b>Printed on</b>';
+        $titleHTML .= '<b>Reference</b>';
         
 
         $this->writeHTMLCell($w, $h, $x = 6 + $w_customer, $y='', $titleHTML, [
@@ -176,8 +175,7 @@ class GstInvoice extends MyPDF{
 		}
         
         $invoice_details .= '<b>:</b> <span style="">'.((!empty($sales->due_date)) ? show_date($sales->due_date):'').'</span><br/>';
-        $invoice_details .= '<b>:</b> <span style="font-size:12px;">'.$sales->reference_no.'</span><br/>';
-        $invoice_details .= '<b>:</b> <span style="font-size:9px;">'.date('d-m-Y h:i:s a').'</span>';
+        $invoice_details .= '<b>:</b> <span style="font-size:12px;">'.$sales->reference_no.'</span>';
         
 
         $this->writeHTMLCell($w * 0.67, $h, $x = 6 + $w_customer + ($w * 0.33), $y='70', $invoice_details, [
@@ -314,10 +312,10 @@ class GstInvoice extends MyPDF{
 		$this->_get_bank_details();
 
 		//Set document name (footer -R)
-		$this->_set_document_name($this->CI->lang->line("invoice_number"));
+		$this->_set_document_name('Printed on');
 
 		//Sey document number (footer -R)
-		$this->_set_document_number($sales->sales_code);
+		$this->_set_document_number(date('d-m-Y h:i:s a'));
 
 		//Search Coupon Details
 		$coupon_code = $coupon_type = '';
@@ -532,10 +530,13 @@ class GstInvoice extends MyPDF{
 		$col_right = 100 - $col_left;
 
 		$tbl .= '<td colspan="3" style="border:none;padding-top:20px;width:'.$col_left.'%;">';
-		$tbl .= '<div style="font-size:12px;"><b>' . $this->CI->lang->line("termsAndConditions") . ':</b></div>';
-		$tbl .= '<div style="text-align:justify;font-size:11px;">';
-		$tbl .= html_entity_decode($sales->invoice_terms);
-		$tbl .= '</div>';
+		if(!empty($store->bank_details)){
+			$tbl .= '<div style="font-size:12px;"><span style="color:rgb(0, 0, 128);font-style:italic;font-weight:bold;">Bank Details:</span></div>';
+			$tbl .= '<div style="text-align:justify;font-size:11px;">';
+			$tbl .= nl2br($store->bank_details);
+			$tbl .= '</div>';
+		}
+		
 		$tbl .= '</td>';
 
 		// 		$tbl .= "<td>";
@@ -595,6 +596,7 @@ class GstInvoice extends MyPDF{
 			$tbl .= '</tr>';
 		}
 
+
 		$tbl .= '<tr nobr="true">
 		               	<td class="text-rightx" style="height:24px;width:60%;font-size:15px;"><b>';
 		$tbl .= "Net Total";
@@ -603,6 +605,7 @@ class GstInvoice extends MyPDF{
 		$tbl .= store_number_format($tot_total_cost);
 		$tbl .= '</b></td>';
 		$tbl .= '</tr>';
+
 		$tbl .= '</tbody>
 		        </table>';
 
@@ -619,40 +622,19 @@ class GstInvoice extends MyPDF{
 		                    </td>';
 
 		$tbl .= '<td style="border-left:none;border-right:none;"><table>';
-		// $tbl .= '<tr style="border:none;">';
-
-		//     $tbl .= '<td class="text-left" style="border:none;" style="height:18px; width: 60%;">';
-		//     $tbl .= 'Grand Total'; 
-		//     $tbl .= '</td>';
-		//     $tbl .= '<td class="text-right" style="height:18px;border:none;font-size:12px; width: 40%;">';
-		//     $tbl .=store_number_format($tot_total_cost);
-		//     $tbl .= '</td>';
-
-		// $tbl .= '</tr>';
 		$tbl .= '</table></td>';
 
 		$tbl .= "</tr>";
+
 		$tbl .= '</tbody>';
 		$tbl .= '</table>';
 
 
-		$tbl .= '<table cellpadding="8" nobr="true">
-	            <tbody>
-	                <tr nobr="true">
-	                    <td colspan="2" style="border-right:none;"><div style="font-size:10px;border-right:none;"><span style="color:rgb(0, 0, 128);font-style:italic;">RECIEVER’S NAME:</span><br><br/>';
-		$tbl .= '<hr width="150">';
-		$tbl .= '</div>
-                		</td>
-                		<td colspan="4">';
-		// Bank details removed
-		$tbl .= '
-                		</td>
-	                    <td colspan="2" style="border-left:none;vertical-align:bottom;text-align:center;min-height:60px;height:60px;"><div style="font-size:10px;"><span style="color:rgb(0, 0, 128);font-style:italic;vertical-align:bottom;"> SIGNATURE:</span><br/><br/> <hr width="120"></div>
-	                    		</td>
-	                </tr>';
+		$tbl .= '<table cellpadding="8" nobr="true" style="width:100%;">
+	            <tbody>';
 	    
+        $show_paid_img = false;
 	    if(!empty($store->qr_image)){
-	        $show_paid_img = false;
 	        $payment_query = $this->CI->db->from('db_salespayments')->where('sales_id', $sales->id)->order_by('id','desc')->get();
 	        if ($payment_query->num_rows() > 0) {
 	            $payment_row = $payment_query->first_row();
@@ -660,44 +642,41 @@ class GstInvoice extends MyPDF{
 	                $show_paid_img = true;
 	            }
 	        }
-
-	        $tbl .='<tr nobr="true">';
-	        $bank_html = !empty($store->bank_details) ? '<div style="font-size:10px;text-align:left;"><span style="color:rgb(0, 0, 128);font-style:italic;font-weight:bold;">Bank Details:</span><br/>'.nl2br($store->bank_details).'</div>' : '';
-	        if ($show_paid_img) {
-	            $tbl .= '
-	                    <td colspan="3" valign="middle">'.$bank_html.'</td>
-	                    <td colspan="2" class="text-center"><br>
-	                        <img src="'.base_url($store->qr_image).'" width="80" height="80">
-	                    </td>
-	                    <td colspan="3" class="text-center"><br>
-	                        <img src="'.base_url('uploads/paid.png').'" width="80" height="80">
-	                    </td>';
-	        } else {
-	            $tbl .= '
-	                    <td colspan="4" valign="middle">'.$bank_html.'</td>
-	                    <td colspan="4" class="text-center"><br>
-	                        <img src="'.base_url($store->qr_image).'" width="80" height="80">
-	                    </td>';
-	        }
-	        $tbl .= '</tr>';
 	    }
+	    
+	    $tbl .='<tr nobr="true">';
+	    // Box 1: Receiver's Sign
+	    $tbl .= '<td style="border:1px solid #333; text-align:center; font-weight:bold; font-size:11px; width:25%; vertical-align:bottom;"><br><br><br><br><br>Receiver\'s Sign<br>___________________</td>';
+	    
+	    // Box 2: Prepared By
+	    $tbl .= '<td style="border:1px solid #333; text-align:center; font-weight:bold; font-size:11px; width:25%; vertical-align:bottom;"><br><br><br><br><br>Prepared By<br>___________________</td>';
+
+        // Box 3: QR Code
+        if(!empty($store->qr_image)) {
+            $tbl .= '<td class="text-center" style="border:1px solid #333; width:25%; vertical-align:middle;"><br><img src="'.base_url($store->qr_image).'" width="80" height="80"></td>';
+        } else {
+            $tbl .= '<td style="border:1px solid #333; width:25%;"></td>';
+        }
+
+        // Box 4: Paid
+        if ($show_paid_img) {
+            $tbl .= '<td class="text-center" style="border:1px solid #333; width:25%; vertical-align:middle;"><br><img src="'.base_url('uploads/paid.png').'" width="80" height="80"></td>';
+        } else {
+            $tbl .= '<td style="border:1px solid #333; width:25%;"></td>';
+        }
+        $tbl .= '</tr>';
 	    
 	    $tbl .='</tbody>
 	        </table>';
 
-	    $tbl .='<br/><br/><br/><br/>
+	    $tbl .='<br/><br/>
 	        <table border="0" nobr="true" style="border:none; width:100%;">
 	            <tbody>
 	                <tr nobr="true">
-	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px; width:33%;">Receiver\'s Sign<br/><br/><br/>______________________</td>
-	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px; width:34%;">Prepared By<br/><br/><br/>______________________</td>
-	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px; width:33%;">Checked By<br/><br/><br/>______________________</td>
+	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px;"><br/><br/>Return and Exchange Policy</td>
 	                </tr>
 	                <tr nobr="true">
-	                    <td colspan="3" style="border:none; text-align:center; font-weight:bold; font-size:11px;"><br/><br/>Return and Exchange Policy</td>
-	                </tr>
-	                <tr nobr="true">
-	                    <td colspan="3" style="border:none; text-align:center; font-size:10px;">For Exchange/return of goods, the invoice is required and the goods should be in good condition.</td>
+	                    <td style="border:none; text-align:center; font-size:10px;">For Exchange/return of goods, the invoice is required and the goods should be in good condition.</td>
 	                </tr>
 	            </tbody>
 	        </table>';
@@ -747,10 +726,10 @@ class GstInvoice extends MyPDF{
 		$this->_get_bank_details();
 	
 		//Set document name (footer -R)
-		$this->_set_document_name($this->CI->lang->line("invoice_number"));
+		$this->_set_document_name('Printed on');
 		
 		//Sey document number (footer -R)
-		$this->_set_document_number($sales->sales_code);
+		$this->_set_document_number(date('d-m-Y h:i:s a'));
 
 		//Search Coupon Details
 		$coupon_code = $coupon_type = '';
@@ -965,10 +944,13 @@ class GstInvoice extends MyPDF{
 		$col_right = 100 - $col_left;
 
 		$tbl .= '<td colspan="3" style="border:none;padding-top:20px;width:'.$col_left.'%;">';
-		$tbl .= '<div style="font-size:12px;"><b>' . $this->CI->lang->line("termsAndConditions") . ':</b></div>';
-		$tbl .= '<div style="text-align:justify;font-size:11px;">';
-    	$tbl .=html_entity_decode($sales->invoice_terms);
-		$tbl .= '</div>';
+		if(!empty($store->bank_details)){
+			$tbl .= '<div style="font-size:12px;"><span style="color:rgb(0, 0, 128);font-style:italic;font-weight:bold;">Bank Details:</span></div>';
+			$tbl .= '<div style="text-align:justify;font-size:11px;">';
+			$tbl .= nl2br($store->bank_details);
+			$tbl .= '</div>';
+		}
+		
 		$tbl .= '</td>';
 		
 // 		$tbl .= "<td>";
@@ -1028,6 +1010,7 @@ class GstInvoice extends MyPDF{
 			                $tbl .='</tr>';
 		            	}
 
+
 		               $tbl .='<tr nobr="true">
 		               	<td class="text-rightx text-bold" style="height:24px;width:60%;font-size:15px;">';
 		               	$tbl .= "Net Total";
@@ -1036,6 +1019,7 @@ class GstInvoice extends MyPDF{
 		               	$tbl .=store_number_format($tot_total_cost);
 		               	$tbl .='</td>';
 		               $tbl .='</tr>';
+
 		            $tbl .='</tbody>
 		        </table>';
 		        
@@ -1052,40 +1036,19 @@ class GstInvoice extends MyPDF{
 		                    </td>';
 	
 	$tbl .= '<td style="border-left:none;border-right:none;"><table>';
-	   // $tbl .= '<tr style="border:none;">';
-	
-	   //     $tbl .= '<td class="text-left" style="border:none;" style="height:18px; width: 60%;">';
-	   //     $tbl .= 'Grand Total'; 
-	   //     $tbl .= '</td>';
-	   //     $tbl .= '<td class="text-right" style="height:18px;border:none;font-size:12px; width: 40%;">';
-	   //     $tbl .=store_number_format($tot_total_cost);
-	   //     $tbl .= '</td>';
-	    
-	   // $tbl .= '</tr>';
     $tbl .='</table></td>';
     
 	$tbl .= "</tr>";
+
 	$tbl .= '</tbody>';
 	$tbl .= '</table>';
 
 		
-	$tbl .='<table cellpadding="8" nobr="true">
-	            <tbody>
-	                <tr nobr="true">
-	                    <td colspan="2" style="border-right:none;"><div style="font-size:10px;border-right:none;"><span style="color:rgb(0, 0, 128);font-style:italic;">RECIEVER’S NAME:</span><br><br/>';
-	                            $tbl .= '<hr width="150">';
-	                    		$tbl .='</div>
-                		</td>
-                		<td colspan="4">';
-                		// Bank details removed
-                		$tbl .='
-                		</td>
-	                    <td colspan="2" style="border-left:none;vertical-align:bottom;text-align:center;min-height:60px;height:60px;"><div style="font-size:10px;"><span style="color:rgb(0, 0, 128);font-style:italic;vertical-align:bottom;"> SIGNATURE:</span><br/><br/> <hr width="120"></div>
-	                    		</td>
-	                </tr>';
-
+	$tbl .='<table cellpadding="8" nobr="true" style="width:100%;">
+	            <tbody>';
+	            
+	    $show_paid_img = false;
 	    if(!empty($store->qr_image)){
-	        $show_paid_img = false;
 	        $payment_query = $this->CI->db->from('db_salespayments')->where('sales_id', $sales->id)->order_by('id','desc')->get();
 	        if ($payment_query->num_rows() > 0) {
 	            $payment_row = $payment_query->first_row();
@@ -1093,44 +1056,41 @@ class GstInvoice extends MyPDF{
 	                $show_paid_img = true;
 	            }
 	        }
-
-	        $tbl .='<tr nobr="true">';
-	        $bank_html = !empty($store->bank_details) ? '<div style="font-size:10px;text-align:left;"><span style="color:rgb(0, 0, 128);font-style:italic;font-weight:bold;">Bank Details:</span><br/>'.nl2br($store->bank_details).'</div>' : '';
-	        if ($show_paid_img) {
-	            $tbl .= '
-	                    <td colspan="3" valign="middle">'.$bank_html.'</td>
-	                    <td colspan="2" class="text-center"><br>
-	                        <img src="'.base_url($store->qr_image).'" width="80" height="80">
-	                    </td>
-	                    <td colspan="3" class="text-center"><br>
-	                        <img src="'.base_url('uploads/paid.png').'" width="80" height="80">
-	                    </td>';
-	        } else {
-	            $tbl .= '
-	                    <td colspan="4" valign="middle">'.$bank_html.'</td>
-	                    <td colspan="4" class="text-center"><br>
-	                        <img src="'.base_url($store->qr_image).'" width="80" height="80">
-	                    </td>';
-	        }
-	        $tbl .= '</tr>';
 	    }
+	    
+	    $tbl .='<tr nobr="true">';
+	    // Box 1: Receiver's Sign
+	    $tbl .= '<td style="border:1px solid #333; text-align:center; font-weight:bold; font-size:11px; width:25%; vertical-align:bottom;"><br><br><br><br><br>Receiver\'s Sign<br>___________________</td>';
+	    
+	    // Box 2: Prepared By
+	    $tbl .= '<td style="border:1px solid #333; text-align:center; font-weight:bold; font-size:11px; width:25%; vertical-align:bottom;"><br><br><br><br><br>Prepared By<br>___________________</td>';
+
+        // Box 3: QR Code
+        if(!empty($store->qr_image)) {
+            $tbl .= '<td class="text-center" style="border:1px solid #333; width:25%; vertical-align:middle;"><br><img src="'.base_url($store->qr_image).'" width="80" height="80"></td>';
+        } else {
+            $tbl .= '<td style="border:1px solid #333; width:25%;"></td>';
+        }
+
+        // Box 4: Paid
+        if ($show_paid_img) {
+            $tbl .= '<td class="text-center" style="border:1px solid #333; width:25%; vertical-align:middle;"><br><img src="'.base_url('uploads/paid.png').'" width="80" height="80"></td>';
+        } else {
+            $tbl .= '<td style="border:1px solid #333; width:25%;"></td>';
+        }
+        $tbl .= '</tr>';
 	    
 	    $tbl .='</tbody>
 	        </table>';
 
-	    $tbl .='<br/><br/><br/><br/>
+	    $tbl .='<br/><br/>
 	        <table border="0" nobr="true" style="border:none; width:100%;">
 	            <tbody>
 	                <tr nobr="true">
-	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px; width:33%;">Receiver\'s Sign<br/><br/><br/>______________________</td>
-	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px; width:34%;">Prepared By<br/><br/><br/>______________________</td>
-	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px; width:33%;">Checked By<br/><br/><br/>______________________</td>
+	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px;"><br/><br/>Return and Exchange Policy</td>
 	                </tr>
 	                <tr nobr="true">
-	                    <td colspan="3" style="border:none; text-align:center; font-weight:bold; font-size:11px;"><br/><br/>Return and Exchange Policy</td>
-	                </tr>
-	                <tr nobr="true">
-	                    <td colspan="3" style="border:none; text-align:center; font-size:10px;">For Exchange/return of goods, the invoice is required and the goods should be in good condition.</td>
+	                    <td style="border:none; text-align:center; font-size:10px;">For Exchange/return of goods, the invoice is required and the goods should be in good condition.</td>
 	                </tr>
 	            </tbody>
 	        </table>';

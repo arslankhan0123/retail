@@ -285,6 +285,10 @@ class MyPDF extends TCPDF {
             $html .= '<span style="font-size:12px;">Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: '.$store->email.'</span><br/>';
         }
         
+        if(!empty($store->store_website)){
+            $html .= '<span style="font-size:12px;">Website &nbsp;&nbsp;: '.$store->store_website.'</span><br/>';
+        }
+        
         $html .= '</div>';
 
         $this->writeHTMLCell($w, 0, $x, $y='14', $html, $border = 0, 0, 0, true, $align, true);

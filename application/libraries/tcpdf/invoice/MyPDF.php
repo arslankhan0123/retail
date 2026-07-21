@@ -262,28 +262,32 @@ class MyPDF extends TCPDF {
         $store_name = strtoupper($store->store_name);
         $store_name = str_replace('&AMP;', '&amp;', $store_name);
 
-        $txt = '<span style="font-size:28px;font-weight:bold;">'.$store_name.'</span>';
-        $this->writeHTMLCell($w, $h='', $x, $y='14', $txt, $border = 0, 0, 0, true, $align, true);
-
-        $email_txt = '';
-        if(!empty($store->email)){
-            $email_txt = '<span style="font-size:18px;font-weight:bold;">Email: '.$store->email.'</span>';
-        }
-        $this->writeHTMLCell($w, $h='', $x, $y='25', $email_txt, $border = 0, 0, 0, true, $align, true);
-
+        $html = '<div style="text-align:'.$align.';">';
+        $html .= '<span style="font-size:22px;font-weight:bold;">'.$store_name.'</span><br/>';
+        
         $address_txt = $store->address;
         if(!empty($store->city)){
             $address_txt .= ', '.$store->city;
         }
-        $txt = '<span style="font-size:17px;">'.$address_txt.'</span>';
-        $this->writeHTMLCell($w, $h='', $x, $y='32', $txt, $border = 0, 0, 0, true, $align, true);
+        if(!empty($address_txt)){
+            $html .= '<span style="font-size:12px;">'.$address_txt.'</span><br/>';
+        }
 
         $phones = [];
         if(!empty($store->mobile)) $phones[] = $store->mobile;
         if(!empty($store->phone)) $phones[] = $store->phone;
         $phone_str = implode(", ", $phones);
-        $txt = '<span style="font-size:17px;">Mob.: '.$phone_str.'</span>';
-        $this->writeHTMLCell($w, $h='', $x, $y='39', $txt, $border = 0, 0, 0, true, $align, true);
+        if(!empty($phone_str)) {
+            $html .= '<span style="font-size:12px;">Mobile &nbsp;&nbsp;&nbsp;: '.$phone_str.'</span><br/>';
+        }
+        
+        if(!empty($store->email)){
+            $html .= '<span style="font-size:12px;">Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: '.$store->email.'</span><br/>';
+        }
+        
+        $html .= '</div>';
+
+        $this->writeHTMLCell($w, 0, $x, $y='14', $html, $border = 0, 0, 0, true, $align, true);
 
         return $this;
     }

@@ -229,8 +229,8 @@ class MyPDF extends TCPDF {
         }
         
         $pageWidth = $this->getPageWidth();
-        $logo_w = ($pageWidth < 160) ? 25 : 35;
-        $logo_x = ($pageWidth < 160) ? 6 : 15.5;
+        $logo_w = ($pageWidth < 160) ? 18 : 27;
+        $logo_x = ($pageWidth < 160) ? 6 : 6;
 
         $this->Image($image_file, $x = $logo_x, $y = 12, $logo_w, '', '', '', 'T', false, 300, '', false, false, $border =0, false, false, false);
         return $this;
@@ -248,11 +248,11 @@ class MyPDF extends TCPDF {
         $has_logo = (!empty($store->store_logo) && file_exists($store->store_logo));
 
         if ($has_logo) {
-            $logo_w = ($pageWidth < 160) ? 25 : 35;
-            $logo_x = ($pageWidth < 160) ? 6 : 15.5;
+            $logo_w = ($pageWidth < 160) ? 18 : 27;
+            $logo_x = ($pageWidth < 160) ? 6 : 6;
             $x = $logo_x + $logo_w + 5; // Start company details after the logo
             $w = $pageWidth - $x - 10;
-            $align = 'L'; // Left-align next to the logo
+            $align = 'L'; // Keep the company block left-aligned beside the logo
         } else {
             $x = 0;
             $w = $pageWidth;
@@ -262,15 +262,16 @@ class MyPDF extends TCPDF {
         $store_name = strtoupper($store->store_name);
         $store_name = str_replace('&AMP;', '&amp;', $store_name);
 
-        $html = '<div style="text-align:'.$align.';">';
-        $html .= '<span style="font-size:22px;font-weight:bold;">'.$store_name.'</span><br/>';
+        $html = '<table border="0" cellpadding="0" cellspacing="0" style="width:100%; line-height:1;">';
+        $html .= '<tr><td colspan="2" style="text-align:left;"><span style="font-size:22px;font-weight:bold;">'.$store_name.'</span></td></tr>';
         
         $address_txt = $store->address;
         if(!empty($store->city)){
             $address_txt .= ', '.$store->city;
         }
         if(!empty($address_txt)){
-            $html .= '<span style="font-size:12px;">'.$address_txt.'</span><br/>';
+            $html .= '<tr><td colspan="2" style="font-size: 5px;">&nbsp;</td></tr>';
+            $html .= '<tr><td colspan="2" style="text-align:left;"><span style="font-size:12px;">'.$address_txt.'</span></td></tr>';
         }
 
         $phones = [];
@@ -278,20 +279,22 @@ class MyPDF extends TCPDF {
         if(!empty($store->phone)) $phones[] = $store->phone;
         $phone_str = implode(", ", $phones);
         if(!empty($phone_str)) {
-            $html .= '<span style="font-size:12px;">Mobile &nbsp;&nbsp;&nbsp;: '.$phone_str.'</span><br/>';
+            $html .= '<tr><td style="width:9%; text-align:left; font-size:12px;">Mobile</td><td style="width:91%; text-align:left; font-size:12px;">: '.$phone_str.'</td></tr>';
         }
         
         if(!empty($store->email)){
-            $html .= '<span style="font-size:12px;">Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: '.$store->email.'</span><br/>';
+            $html .= '<tr><td style="width:9%; font-size: 5px;">&nbsp;</td><td style="width:91%; font-size: 5px;">&nbsp;</td></tr>';
+            $html .= '<tr><td style="width:9%; text-align:left; font-size:12px;">Email</td><td style="width:91%; text-align:left; font-size:12px;">: '.$store->email.'</td></tr>';
         }
         
         if(!empty($store->store_website)){
-            $html .= '<span style="font-size:12px;">Website &nbsp;&nbsp;: '.$store->store_website.'</span><br/>';
+            $html .= '<tr><td style="width:9%; font-size: 5px;">&nbsp;</td><td style="width:91%; font-size: 5px;">&nbsp;</td></tr>';
+            $html .= '<tr><td style="width:9%; text-align:left; font-size:12px;">Website</td><td style="width:91%; text-align:left; font-size:12px;">: '.$store->store_website.'</td></tr>';
         }
         
-        $html .= '</div>';
+        $html .= '</table>';
 
-        $this->writeHTMLCell($w, 0, $x, $y='14', $html, $border = 0, 0, 0, true, $align, true);
+        $this->writeHTMLCell($w, 0, $x, $y='12', $html, $border = 0, 0, 0, true, $align, true);
 
         return $this;
     }
@@ -447,12 +450,13 @@ class MyPDF extends TCPDF {
     public function Footer() {
         // Position at 15 mm from bottom
         $this->setY(-8);
-        // Set font
         $this->setFont($this->get_font_name(), 'I', 8);
-        // Page number
-        $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
-
-        $this->Cell(0, 10, $this->_document_name.' : '.$this->_document_number, 0, false, 'R', 0, '', 0, false, 'T', 'M');
+        // Printed on (Left side)
+        $this->Cell(0, 10, $this->_document_name.' : '.$this->_document_number, 0, false, 'L', 0, '', 0, false, 'T', 'M');
+        
+        // Page number (Right side)
+        $this->setX($this->lMargin);
+        $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'T', 'M');
 
         //Last page
         if($this->last_page_flag){
@@ -492,7 +496,7 @@ class MyPDF extends TCPDF {
         $this->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
         // set margins
-         $this->setMargins($PDF_MARGIN_LEFT=5, $PDF_MARGIN_TOP=52, $PDF_MARGIN_RIGHT=5);
+         $this->setMargins($PDF_MARGIN_LEFT=5, $PDF_MARGIN_TOP=40, $PDF_MARGIN_RIGHT=5);
          $this->setHeaderMargin(PDF_MARGIN_HEADER);
         $this->setFooterMargin(PDF_MARGIN_FOOTER);
 

@@ -22,3 +22,13 @@ ERROR - 2026-07-21 16:06:13 --> 404 Page Not Found: Uploads/store
 ERROR - 2026-07-21 16:06:32 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-07-21 16:06:35 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-07-21 16:06:55 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-21 16:27:10 --> 404 Page Not Found: Uploads/store
+ERROR - 2026-07-21 16:27:23 --> 404 Page Not Found: Uploads/store
+ERROR - 2026-07-21 16:29:29 --> 404 Page Not Found: Uploads/store
+ERROR - 2026-07-21 16:29:30 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-21 16:29:52 --> 404 Page Not Found: Uploads/store
+ERROR - 2026-07-21 16:29:52 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-21 16:31:11 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-21 18:08:26 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-21 18:32:52 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-21 18:35:29 --> 404 Page Not Found: Faviconico/index

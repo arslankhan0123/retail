@@ -78,7 +78,7 @@ class GstInvoice extends MyPDF{
         $this->setFont($this->get_font_name(), '', 11);
         $this->setFillColor(255, 255, 255);
 
-        $this->writeHTMLCell($w, $h, $x ='6', $y='70', $customer_details, 1, 0, 1, true, 'L', true);
+        $this->writeHTMLCell($w, $h, $x ='6', $y='57', $customer_details, 1, 0, 1, true, 'L', true);
         
         return $this;
     } 
@@ -132,7 +132,7 @@ class GstInvoice extends MyPDF{
         $this->setCellPaddings(2,1,1,1);
         $this->setFont($this->get_font_name(), '', 11);
         $this->setFillColor(255, 255, 255);
-        $this->writeHTMLCell($w, $h, $x = 6 + $w_customer, $y='70', $invoice_details, 1, 1, 1, true, 'L', true);
+        $this->writeHTMLCell($w, $h, $x = 6 + $w_customer, $y='57', $invoice_details, 1, 1, 1, true, 'L', true);
             
         return $this;
     }
@@ -210,13 +210,7 @@ class GstInvoice extends MyPDF{
         $this->setFont($this->get_font_name(), '', 15);
         $this->setFillColor(255, 255, 255);
 
-        $this->writeHTMLCell($w, $h, $x ='6', $y='52', $html, 1, 0, 1, true, 'C', true);
-
-        // Place pagination independently so it sits at the extreme right of the title box.
-        $pageNumber = 'Page ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages();
-        $this->setFont($this->get_font_name(), '', 14);
-        $this->setXY($pageWidth - 32, 56);
-        $this->Cell(26, 8, $pageNumber, 0, 0, 'R', 0, '', 0, false, 'T', 'M');
+        $this->writeHTMLCell($w, $h, $x ='6', $y='40', $html, 1, 0, 1, true, 'C', true);
         
         return $this;
     }
@@ -226,7 +220,13 @@ class GstInvoice extends MyPDF{
     {
         $this->setY(-8);
         $this->setFont($this->get_font_name(), 'I', 8);
-        $this->Cell(0, 10, $this->_document_name.' : '.$this->_document_number, 0, false, 'R', 0, '', 0, false, 'T', 'M');
+        
+        // Printed on (Left side)
+        $this->Cell(0, 10, $this->_document_name.' : '.$this->_document_number, 0, false, 'L', 0, '', 0, false, 'T', 'M');
+        
+        // Page number (Right side)
+        $this->setX($this->lMargin);
+        $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'T', 'M');
     }
 
    
@@ -309,12 +309,18 @@ class GstInvoice extends MyPDF{
 
 		$tbl = '
 		<style type="text/css">
-			table, td, th {
+			table {
 			    border-collapse: collapse;
-			    border: 0.5px solid #000000;
-			    
 			}
-			
+			#print, .totals-table, .signatures-table {
+			    border: 0.5px solid #000000;
+			}
+			th {
+			    border: 0.5px solid #000000;
+			}
+			.totals-table td {
+			    border: 0.5px solid #000000;
+			}
 			table + table, table + table tr:first-child th, table + table tr:first-child td {
 			    border-top: 0;
 			}
@@ -331,29 +337,33 @@ class GstInvoice extends MyPDF{
 				background-color: #e4eaff;
 			}
 			
+			#print tbody td {
+				border-top: none;
+				border-bottom: none;
+			}
 		</style>
 		<table id="print" >';
 
 		$pageWidth = $this->getPageWidth();
 		if ($pageWidth < 160) {
 			$widthArray = array(
-				'sl_no' 		=> '5',
-				'description' 	=> '32',
-				'unit' 			=> '9',
-				'qty' 			=> '9',
-				'rate' 	        => '11',
-				'dis'           => '8',
+				'sl_no' 		=> '4',
+				'description' 	=> '49',
+				'unit' 			=> '5',
+				'qty' 			=> '5',
+				'rate' 	        => '8',
+				'dis'           => '6',
 				'tax'           => '12',
-				'amount' 		=> '14',
+				'amount' 		=> '11',
 			);
 		} else {
 			$widthArray = array(
-				'sl_no' 		=> '5',
-				'description' 	=> '38',
-				'unit' 			=> '10',
-				'qty' 			=> '10',
-				'rate' 	        => '10',
-				'dis'           => '7',
+				'sl_no' 		=> '4',
+				'description' 	=> '52',
+				'unit' 			=> '5',
+				'qty' 			=> '6',
+				'rate' 	        => '7',
+				'dis'           => '6',
 				'tax'           => '10',
 				'amount' 		=> '10',
 			);
@@ -385,8 +395,8 @@ class GstInvoice extends MyPDF{
 			        <th colspan="1" style="text-align:center;width: ' . $colW['qty'] . '">' . $this->CI->lang->line("qty") . '</th>
 			        <th colspan="1" class="text-center" style="width: ' . $colW['rate'] . '">Rate</th>
 					 <th colspan="1" class="text-center" style="width: ' . $colW['dis'] . '">Dis </th>
-			        <th colspan="1" class="text-center" style="width: ' . $colW['tax'] . '">Tax(5%) (<img src="'.base_url('uploads/logo-black.png').'" width="8" height="8" align="top">)</th>
-			        <th colspan="1" class="text-right" style="width: ' . $colW['amount'] . '">' . $this->CI->lang->line("amount") . ' (<img src="'.base_url('uploads/logo-black.png').'" width="8" height="8" align="top">)</th>
+			        <th colspan="1" class="text-center" style="width: ' . $colW['tax'] . '"><nobr>Tax(5%)&nbsp;(<img src="'.base_url('uploads/logo-black.png').'" width="8" height="8" align="top">)</nobr></th>
+			        <th colspan="1" class="text-right" style="width: ' . $colW['amount'] . '"><nobr>' . $this->CI->lang->line("amount") . '&nbsp;(<img src="'.base_url('uploads/logo-black.png').'" width="8" height="8" align="top">)</nobr></th>
 		        </tr>
 		    </thead>
 		    <tbody>';
@@ -431,19 +441,19 @@ class GstInvoice extends MyPDF{
 
 			$tax_type = ($res2->tax_type == 'Exclusive') ? 'Exc.' : 'Inc.';
 			$tbl .= '<tr style="" nobr="true" style="width: 100%;">';
-			$tbl .= '<td colspan="1" style="text-align:center;width: ' . $colW['sl_no'] . ';font-size:12px;">' . $i++ . '</td>';
-			$tbl .= '<td colspan="1" style="width: ' . $colW['description'] . ';font-size:12px;" >';
-			$tbl .= $res2->item_name;
+			$tbl .= '<td colspan="1" style="text-align:center;width: ' . $colW['sl_no'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . $i++ . '</td>';
+			$tbl .= '<td colspan="1" style="width: ' . $colW['description'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;" >';
+			$tbl .= '<nobr>' . $res2->item_name . '</nobr>';
 			$tbl .= (!empty($res2->description)) ? "<br><i>[" . nl2br($res2->description) . "]</i>" : '';
 			$tbl .= '</td>';
-			$tbl .= '<td colspan="1" style="width: ' . $colW['unit'] . '">' . $res2->unit_name . '</td>';
+			$tbl .= '<td colspan="1" style="width: ' . $colW['unit'] . ';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . $res2->unit_name . '</td>';
 
-			$tbl .= '<td colspan="1" style="text-align:center;width: ' . $colW['qty'] . ';font-size:12px;">' . format_qty($res2->sales_qty) . '</td>';
+			$tbl .= '<td colspan="1" style="text-align:center;width: ' . $colW['qty'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . format_qty($res2->sales_qty) . '</td>';
 
-			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['rate'] . ';font-size:12px;">' . store_number_format($res2->price_per_unit) . '</td>';
-			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['dis'] . ';font-size:12px;">' . store_number_format($res2->discount_amt) . '</td>';
-			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['tax'] . ';font-size:12px;">' . store_number_format($res2->tax_amt) . '</td>';
-			$tbl .= '<td colspan="1" class="text-right" style="width: ' . $colW['amount'] . ';font-size:12px;">' . (store_number_format($res2->total_cost)) . '</td>';
+			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['rate'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . store_number_format($res2->price_per_unit) . '</td>';
+			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['dis'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . store_number_format($res2->discount_amt) . '</td>';
+			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['tax'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . store_number_format($res2->tax_amt) . '</td>';
+			$tbl .= '<td colspan="1" class="text-right" style="width: ' . $colW['amount'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . (store_number_format($res2->total_cost)) . '</td>';
 
 			$tbl .= '</tr>';
 
@@ -459,20 +469,19 @@ class GstInvoice extends MyPDF{
 
 		$mCount = count($q2->result());
 
-		// Padding to minimum of 15 rows to fill the empty space nicely without overflowing to page 2
-		if ($mCount < 20) {
-			for ($i = $mCount; $i < 20; $i++) {
-				$tbl .= '<tr style="" nobr="true" style="width: 100%;">';
-				$tbl .= '<td colspan="1" style="text-align:center;width: ' . $colW['sl_no'] . ';font-size:12px;">' . ($i + 1) . '</td>';
-				$tbl .= '<td colspan="1" style="width: ' . $colW['description'] . ';font-size:12px;">&nbsp;</td>';
-				$tbl .= '<td colspan="1" style="width: ' . $colW['unit'] . '">&nbsp;</td>';
-				$tbl .= '<td colspan="1" style="text-align:center;width: ' . $colW['qty'] . ';font-size:12px;">&nbsp;</td>';
-				$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['rate'] . ';font-size:12px;">&nbsp;</td>';
-				$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['dis'] . ';font-size:12px;">&nbsp;</td>';
-				$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['tax'] . ';font-size:12px;">&nbsp;</td>';
-				$tbl .= '<td colspan="1" class="text-right" style="width: ' . $colW['amount'] . ';font-size:12px;">&nbsp;</td>';
-				$tbl .= '</tr>';
-			}
+		// Use one tall spacer row so only column lines appear in the blank area.
+		if ($mCount < 25) {
+			$blank_lines = str_repeat('<br/>', 25 - $mCount);
+			$tbl .= '<tr nobr="true">';
+			$tbl .= '<td style="width: ' . $colW['sl_no'] . ';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">' . $blank_lines . '</td>';
+			$tbl .= '<td style="width: ' . $colW['description'] . ';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+			$tbl .= '<td style="width: ' . $colW['unit'] . ';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+			$tbl .= '<td style="width: ' . $colW['qty'] . ';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+			$tbl .= '<td style="width: ' . $colW['rate'] . ';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+			$tbl .= '<td style="width: ' . $colW['dis'] . ';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+			$tbl .= '<td style="width: ' . $colW['tax'] . ';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+			$tbl .= '<td style="width: ' . $colW['amount'] . ';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+			$tbl .= '</tr>';
 		}
 
 		$tbl .= '</tbody>
@@ -486,116 +495,68 @@ class GstInvoice extends MyPDF{
 
 
 		$tbl .= '<div style="font-size:20px;line-height:20px;">&nbsp;</div>';
-		$tbl .= '<table>';
+		$tbl .= '<table class="totals-table">';
 		$tbl .= '<tbody>';
 
 		$tbl .= '<tr>';
 
 		$col_left = ($pageWidth < 160) ? 60 : 72;
 		$col_right = 100 - $col_left;
+		$col_r_left = $col_right * 0.6;
+		$col_r_right = $col_right * 0.4;
 
-		$tbl .= '<td colspan="3" style="border:none;padding-top:20px;width:'.$col_left.'%;">';
+		$tbl .= '<tr>';
+		// Bank Details spans 3 rows
+		$tbl .= '<td rowspan="3" colspan="3" style="border:none;border-bottom:none;padding-top:20px;width:'.$col_left.'%;">';
 		if(!empty($store->bank_details)){
-			$tbl .= '<div style="font-size:12px;"><span style="color:rgb(0, 0, 128);font-style:italic;font-weight:bold;">Bank Details:</span></div>';
-			$tbl .= '<div style="text-align:justify;font-size:11px;">';
-			$tbl .= nl2br($store->bank_details);
-			$tbl .= '</div>';
+			$tbl .= '<span style="font-size:12px;color:rgb(0, 0, 128);font-style:italic;font-weight:bold;">Bank Details:</span><br/>';
+			$tbl .= '<span style="text-align:justify;font-size:11px;line-height:1.2;">' . nl2br($store->bank_details) . '</span>';
 		}
-		
 		$tbl .= '</td>';
 
-		// 		$tbl .= "<td>";
-		// 		$tbl .= "<b>Note</b>: " . $sales->sales_note;
-		// 		$tbl .= "</td>";
-
-		$tbl .= '<td style="border:none;width:'.$col_right.'%;">';
-
-
-		$tbl .= '<table>
-		            <tbody>';
-		//Total Before Tax
-		$tbl .= '<tr nobr="true">
-		                	<td class="text-left" style="height:18px; width: 60%;">';
-		$tbl .= "SubTotal";
-		$tbl .= '</td>';
-		$tbl .= '<td style="height:22px;;font-size:12px; width: 40%;" class="text-right">';
+		// Row 1 Totals: SubTotal
+		$tbl .= '<td class="text-left" style="height:22px; width: '.$col_r_left.'%; font-size:15px; border-bottom:0.5px solid #000000; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">SubTotal</td>';
+		$tbl .= '<td style="height:22px; font-size:15px; width: '.$col_r_right.'%; border-bottom:0.5px solid #000000; border-left:0.5px solid #000000; border-right:0.5px solid #000000;" class="text-right">';
 		$tbl .= store_number_format($sub_total);
 		$tbl .= '</td>';
 		$tbl .= '</tr>';
 
-		//Tax Total
-		$tbl .= '<tr nobr="true">
-		                	<td class="text-left" style="height:22px; width: 60%;">';
-		$tbl .= "Discount";
-		$tbl .= '</td>';
-		$tbl .= '<td  class="text-right" style="height:20px; font-size:12px; width: 40%;">';
+		// Row 2 Totals: Discount
+		$tbl .= '<tr>';
+		$tbl .= '<td class="text-left" style="height:22px; width: '.$col_r_left.'%; font-size:15px; border-bottom:0.5px solid #000000; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">Discount</td>';
+		$tbl .= '<td class="text-right" style="height:22px; font-size:15px; width: '.$col_r_right.'%; border-bottom:0.5px solid #000000; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">';
 		$tbl .= store_number_format($invoice_discount_amt);
 		$tbl .= '</td>';
 		$tbl .= '</tr>';
 
-		//Tax Total
-		$tbl .= '<tr nobr="true">
-		                <td class="text-left" style="height:22px; width: 60%;">';
-		$tbl .= "VAT (5%)";
-		$tbl .= '</td>';
-		$tbl .= '<td class="text-right" style="height:18px; font-size:12px; width: 40%;">';
+		// Row 3 Totals: VAT
+		$tbl .= '<tr>';
+		$tbl .= '<td class="text-left" style="height:22px; width: '.$col_r_left.'%; font-size:15px; border-bottom:none; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">VAT (5%)</td>';
+		$tbl .= '<td class="text-right" style="height:22px; font-size:15px; width: '.$col_r_right.'%; border-bottom:none; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">';
 		$tbl .= store_number_format($tot_tax_amt);
 		$tbl .= '</td>';
 		$tbl .= '</tr>';
 
-		//Coupon
-		if (!empty($coupon_code)) {
-			$tbl .= '<tr nobr="true">
-			                	<td colspan="4" style="width:' . ($colWidthSize['sl_no'] + $colWidthSize['description'] + $colWidthSize['hsn'] + $colWidthSize['gst_rate'] + $colWidthSize['qty']) . '%">';
-			$tbl .= "<b>" . $this->CI->lang->line("couponCode") . "</b>: " . getTruncatedCCNumber($coupon_code);
-			$tbl .= '</td>
-
-			                	<td colspan="3" class="text-right" style="width:' . ($colWidthSize['before_tax'] + $colWidthSize['discount']) . '%">';
-			$tbl .= $this->CI->lang->line("couponDiscount") . ":";
-			$tbl .= ($coupon_type == 'Percentage') ? $coupon_value . '%' : '[Fixed]';
-			$tbl .= '</td>
-
-			                	<td colspan="1" class="text-right" style="width:' . ($colWidthSize['amount']) . '%">';
-			$tbl .= store_number_format($sales->coupon_amt);
-			$tbl .= '</td>';
-			$tbl .= '</tr>';
-		}
-
-
-		$tbl .= '<tr nobr="true">
-		               	<td class="text-rightx" style="height:24px;width:60%;font-size:15px;"><b>';
-		$tbl .= "Net Total";
-		$tbl .= '</b></td>';
-		$tbl .= '<td class="text-right" style="height:24px; font-size:15px; width: 40%;"><b>';
-		$tbl .= store_number_format($invoice_net_total);
-		$tbl .= '</b></td>';
-		$tbl .= '</tr>';
-
-		$tbl .= '</tbody>
-		        </table>';
-
-		$tbl .= '</td>';
-		$tbl .= '</tr>';
-		$tbl .= "<tr>";
-		$tbl .= '<td colspan="3"><div style="font-size:12px;"><b>' . $this->CI->lang->line("amount_in_words") . ':</b> ';
+		// Row 4: Amount in Words + Net Total
+		$tbl .= '<tr>';
+		$tbl .= '<td colspan="3" style="width:'.$col_left.'%;border-top:none;"><div style="font-size:12px;"><b>' . $this->CI->lang->line("amount_in_words") . ':</b> ';
 		$tbl .= no_to_words($invoice_net_total);
 		$tot_expl = explode('.', store_number_format($invoice_net_total));
 		if (!empty($tot_expl[1])) {
 			$tbl .= " and " . no_to_words($tot_expl[1]) . " Fills";
 		}
-		$tbl .= '</div>
-		                    </td>';
+		$tbl .= '</div>';
+		$tbl .= '</td>';
 
-		$tbl .= '<td style="border-left:none;border-right:none;"><table>';
-		$tbl .= '</table></td>';
-
-		$tbl .= "</tr>";
+		$tbl .= '<td class="text-left text-bold" style="width: '.$col_r_left.'%; height:24px; font-size:15px; border-top:none; border-bottom:0.5px solid #000000; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">Net Total</td>';
+		$tbl .= '<td class="text-right text-bold" style="width: '.$col_r_right.'%; height:24px; font-size:15px; border-top:none; border-bottom:0.5px solid #000000; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">' . store_number_format($invoice_net_total) . '</td>';
+		$tbl .= '</tr>';
 
 		$tbl .= '</tbody>';
 		$tbl .= '</table>';
 
 
-		$tbl .= '<table cellpadding="8" nobr="true" style="width:100%;">
+		$tbl .= '<table cellpadding="8" class="signatures-table" nobr="true" style="width:100%;">
 	            <tbody>';
 	    
         $show_paid_img = false;
@@ -724,12 +685,18 @@ class GstInvoice extends MyPDF{
 		
 		$tbl = '
 		<style type="text/css">
-			table, td, th {
+			table {
 			    border-collapse: collapse;
-			    border: 0.5px solid #000000;
-			    
 			}
-			
+			#print, .totals-table, .signatures-table {
+			    border: 0.5px solid #000000;
+			}
+			th {
+			    border: 0.5px solid #000000;
+			}
+			.totals-table td {
+			    border: 0.5px solid #000000;
+			}
 			table + table, table + table tr:first-child th, table + table tr:first-child td {
 			    border-top: 0;
 			}
@@ -745,30 +712,33 @@ class GstInvoice extends MyPDF{
 			.bg-light-blue{
 				background-color: #e4eaff;
 			}
-			
+			#print tbody td {
+				border-top: none;
+				border-bottom: none;
+			}
 		</style>
 		<table id="print" >';
 
 		$pageWidth = $this->getPageWidth();
 		if ($pageWidth < 160) {
 			$widthArray = array(
-				'sl_no' 		=> '5',
-				'description' 	=> '32',
-				'unit' 			=> '9',
-				'qty' 			=> '9',
-				'rate' 	        => '11',
-				'dis'           => '8',
+				'sl_no' 		=> '4',
+				'description' 	=> '49',
+				'unit' 			=> '5',
+				'qty' 			=> '5',
+				'rate' 	        => '8',
+				'dis'           => '6',
 				'tax'           => '12',
-				'amount' 		=> '14',
+				'amount' 		=> '11',
 			);
 		} else {
 			$widthArray = array(
-				'sl_no' 		=> '5',
-				'description' 	=> '38',
-				'unit' 			=> '10',
-				'qty' 			=> '10',
-				'rate' 	        => '10',
-				'dis'           => '7',
+				'sl_no' 		=> '4',
+				'description' 	=> '52',
+				'unit' 			=> '5',
+				'qty' 			=> '6',
+				'rate' 	        => '7',
+				'dis'           => '6',
 				'tax'           => '10',
 				'amount' 		=> '10',
 			);
@@ -800,8 +770,8 @@ class GstInvoice extends MyPDF{
 			        <th colspan="1" style="text-align:center;width: '.$colW['qty'].'">'.$this->CI->lang->line("qty").'</th>
 			        <th colspan="1" class="text-center" style="width: '.$colW['rate'].'">Rate</th>
 					 <th colspan="1" class="text-center" style="width: '.$colW['dis'].'">Dis </th>
-			        <th colspan="1" class="text-center" style="width: '.$colW['tax'].'">Tax(5%) (<img src="'.base_url('uploads/logo-black.png').'" width="8" height="8" align="top">)</th>
-			        <th colspan="1" class="text-right" style="width: '.$colW['amount'].'">'.$this->CI->lang->line("amount").' (<img src="'.base_url('uploads/logo-black.png').'" width="8" height="8" align="top">)</th>
+			        <th colspan="1" class="text-center" style="width: '.$colW['tax'].'"><nobr>Tax(5%)&nbsp;(<img src="'.base_url('uploads/logo-black.png').'" width="8" height="8" align="top">)</nobr></th>
+			        <th colspan="1" class="text-right" style="width: '.$colW['amount'].'"><nobr>'.$this->CI->lang->line("amount").'&nbsp;(<img src="'.base_url('uploads/logo-black.png').'" width="8" height="8" align="top">)</nobr></th>
 		        </tr>
 		    </thead>
 		    <tbody>';
@@ -845,20 +815,20 @@ class GstInvoice extends MyPDF{
                   $tot_cost_before_tax=$res2->total_cost;//$before_tax * $res2->sales_qty;
 
                  $tax_type = ($res2->tax_type=='Exclusive') ? 'Exc.' : 'Inc.';
-                 $tbl .='<tr style="" nobr="true" style="width: 100%;">';
-				      $tbl .='<td colspan="1" style="text-align:center;width: '.$colW['sl_no'].';font-size:12px;">'.$i++.'</td>';
-				      $tbl .='<td colspan="1" style="width: '.$colW['description'].';font-size:12px;" >';
-				      $tbl .= $res2->item_name;
+                  $tbl .='<tr style="" nobr="true" style="width: 100%;">';
+				      $tbl .='<td colspan="1" style="text-align:center;width: '.$colW['sl_no'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.$i++.'</td>';
+				      $tbl .= '<td colspan="1" style="width: '.$colW['description'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;" >';
+				      $tbl .= '<nobr>' . $res2->item_name . '</nobr>';
 				      $tbl .= (!empty($res2->description)) ? "<br><i>[".nl2br($res2->description)."]</i>" : '';
 				      $tbl .= '</td>';
-				      $tbl .='<td colspan="1" style="width: '.$colW['unit'].'">'.$res2->unit_name.'</td>';
+				      $tbl .='<td colspan="1" style="width: '.$colW['unit'].';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.$res2->unit_name.'</td>';
 				      
-				      $tbl .='<td colspan="1" style="text-align:center;width: '.$colW['qty'].';font-size:12px;">'.format_qty($res2->sales_qty).'</td>';
+				      $tbl .='<td colspan="1" style="text-align:center;width: '.$colW['qty'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.format_qty($res2->sales_qty).'</td>';
 
-				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['rate'].';font-size:12px;">'.store_number_format($res2->price_per_unit).'</td>';
-				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['dis'].';font-size:12px;">'.store_number_format($res2->discount_amt).'</td>';
-				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['tax'].';font-size:12px;">'.store_number_format($res2->tax_amt).'</td>';
-				      $tbl .='<td colspan="1" class="text-right" style="width: '.$colW['amount'].';font-size:12px;">'.(store_number_format($res2->total_cost)).'</td>';
+				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['rate'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.store_number_format($res2->price_per_unit).'</td>';
+				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['dis'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.store_number_format($res2->discount_amt).'</td>';
+				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['tax'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.store_number_format($res2->tax_amt).'</td>';
+				      $tbl .='<td colspan="1" class="text-right" style="width: '.$colW['amount'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.(store_number_format($res2->total_cost)).'</td>';
 				      
 		          $tbl .='</tr>';
 
@@ -874,20 +844,19 @@ class GstInvoice extends MyPDF{
               
               $mCount = count($q2->result());
               
-            // Padding to minimum of 15 rows to fill the empty space nicely without overflowing to page 2
-            if($mCount < 20){
-				for ($i = $mCount; $i < 20; $i++) {
-					$tbl .='<tr style="" nobr="true" style="width: 100%;">';
-					$tbl .='<td colspan="1" style="text-align:center;width: '.$colW['sl_no'].';font-size:12px;">'.($i+1).'</td>';
-					$tbl .='<td colspan="1" style="width: '.$colW['description'].';font-size:12px;">&nbsp;</td>';
-					$tbl .='<td colspan="1" style="width: '.$colW['unit'].'">&nbsp;</td>';
-					$tbl .='<td colspan="1" style="text-align:center;width: '.$colW['qty'].';font-size:12px;">&nbsp;</td>';
-					$tbl .='<td colspan="1" class="text-center" style="width: '.$colW['rate'].';font-size:12px;">&nbsp;</td>';
-					$tbl .='<td colspan="1" class="text-center" style="width: '.$colW['dis'].';font-size:12px;">&nbsp;</td>';
-					$tbl .='<td colspan="1" class="text-center" style="width: '.$colW['tax'].';font-size:12px;">&nbsp;</td>';
-					$tbl .='<td colspan="1" class="text-right" style="width: '.$colW['amount'].';font-size:12px;">&nbsp;</td>';
-					$tbl .='</tr>';
-				}
+            // Use one tall spacer row so only column lines appear in the blank area.
+            if($mCount < 25){
+				$blank_lines = str_repeat('<br/>', 25 - $mCount);
+				$tbl .='<tr nobr="true">';
+				$tbl .='<td style="width: '.$colW['sl_no'].';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">'.$blank_lines.'</td>';
+				$tbl .='<td style="width: '.$colW['description'].';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+				$tbl .='<td style="width: '.$colW['unit'].';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+				$tbl .='<td style="width: '.$colW['qty'].';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+				$tbl .='<td style="width: '.$colW['rate'].';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+				$tbl .='<td style="width: '.$colW['dis'].';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+				$tbl .='<td style="width: '.$colW['tax'].';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+				$tbl .='<td style="width: '.$colW['amount'].';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
+				$tbl .='</tr>';
             }
 
 		    $tbl .='</tbody>
@@ -901,116 +870,66 @@ class GstInvoice extends MyPDF{
 		
 		
 		$tbl .= '<div style="font-size:20px;line-height:20px;">&nbsp;</div>';
-		$tbl .= '<table>';
+		$tbl .= '<table class="totals-table">';
 		$tbl .= '<tbody>';
-		
-		$tbl .= '<tr>';
 		
 		$col_left = ($pageWidth < 160) ? 60 : 72;
 		$col_right = 100 - $col_left;
+		$col_r_left = $col_right * 0.6;
+		$col_r_right = $col_right * 0.4;
 
-		$tbl .= '<td colspan="3" style="border:none;padding-top:20px;width:'.$col_left.'%;">';
+		$tbl .= '<tr>';
+		// Bank Details spans 3 rows
+		$tbl .= '<td rowspan="3" colspan="3" style="border:none;border-bottom:none;padding-top:20px;width:'.$col_left.'%;">';
 		if(!empty($store->bank_details)){
-			$tbl .= '<div style="font-size:12px;"><span style="color:rgb(0, 0, 128);font-style:italic;font-weight:bold;">Bank Details:</span></div>';
-			$tbl .= '<div style="text-align:justify;font-size:11px;">';
-			$tbl .= nl2br($store->bank_details);
-			$tbl .= '</div>';
+			$tbl .= '<span style="font-size:12px;color:rgb(0, 0, 128);font-style:italic;font-weight:bold;">Bank Details:</span><br/>';
+			$tbl .= '<span style="text-align:justify;font-size:11px;line-height:1.2;">' . nl2br($store->bank_details) . '</span>';
 		}
-		
 		$tbl .= '</td>';
-		
-// 		$tbl .= "<td>";
-// 		$tbl .= "<b>Note</b>: " . $sales->sales_note;
-// 		$tbl .= "</td>";
-		
-		$tbl .= '<td style="border:none;width:'.$col_right.'%;">';
 
+		// Row 1 Totals: SubTotal
+		$tbl .= '<td class="text-left" style="height:22px; width: '.$col_r_left.'%; font-size:13px; border-bottom:0.5px solid #000000; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">SubTotal</td>';
+		$tbl .= '<td style="height:22px; font-size:13px; width: '.$col_r_right.'%; border-bottom:0.5px solid #000000; border-left:0.5px solid #000000; border-right:0.5px solid #000000;" class="text-right">';
+		$tbl .= store_number_format($sub_total);
+		$tbl .= '</td>';
+		$tbl .= '</tr>';
 
-		$tbl .='<table>
-		            <tbody>';
-		                //Total Before Tax
-		                $tbl .='<tr nobr="true">
-		                	<td class="text-left" style="height:18px; width: 60%;">';
-		                	$tbl .= "SubTotal";
-		                	$tbl .='</td>';
-		                	$tbl .='<td style="height:22px;;font-size:12px; width: 40%;" class="text-right">';
-		                	$tbl .=store_number_format($sub_total);
-		                	$tbl .='</td>';
-		                $tbl .='</tr>';
+		// Row 2 Totals: Discount
+		$tbl .= '<tr>';
+		$tbl .= '<td class="text-left" style="height:22px; width: '.$col_r_left.'%; font-size:13px; border-bottom:0.5px solid #000000; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">Discount</td>';
+		$tbl .= '<td class="text-right" style="height:22px; font-size:13px; width: '.$col_r_right.'%; border-bottom:0.5px solid #000000; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">';
+		$tbl .= store_number_format($invoice_discount_amt);
+		$tbl .= '</td>';
+		$tbl .= '</tr>';
 
-		                //Tax Total
-		                $tbl .='<tr nobr="true">
-		                	<td class="text-left" style="height:22px; width: 60%;">';
-		                	$tbl .= "Discount";
-		                	$tbl .='</td>';
-		                	$tbl .='<td  class="text-right" style="height:20px; font-size:12px; width: 40%;">';
-					$tbl .=store_number_format($invoice_discount_amt);
-		                	$tbl .='</td>';
-		                $tbl .='</tr>';
+		// Row 3 Totals: VAT
+		$tbl .= '<tr>';
+		$tbl .= '<td class="text-left" style="height:22px; width: '.$col_r_left.'%; font-size:13px; border-bottom:none; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">VAT (5%)</td>';
+		$tbl .= '<td class="text-right" style="height:22px; font-size:13px; width: '.$col_r_right.'%; border-bottom:none; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">';
+		$tbl .= store_number_format($tot_tax_amt);
+		$tbl .= '</td>';
+		$tbl .= '</tr>';
 
-		                //Tax Total
-		                $tbl .='<tr nobr="true">
-		                <td class="text-left" style="height:22px; width: 60%;">';
-		                	$tbl .= "VAT (5%)";
-		                	$tbl .='</td>';
-		                	$tbl .='<td class="text-right" style="height:18px; font-size:12px; width: 40%;">';
-		                	$tbl .= store_number_format($tot_tax_amt);
-		                	$tbl .='</td>';
-		                $tbl .='</tr>';
+		// Row 4: Amount in Words + Net Total
+		$tbl .= '<tr>';
+		$tbl .= '<td colspan="3" style="width:'.$col_left.'%;border-top:none;"><div style="font-size:12px;"><b>'.$this->CI->lang->line("amount_in_words").':</b> ';
+		$tbl .=no_to_words($invoice_net_total);
+		$tot_expl = explode('.', store_number_format($invoice_net_total));
+		if(!empty($tot_expl[1])){
+			$tbl .= " and ". no_to_words($tot_expl[1]). " Fills";
+		}
+		$tbl .='</div>';
+		$tbl .= '</td>';
 
-		                //Coupon
-		                if(!empty($coupon_code)){
-			                $tbl .='<tr nobr="true">
-			                	<td colspan="4" style="width:'.($colWidthSize['sl_no']+$colWidthSize['description']+$colWidthSize['hsn']+$colWidthSize['gst_rate']+$colWidthSize['qty']).'%">';
-			                	$tbl .="<b>".$this->CI->lang->line("couponCode")."</b>: ".getTruncatedCCNumber($coupon_code);
-			                	$tbl .='</td>
-
-			                	<td colspan="3" class="text-right" style="width:'.($colWidthSize['before_tax']+$colWidthSize['discount']).'%">';
-			                	$tbl .=$this->CI->lang->line("couponDiscount").":";
-			                	$tbl .=($coupon_type=='Percentage') ? $coupon_value .'%' : '[Fixed]' ;
-			                	$tbl .='</td>
-
-			                	<td colspan="1" class="text-right" style="width:'.($colWidthSize['amount']).'%">';
-			                	$tbl .=store_number_format($sales->coupon_amt);
-			                	$tbl .='</td>';
-			                $tbl .='</tr>';
-		            	}
-
-
-		               $tbl .='<tr nobr="true">
-		               	<td class="text-rightx text-bold" style="height:24px;width:60%;font-size:15px;">';
-		               	$tbl .= "Net Total";
-		               	$tbl .='</td>';
-		               	$tbl .='<td class="text-right text-bold" style="height:24px; font-size:15px; width: 40%;">';
-				$tbl .=store_number_format($invoice_net_total);
-		               	$tbl .='</td>';
-		               $tbl .='</tr>';
-
-		            $tbl .='</tbody>
-		        </table>';
-		        
-	$tbl .= '</td>';
-	$tbl .= '</tr>';
-	$tbl .= "<tr>";
-	$tbl .= '<td colspan="3"><div style="font-size:12px;"><b>'.$this->CI->lang->line("amount_in_words").':</b> ';
-				$tbl .=no_to_words($invoice_net_total);
-				$tot_expl = explode('.', store_number_format($invoice_net_total));
-                            		if(!empty($tot_expl[1])){
-                            		    $tbl .= " and ". no_to_words($tot_expl[1]). " Fills";
-                            		}
-		                    		$tbl .='</div>
-		                    </td>';
-	
-	$tbl .= '<td style="border-left:none;border-right:none;"><table>';
-    $tbl .='</table></td>';
-    
-	$tbl .= "</tr>";
+		$tbl .= '<td class="text-left text-bold" style="width: '.$col_r_left.'%; height:24px; font-size:15px; border-top:none; border-bottom:0.5px solid #000000; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">Net Total</td>';
+		$tbl .= '<td class="text-right text-bold" style="width: '.$col_r_right.'%; height:24px; font-size:15px; border-top:none; border-bottom:0.5px solid #000000; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">' . store_number_format($invoice_net_total) . '</td>';
+		$tbl .= '</tr>';
 
 	$tbl .= '</tbody>';
 	$tbl .= '</table>';
 
 		
-	$tbl .='<table cellpadding="8" nobr="true" style="width:100%;">
+	$tbl .='<table cellpadding="8" class="signatures-table" nobr="true" style="width:100%;">
 	            <tbody>';
 	            
 	    $show_paid_img = false;

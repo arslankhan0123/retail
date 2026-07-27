@@ -40,21 +40,10 @@ $rowcount = $this->input->post('payment_row_count') +1;
             <div class="clearfix"></div>
         </div>  
         <div class="row">
-                  <div class="col-md-6">
-                    <div class="">
-                      <label for="account_id_<?= $rowcount;?>"><?= $this->lang->line('account'); ?></label>
-                      <select class="form-control" id='account_id_<?= $rowcount;?>' name="account_id_<?= $rowcount;?>">
-                        <option value="">-Select-</option>}
-                        <?php
-                          echo get_accounts_select_list();
-                          ?>
-                      </select>
-                      <span id="account_id_<?= $rowcount;?>_msg" style="display:none" class="text-danger"></span>
-                    </div>
-                  </div>
+                  <input type="hidden" id="account_id_<?= $rowcount;?>" name="account_id_<?= $rowcount;?>" value="1">
               <div class="clearfix"></div>
           </div> 
-        <div class="row">
+        <div class="row hide">
                <div class="col-md-12">
                   <div class="">
                     <label for="payment_note_<?= $rowcount;?>"><?= $this->lang->line('payment_note'); ?></label>

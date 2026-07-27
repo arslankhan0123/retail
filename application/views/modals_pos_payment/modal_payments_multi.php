@@ -3,9 +3,9 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header header-custom">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #fff; opacity: 1; font-size: 30px; line-height: 20px;">
           <span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title text-center"><?= $this->lang->line('payments'); ?></h4>
+        <h4 class="modal-title text-center" style="font-size: 20px; font-weight: 700;">Payment Processing</h4>
       </div>
       <div class="modal-body">
         
@@ -25,7 +25,7 @@
       }
 
       ?>
-        <div class="box box-solid bg-default">
+        <div class="box box-solid bg-default hide">
           
             <div class="box-body">
               <div class="row">
@@ -117,18 +117,7 @@
           </div>  
 
           <div class="row">
-                  <div class="col-md-6">
-                    <div class="">
-                      <label for="account_id_<?= $i;?>"><?= $this->lang->line('account'); ?></label>
-                      <select class="form-control" id='account_id_<?= $i;?>' name="account_id_<?= $i;?>">
-                        <option value="">-Select-</option>}
-                        <?php
-                          echo get_accounts_select_list($res22->account_id);
-                          ?>
-                      </select>
-                      <span id="account_id_<?= $i;?>_msg" style="display:none" class="text-danger"></span>
-                    </div>
-                  </div>
+                  <input type="hidden" id="account_id_<?= $i;?>" name="account_id_<?= $i;?>" value="1">
                   <?php if($i==1){ ?>
                   <div class="col-md-6">
                     <div class="">
@@ -141,7 +130,7 @@
               <div class="clearfix"></div>
           </div>  
 
-          <div class="row">
+          <div class="row hide">
                  <div class="col-md-12">
                     <div class="">
                       <label for="payment_note_<?= $i;?>"><?= $this->lang->line('payment_note'); ?></label>
@@ -208,19 +197,7 @@
             <div class="clearfix"></div>
         </div>  
         <div class="row">
-                  <div class="col-md-6">
-                    <div class="">
-                      <label for="account_id_1"><?= $this->lang->line('account'); ?></label>
-                      <select class="form-control" id='account_id_1' name="account_id_1">
-                        <option value="">-Select-</option>}
-                        option
-                        <?php
-                          echo get_accounts_select_list();
-                          ?>
-                      </select>
-                      <span id="account_id_1_msg" style="display:none" class="text-danger"></span>
-                    </div>
-                  </div>
+                  <input type="hidden" id="account_id_1" name="account_id_1" value="1">
                   <div class="col-md-6">
                     <div class="">
                       <label for="payment_discount_input">Discount Amount</label>
@@ -230,7 +207,7 @@
                   </div>
               <div class="clearfix"></div>
           </div>  
-        <div class="row">
+        <div class="row hide">
                <div class="col-md-12">
                   <div class="">
                     <label for="payment_note_1"><?= $this->lang->line('payment_note'); ?></label>
@@ -260,7 +237,7 @@
             </div>
             </div>
 
-            <div class="row">
+            <div class="row hide">
               <div class="col-md-12">
               <div class="col-md-12">
               <div class="col-md-12">
@@ -354,7 +331,7 @@
         
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default btn-lg hide" data-dismiss="modal">Close</button>
         <button type="button" class="btn bg-maroon btn-lg make_sale btn-lg" onclick="save()"><i class="fa  fa-save "></i> Save</button>
         <button type="button" class="btn btn-success btn-lg make_sale btn-lg" onclick="save(true)"><i class="fa  fa-print "></i> Save & Print</button>
 

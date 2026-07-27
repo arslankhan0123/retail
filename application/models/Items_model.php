@@ -214,6 +214,20 @@ class Items_model extends CI_Model {
 		
 		//Validate This items already exist or not
 		$store_id=(store_module() && is_admin()) ? $store_id : get_current_store_id();
+		$stock_adjustment_qty = isset($adjustment_qty) ? (float) $adjustment_qty : 0;
+		$current_opening_stock = 0;
+		if ($command == 'update' && !empty($q_id)) {
+			$opening_stock_row = $this->db
+				->select('opening_stock')
+				->where('id', $q_id)
+				->where('store_id', $store_id)
+				->get('db_items')
+				->row();
+			$current_opening_stock = !empty($opening_stock_row)
+				? (float) $opening_stock_row->opening_stock
+				: 0;
+		}
+		$opening_stock_total = $current_opening_stock + $stock_adjustment_qty;
 		/*$query=$this->db->query("select * from db_items where upper(item_name)=upper('$item_name') and store_id=$store_id");
 		if($query->num_rows()>0){
 			return "Sorry! This Items Name already Exist.";
@@ -286,7 +300,7 @@ class Items_model extends CI_Model {
 			    				'discount_type'				=> $discount_type,
 			    				'discount'					=> $discount,
 			    				'mrp'						=> $mrp,
-			    				'opening_stock'				=> $adjustment_qty,
+								'opening_stock'				=> $opening_stock_total,
 			    				
 			    			);
 			if(!empty($file_name)){
@@ -308,19 +322,21 @@ class Items_model extends CI_Model {
 			
 			
 
-			//Opening Stock Exist
-// 			if($adjustment_qty>0){
-// 				$array_params = array(  'store_id'			=> 	$store_id,
-//                                         'item_id'			=>	$item_id, 
-//                                         'warehouse_id'		=>	$warehouse_id, 
-//                                         'adjustment_qty'	=> 	$adjustment_qty,
-//                                         'opening_stock'		=> 	$opening_stock, 
-//                                   	);
-//                 $q2 = $this->add_opening_stock($array_params); 
-//                 if(!$q2){
-//                     return "failed";
-//                 }
-//             }
+			if($stock_adjustment_qty > 0){
+				$array_params = array(
+					'store_id'			=> $store_id,
+					'item_id'			=> $item_id,
+					'warehouse_id'		=> $warehouse_id,
+					'adjustment_qty'		=> $stock_adjustment_qty,
+					'opening_stock'		=> $current_opening_stock,
+					'force_new'			=> true,
+				);
+				$q2 = $this->add_opening_stock($array_params);
+				if(!$q2){
+					$this->db->trans_rollback();
+					return "failed";
+				}
+			}
 
 		}//Single END
 
@@ -862,7 +878,7 @@ public function add_opening_stock(array $info)
   {
 			//From MyController
   $data = $this->data;
-  $openstock = $this->db->select('*')
+  $openstock = !empty($info['force_new']) ? null : $this->db->select('*')
               ->from('db_stockadjustmentitems')
               ->where('store_id',$info['store_id'])
               ->where('warehouse_id',$info['warehouse_id'])

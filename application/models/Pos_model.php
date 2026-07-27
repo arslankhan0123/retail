@@ -417,7 +417,7 @@ class Pos_model extends CI_Model {
 					//RECEIVE VALUES FROM FORM
 					$amount 		=$this->xss_html_filter(trim($_REQUEST['amount_'.$i]));
 					$payment_type 	=$this->xss_html_filter(trim($_REQUEST['payment_type_'.$i]));
-					$payment_note 	=$this->xss_html_filter(trim($_REQUEST['payment_note_'.$i]));
+					$payment_note 	='';
 				}
 
 				$account_id 	=$this->xss_html_filter(trim($_REQUEST['account_id_'.$i]));

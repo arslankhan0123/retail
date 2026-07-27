@@ -1,4 +1,16 @@
 <?php
+ function get_current_assets_account_id(){
+	$CI =& get_instance();
+	$account = $CI->db
+					->select('id')
+					->where('store_id',get_current_store_id())
+					->where('status',1)
+					->where('account_name','Current Assets')
+					->get('ac_accounts')
+					->row();
+	return $account ? $account->id : '';
+ }
+
  function get_accounts_select_list($select_id='',$parent_id=0){
  	  $CI =& get_instance();
 

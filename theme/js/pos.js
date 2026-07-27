@@ -388,8 +388,7 @@ $('.show_payments_modal').on("click",function (e) {
     }
     else{
     	adjust_payments();
-    	$("#add_payment_row,#payment_type_1").parent().show();
-    	$("#amount_1").parent().parent().removeClass('col-md-12').addClass('col-md-6');
+		$("#add_payment_row").parent().show();
     	$('#multiple-payments-modal').modal('toggle');
     }
 }); //hold_invoice end
@@ -403,9 +402,8 @@ $('#show_cash_modal').on("click",function (e) {
     }
     else{
     	adjust_payments();
-    	$("#add_payment_row,#payment_type_1").parent().hide();
+		$("#add_payment_row").parent().hide();
     	$("#amount_1").focus();
-    	$("#amount_1").parent().parent().removeClass('col-md-6').addClass('col-md-12');
     	$('#multiple-payments-modal').modal('toggle');
     }
 }); //hold_invoice end

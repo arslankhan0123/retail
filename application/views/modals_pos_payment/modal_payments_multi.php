@@ -86,33 +86,14 @@
               <div class="box-body">
                 <div class="row">
            
-                  <div class="col-md-6">
+                  <div class="col-md-12">
                     <div class="">
                     <label for="amount_<?= $i;?>"><?= $this->lang->line('amount'); ?></label>
                       <input type="text" class="form-control text-right payment only_currency" value='<?= store_number_format($res22->payment,0)?>' id="amount_<?= $i;?>" name="amount_<?= $i;?>" placeholder="" onkeyup="calculate_payments()">
                         <span id="amount_<?= $i;?>_msg" style="display:none" class="text-danger"></span>
                   </div>
                  </div>
-                  <div class="col-md-6">
-                    <div class="">
-                      <label for="payment_type_<?= $i;?>"><?= $this->lang->line('payment_type'); ?></label>
-                      <select class="form-control" id='payment_type_<?= $i;?>' name="payment_type_<?= $i;?>">
-                        <?php
-                          $q1=$this->db->query("select * from db_paymenttypes where status=1 and store_id=".get_current_store_id());
-                           if($q1->num_rows()>0){
-                               foreach($q1->result() as $res1){
-                                $selected=($res22->payment_type==$res1->payment_type) ? 'selected' : '';
-                               echo "<option $selected value='".$res1->payment_type."'>".$res1->payment_type ."</option>";
-                             }
-                           }
-                           else{
-                              echo "No Records Found";
-                           }
-                          ?>
-                      </select>
-                      <span id="payment_type_<?= $i;?>_msg" style="display:none" class="text-danger"></span>
-                    </div>
-                  </div>
+                  <input type="hidden" id="payment_type_<?= $i;?>" name="payment_type_<?= $i;?>" value="Cash">
               <div class="clearfix"></div>
           </div>  
 
@@ -120,12 +101,8 @@
                   <div class="col-md-6">
                     <div class="">
                       <label for="account_id_<?= $i;?>"><?= $this->lang->line('account'); ?></label>
-                      <select class="form-control" id='account_id_<?= $i;?>' name="account_id_<?= $i;?>">
-                        <option value="">-Select-</option>}
-                        <?php
-                          echo get_accounts_select_list($res22->account_id);
-                          ?>
-                      </select>
+                      <input type="text" class="form-control" value="Current Assets" readonly>
+                      <input type="hidden" id="account_id_<?= $i;?>" name="account_id_<?= $i;?>" value="<?= get_current_assets_account_id(); ?>">
                       <span id="account_id_<?= $i;?>_msg" style="display:none" class="text-danger"></span>
                     </div>
                   </div>
@@ -141,17 +118,6 @@
               <div class="clearfix"></div>
           </div>  
 
-          <div class="row">
-                 <div class="col-md-12">
-                    <div class="">
-                      <label for="payment_note_<?= $i;?>"><?= $this->lang->line('payment_note'); ?></label>
-                      <textarea type="text" class="form-control" id="payment_note_<?= $i;?>" name="payment_note_<?= $i;?>" placeholder="" ><?= $res22->payment_note;?></textarea>
-                      <span id="payment_note_<?= $i;?>_msg" style="display:none" class="text-danger"></span>
-                    </div>
-                 </div>
-                  
-              <div class="clearfix"></div>
-          </div>   
           </div>
           </div>
         </div><!-- col-md-12 -->
@@ -179,45 +145,22 @@
               <div class="row">
           
 
-                <div class="col-md-6">
+                <div class="col-md-12">
                   <div class="">
                   <label for="amount_1"><?= $this->lang->line('amount'); ?></label>
                     <input type="text" class="form-control text-right payment" id="amount_1" name="amount_1" placeholder="" onkeyup="calculate_payments()">
                       <span id="amount_1_msg" style="display:none" class="text-danger"></span>
                 </div>
                </div>
-                <div class="col-md-6">
-                  <div class="">
-                    <label for="payment_type_1"><?= $this->lang->line('payment_type'); ?></label>
-                    <select class="form-control" id='payment_type_1' name="payment_type_1">
-                      <?php
-                        $q1=$this->db->query("select * from db_paymenttypes where status=1 and store_id=".get_current_store_id());
-                         if($q1->num_rows()>0){
-                             foreach($q1->result() as $res1){
-                             echo "<option value='".$res1->payment_type."'>".$res1->payment_type ."</option>";
-                           }
-                         }
-                         else{
-                            echo "No Records Found";
-                         }
-                        ?>
-                    </select>
-                    <span id="payment_type_1_msg" style="display:none" class="text-danger"></span>
-                  </div>
-                </div>
+                <input type="hidden" id="payment_type_1" name="payment_type_1" value="Cash">
             <div class="clearfix"></div>
         </div>  
         <div class="row">
                   <div class="col-md-6">
                     <div class="">
                       <label for="account_id_1"><?= $this->lang->line('account'); ?></label>
-                      <select class="form-control" id='account_id_1' name="account_id_1">
-                        <option value="">-Select-</option>}
-                        option
-                        <?php
-                          echo get_accounts_select_list();
-                          ?>
-                      </select>
+                      <input type="text" class="form-control" value="Current Assets" readonly>
+                      <input type="hidden" id="account_id_1" name="account_id_1" value="<?= get_current_assets_account_id(); ?>">
                       <span id="account_id_1_msg" style="display:none" class="text-danger"></span>
                     </div>
                   </div>
@@ -230,17 +173,6 @@
                   </div>
               <div class="clearfix"></div>
           </div>  
-        <div class="row">
-               <div class="col-md-12">
-                  <div class="">
-                    <label for="payment_note_1"><?= $this->lang->line('payment_note'); ?></label>
-                    <textarea type="text" class="form-control" id="payment_note_1" name="payment_note_1" placeholder="" ></textarea>
-                    <span id="payment_note_1_msg" style="display:none" class="text-danger"></span>
-                  </div>
-               </div>
-                
-            <div class="clearfix"></div>
-        </div>   
         </div>
         </div>
       </div><!-- col-md-12 -->
@@ -260,19 +192,7 @@
             </div>
             </div>
 
-            <div class="row">
-              <div class="col-md-12">
-              <div class="col-md-12">
-              <div class="col-md-12">
-                <div class="">
-                    <label for="sales_note"><?= $this->lang->line('note'); ?></label>
-                    <textarea type="text" class="form-control" id="sales_note" name="sales_note" placeholder="" ></textarea>
-                    <span id="sales_note_msg" style="display:none" class="text-danger"></span>
-                  </div>
-              </div>
-              </div>
-            </div>
-            </div>
+            <input type="hidden" id="sales_note" name="sales_note" value="">
       </div><!-- col-md-9 -->
 
 

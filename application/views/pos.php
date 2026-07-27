@@ -872,6 +872,7 @@ function calulate_discount(discount_input,discount_type,total){
 
 function final_total(){
   var total=0;
+  var item_discount_total=0;
   var item_qty=0;
   var rowcount=$("#hidden_rowcount").val();
   var discount_input=$("#discount_input").val();
@@ -887,6 +888,8 @@ function final_total(){
       item_id=$("#tr_item_id_"+i).val();
       
       total=parseFloat(total)+parseFloat($("#td_data_"+i+"_4").val());
+      var row_discount = parseFloat($("#item_discount_"+i).val());
+      item_discount_total += isNaN(row_discount) ? 0 : row_discount;
       //console.log("==>total="+total);
       //console.log("==>tax_amt="+tax_amt);
      // total+=tax_amt;
@@ -910,19 +913,26 @@ function final_total(){
   var coupon_amt = discount_coupon_tot(subtotal);
       subtotal -=coupon_amt;
     
-  set_total(item_qty,total,discount_amt,subtotal);
+  set_total(
+    item_qty,
+    total + item_discount_total,
+    discount_amt + item_discount_total,
+    subtotal,
+    discount_amt
+  );
 }
-function set_total(tot_qty=0, tot_amt=0, tot_disc=0, tot_grand=0){
+function set_total(tot_qty=0, tot_amt=0, tot_disc=0, tot_grand=0, payment_discount=0){
   $(".tot_qty   ").html(tot_qty);
   $(".tot_amt   ").html(to_Fixed(tot_amt));
   $(".tot_disc  ").html(to_Fixed(tot_disc));
   $(".tot_grand ").html(to_Fixed(round_off(tot_grand)));
-  $(".payment_discount_input").val(to_Fixed(tot_disc));
+  $(".payment_discount_input").val(to_Fixed(payment_discount));
 }
 
 //LEFT SIDE: FINAL TOTAL
 function adjust_payments(){
   var total=0;
+  var item_discount_total=0;
   var item_qty=parseFloat(0);
   var rowcount=$("#hidden_rowcount").val();
   var discount_input=$("#discount_input").val();
@@ -933,6 +943,8 @@ function adjust_payments(){
     for(i=0;i<rowcount;i++){
       if(document.getElementById('tr_item_id_'+i)){
       total=parseFloat(total)+parseFloat($("#td_data_"+i+"_4").val());
+      var row_discount = parseFloat($("#item_discount_"+i).val());
+      item_discount_total += isNaN(row_discount) ? 0 : row_discount;
       item_id=$("#tr_item_id_"+i).val();
 
       row_wise_item_qty = get_float_type_data("#item_qty_"+i);
@@ -978,8 +990,8 @@ function adjust_payments(){
   
   balance =round_off(balance);
   $(".sales_div_tot_qty").html(format_qty(item_qty));
-  $(".sales_div_tot_amt").html((to_Fixed(total)));
-  $(".sales_div_tot_discount").html((to_Fixed(discount_amt))); 
+  $(".sales_div_tot_amt").html(to_Fixed(total + item_discount_total));
+  $(".sales_div_tot_discount").html(to_Fixed(discount_amt + item_discount_total));
   $(".coupon_discount_div_amt").html((to_Fixed(coupon_amt))); 
   $("#coupon_discount_amt").val(coupon_amt); 
   $(".sales_div_tot_payble").html(round_off(subtotal)); 
@@ -1217,7 +1229,7 @@ $('#order_date,#delivery_date,#cheque_date').datepicker({
       var tax_type = $("#tr_tax_type_"+row_id).val();
       var tax = $("#tr_tax_value_"+row_id).val(); //%
       var item_id=$("#tr_item_id_"+row_id).val();
-      var qty=($("#item_qty_"+item_id).val());
+      var qty=($("#item_qty_"+row_id).val());
           qty = (isNaN(qty)) ? 0 :qty;
 
       var sales_price = parseFloat($("#sales_price_"+row_id).val());

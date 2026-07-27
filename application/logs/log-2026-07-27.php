@@ -13,3 +13,13 @@ ERROR - 2026-07-27 23:54:18 --> Severity: Notice --> Undefined variable: warehou
 ERROR - 2026-07-27 23:54:31 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
 ERROR - 2026-07-27 23:55:09 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
 ERROR - 2026-07-27 23:55:20 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-27 20:28:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-27 20:28:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-27 20:28:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-27 20:28:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-27 20:28:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-27 20:28:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-27 20:28:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-27 20:28:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-27 20:28:40 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-27 20:28:40 --> 404 Page Not Found: Uploads/items

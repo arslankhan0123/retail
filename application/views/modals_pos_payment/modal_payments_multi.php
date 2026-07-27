@@ -272,7 +272,7 @@
 
                 <div class="row ">
                   <div class="col-md-12 border-custom-bottom">
-                    <span class="col-md-6 text-right text-bold ">Total:</span>
+                    <span class="col-md-6 text-right text-bold ">Subtotal:</span>
                     <span class="col-md-6 text-right text-bold  custom-font-size sales_div_tot_amt">0.00</span>
                   </div>
                 </div>
@@ -284,7 +284,7 @@
                   </div>
                 </div>
                 <!--  -->
-                <div class="row ">
+                <div class="row hide">
                   <div class="col-md-12 border-custom-bottom">
                     <span class="col-md-6 text-right text-bold ">Coupon Discount(-):</span>
                     <span class="col-md-6 text-right text-bold  custom-font-size coupon_discount_div_amt">0.00</span>
@@ -294,14 +294,14 @@
                 <!--  -->
                 <div class="row bg-red">
                   <div class="col-md-12 border-custom-bottom">
-                    <span class="col-md-6 text-right text-bold ">Total Payable:</span>
+                    <span class="col-md-6 text-right text-bold ">Net:</span>
                     <span class="col-md-6 text-right text-bold  custom-font-size sales_div_tot_payble">0.00</span>
                   </div>
                 </div>
                 <!--  -->
                 <div class="row ">
                   <div class="col-md-12 border-custom-bottom">
-                    <span class="col-md-6 text-right text-bold ">Total Paying:</span>
+                    <span class="col-md-6 text-right text-bold ">Paid:</span>
                     <span class="col-md-6 text-right text-bold  custom-font-size sales_div_tot_paid">0.00</span>
                   </div>
                 </div>
@@ -316,7 +316,7 @@
                 <!--  -->
                 <div class="row ">
                   <div class="col-md-12 bg-orange">
-                    <span class="col-md-6 text-right text-bold ">Change Return:</span>
+                    <span class="col-md-6 text-right text-bold ">Change:</span>
                     <span class="col-md-6 text-right text-bold  custom-font-size sales_div_change_return">0.00</span>
                   </div>
                 </div>
@@ -330,10 +330,10 @@
     </div>
         
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="text-align: center;">
         <button type="button" class="btn btn-default btn-lg hide" data-dismiss="modal">Close</button>
-        <button type="button" class="btn bg-maroon btn-lg make_sale btn-lg" onclick="save()"><i class="fa  fa-save "></i> Save</button>
-        <button type="button" class="btn btn-success btn-lg make_sale btn-lg" onclick="save(true)"><i class="fa  fa-print "></i> Save & Print</button>
+        <button type="button" class="btn bg-maroon btn-lg make_sale btn-lg" onclick="save()" style="border-radius: 20px; width: 140px;"><i class="fa  fa-save "></i> Save</button>
+        <button type="button" class="btn btn-success btn-lg make_sale btn-lg" onclick="save(true)" style="border-radius: 20px; width: 140px;"><i class="fa  fa-print "></i> Save & Print</button>
 
       </div>
     </div>

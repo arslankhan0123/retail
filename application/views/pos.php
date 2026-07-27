@@ -917,6 +917,7 @@ function set_total(tot_qty=0, tot_amt=0, tot_disc=0, tot_grand=0){
   $(".tot_amt   ").html(to_Fixed(tot_amt));
   $(".tot_disc  ").html(to_Fixed(tot_disc));
   $(".tot_grand ").html(to_Fixed(round_off(tot_grand)));
+  $(".payment_discount_input").val(to_Fixed(tot_disc));
 }
 
 //LEFT SIDE: FINAL TOTAL
@@ -989,6 +990,34 @@ function adjust_payments(){
   $(".sales_div_change_return").html(to_Fixed(change_return)); 
   
 }
+
+/*
+ * The payment popup discount is always a fixed amount. It uses the existing
+ * overall POS discount fields so the saved sale and printed receipt contain
+ * exactly the amount shown in the payment summary.
+ */
+$(document).on("input", ".payment_discount_input", function(){
+  var discount = parseFloat($(this).val());
+  discount = isNaN(discount) || discount < 0 ? 0 : discount;
+
+  var total = parseFloat($(".sales_div_tot_amt").html());
+  total = isNaN(total) ? 0 : total;
+
+  if(discount > total){
+    discount = total;
+    $(".payment_discount_input_msg")
+      .text("Discount cannot exceed the total amount.")
+      .show();
+  }
+  else{
+    $(".payment_discount_input_msg").hide();
+  }
+
+  $("#discount_type").val("in_fixed");
+  $("#discount_input").val(discount);
+  final_total();
+  adjust_payments();
+});
 
 $(document).ready(function(){
   get_coupon_details();

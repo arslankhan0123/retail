@@ -48,7 +48,9 @@ class Db_reset extends CI_Controller {
             'db_bankdetails',
             'db_fivemojo',
             'db_instamojo',
-            'db_package'
+            'db_package',
+            'db_userswarehouses',
+            'db_subscription'
         );
 
         // Get all tables in the database

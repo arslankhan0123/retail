@@ -129,6 +129,15 @@
                       <span id="account_id_<?= $i;?>_msg" style="display:none" class="text-danger"></span>
                     </div>
                   </div>
+                  <?php if($i==1){ ?>
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="payment_discount_input">Discount Amount</label>
+                      <input type="text" class="form-control text-right only_currency payment_discount_input" id="payment_discount_input" value="0.00" autocomplete="off">
+                      <span class="payment_discount_input_msg text-danger" style="display:none"></span>
+                    </div>
+                  </div>
+                  <?php } ?>
               <div class="clearfix"></div>
           </div>  
 
@@ -210,6 +219,13 @@
                           ?>
                       </select>
                       <span id="account_id_1_msg" style="display:none" class="text-danger"></span>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="">
+                      <label for="payment_discount_input">Discount Amount</label>
+                      <input type="text" class="form-control text-right only_currency payment_discount_input" id="payment_discount_input" value="0.00" autocomplete="off">
+                      <span class="payment_discount_input_msg text-danger" style="display:none"></span>
                     </div>
                   </div>
               <div class="clearfix"></div>

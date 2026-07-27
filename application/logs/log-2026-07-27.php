@@ -14,3 +14,7 @@ ERROR - 2026-07-27 20:58:40 --> Severity: Notice --> Undefined variable: warehou
 ERROR - 2026-07-27 20:59:25 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
 ERROR - 2026-07-27 21:01:11 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
 ERROR - 2026-07-27 21:01:33 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-27 21:15:53 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-27 17:16:11 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-27 21:16:50 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-27 21:17:30 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264

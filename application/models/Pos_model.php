@@ -106,16 +106,12 @@ class Pos_model extends CI_Model {
 				$item_tax_amt = ($item_tax_type=='Inclusive') ? calculate_inclusive($item_sales_price,$item_tax) :calculate_exclusive($item_sales_price,$item_tax);
 
 				
-	        	if($w_stock <1 && !$service_bit){
-	        		$str="zero_stock()";
-	        		$disabled='';
-	        		$bg_color="background-color:#28ACE2";
-	        	}
-	        	else{
-	        		$str="addrow($res2->id)";
-	        		$disabled="disabled=disabled";
-	        		$bg_color="background-color:#dbf4cd";
-	        	}
+	        	// Negative stock sales are allowed in POS.
+	        	$str="addrow($res2->id)";
+	        	$disabled='';
+	        	$bg_color=($w_stock < 1 && !$service_bit)
+	        		? "background-color:#28ACE2"
+	        		: "background-color:#dbf4cd";
 
 	        	$label_title = (!$service_bit) ? $w_stock.' Quantity in Stock' : 'Service Item';
 	        	$label = (!$service_bit) ? "Qty: ".$w_stock : 'Service';
@@ -691,10 +687,10 @@ class Pos_model extends CI_Model {
 			    $remove_btn      ='<img src="'.base_url('uploads/icon02.png').'" class="pos-remove-icon" onclick="removerow('.$i.')" title="Delete Item?" alt="Remove">';
 			    
 		  		echo '<tr id="row_'.$i.'" data-row="0" data-item-id="'.$res3->item_id.'" >'; /*item id */
+		  		echo '<td id="td_'.$i.'_barcode">'.$q5->row()->custom_barcode.'</td>';
 		  		echo '<td id="td_'.$i.'_0">
 		  		<a data-toggle="tooltip" title="Click to Change Tax" class="pointer" id="td_data_'.$i.'_0" onclick="show_sales_item_modal('.$i.')">'.$q5->row()->item_name.'</a>
 		  		</td>';  /*td_0_0 item name*/
-		  		echo '<td id="td_'.$i.'_barcode">'.$q5->row()->custom_barcode.'</td>';
 		  		echo '<td id="td_'.$i.'_1">'.$stock.'</td>';  /*td_0_1 item available qty*/
 		  		echo '<td id="td_'.$i.'_2">'.$quantity.'</td>';    /*td_0_2 item available qty */
 
@@ -836,10 +832,10 @@ class Pos_model extends CI_Model {
 			    $remove_btn      ='<img src="'.base_url('uploads/icon02.png').'" class="pos-remove-icon" onclick="removerow('.$i.')" title="Delete Item?" alt="Remove">';
 			    
 		  		echo '<tr id="row_'.$i.'" data-row="0" data-item-id="'.$res3->item_id.'" >'; /*item id */
+		  		echo '<td id="td_'.$i.'_barcode">'.$q5->row()->custom_barcode.'</td>';
 		  		echo '<td id="td_'.$i.'_0">
 		  		<a data-toggle="tooltip" title="Click to Change Tax" class="pointer" id="td_data_'.$i.'_0" onclick="show_sales_item_modal('.$i.')">'.$q5->row()->item_name.'</a>
 		  		</td>';  /*td_0_0 item name*/
-		  		echo '<td id="td_'.$i.'_barcode">'.$q5->row()->custom_barcode.'</td>';
 		  		echo '<td id="td_'.$i.'_1">'.$stock.'</td>';  /*td_0_1 item available qty*/
 		  		echo '<td id="td_'.$i.'_2">'.$quantity.'</td>';    /*td_0_2 item available qty */
 
@@ -969,10 +965,12 @@ class Pos_model extends CI_Model {
 				$item_details = get_item_details($item_id);
 				$item_name = $item_details->item_name;
 				$service_bit = $item_details->service_bit;
+				/* Negative stock sales are allowed.
 				$current_stock_of_item = total_available_qty_items_of_warehouse($warehouse_id,null,$item_id);
 				if($current_stock_of_item<$sales_qty && $service_bit==0){
 					return $item_name." has only ".$current_stock_of_item." in Stock!!";exit;
 				}
+				*/
 				
 				$salesitems_entry = array(
 							'store_id' 			=> $store_id,

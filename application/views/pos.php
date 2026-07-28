@@ -776,13 +776,9 @@ function set_to_original(row_id,item_cost) {
 
 //INCREMENT ITEM
 function increment_qty(item_id,rowcount){
-  var service_bit=$("#service_bit_"+rowcount).val();
   var item_qty=$("#item_qty_"+rowcount).val();
-  var stock=$("#td_"+rowcount+"_1").html();
-  if(service_bit==1 || parseFloat(item_qty)<parseFloat(stock)){
-    item_qty=parseFloat(item_qty)+1;
-    $("#item_qty_"+rowcount).val(format_qty(item_qty));
-  }
+  item_qty=parseFloat(item_qty)+1;
+  $("#item_qty_"+rowcount).val(format_qty(item_qty));
   make_subtotal(item_id,rowcount);
 }
 //DECREMENT ITEM
@@ -798,37 +794,14 @@ function decrement_qty(item_id,rowcount){
 //LEFT SIDE: IF ITEM QTY CHANGED MANUALLY
 function item_qty_input(item_id,rowcount){
   var item_qty=$("#item_qty_"+rowcount).val();
-  var service_bit=$("#service_bit_"+rowcount).val();
-  var stock=$("#td_"+rowcount+"_1").html();
 
-  if(service_bit!=1){
-    if(stock==0){
-      toastr["warning"]("item Not Available in stock!");
-      //return;  
-    }
-    if(parseFloat(item_qty)>parseFloat(stock)){
-      $("#item_qty_"+rowcount).val(format_qty(stock));
-      toastr["warning"]("Oops! You have only "+stock+" items in Stock");
-     // return;
-    }
-    if(item_qty==0){
-      $("#item_qty_"+rowcount).val(format_qty(1));
-      toastr["warning"]("You must have atlease one Quantity");
-      //return; 
-    }
-    /*else{
-      $("#item_qty_"+rowcount).val(1);
-      toastr["warning"]("You must have atlease one Quantity");
-      return; 
-    }*/
+  // Selling above available stock is allowed; only keep quantity positive.
+  if(isNaN(parseFloat(item_qty)) || parseFloat(item_qty)<=0){
+    $("#item_qty_"+rowcount).val(format_qty(1));
+    toastr["warning"]("You must have at least one Quantity");
   }
 
   make_subtotal(item_id,rowcount);
-}
-
-function zero_stock(){
-  toastr["error"]("Out of Stock!");
-  return;
 }
 //LEFT SIDE: REMOVE ROW 
 function removerow(id){//id=Rowid  

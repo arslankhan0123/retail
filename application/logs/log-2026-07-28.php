@@ -89,3 +89,40 @@ ERROR - 2026-07-28 16:06:21 --> Severity: Notice --> Undefined variable: warehou
 ERROR - 2026-07-28 16:06:36 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
 ERROR - 2026-07-28 12:43:37 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-07-28 12:46:25 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-28 16:56:27 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 16:56:45 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 16:57:11 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 16:59:09 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 12:59:36 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:36 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:36 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:36 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:36 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:36 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:36 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:36 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:37 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:38 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:38 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:38 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:38 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:39 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:39 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:39 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:39 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:53 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:53 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:53 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:53 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:53 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:53 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:53 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 12:59:53 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-28 16:59:55 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264

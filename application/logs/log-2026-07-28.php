@@ -73,3 +73,17 @@ ERROR - 2026-07-28 11:22:59 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-07-28 11:25:51 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-07-28 11:34:47 --> 404 Page Not Found: Faviconico/index
 ERROR - 2026-07-28 15:35:01 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 15:51:05 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 15:51:52 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 15:52:25 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 15:54:09 --> Severity: Notice --> Undefined index: payment_type_1 F:\Projects\retail\application\models\Pos_model.php 419
+ERROR - 2026-07-28 15:55:28 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 15:57:01 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 15:58:04 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 11:58:35 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-28 16:01:00 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 16:02:24 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 12:02:41 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-28 16:05:20 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 16:06:21 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 16:06:36 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264

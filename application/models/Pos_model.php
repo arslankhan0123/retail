@@ -416,8 +416,14 @@ class Pos_model extends CI_Model {
 				else{
 					//RECEIVE VALUES FROM FORM
 					$amount 		=$this->xss_html_filter(trim($_REQUEST['amount_'.$i]));
-					$payment_type 	=$this->xss_html_filter(trim($_REQUEST['payment_type_'.$i]));
-					$payment_note 	=$this->xss_html_filter(trim($_REQUEST['payment_note_'.$i]));
+					$requested_payment_type = isset($_REQUEST['payment_type_'.$i])
+						? $_REQUEST['payment_type_'.$i]
+						: (isset($_REQUEST['direct_payment_type']) ? $_REQUEST['direct_payment_type'] : '');
+					$payment_type 	=$this->xss_html_filter(trim($requested_payment_type));
+					$requested_payment_note = isset($_REQUEST['payment_note_'.$i])
+						? $_REQUEST['payment_note_'.$i]
+						: (!empty($payment_type) ? 'Paid By '.$payment_type : '');
+					$payment_note 	=$this->xss_html_filter(trim($requested_payment_note));
 				}
 
 				$account_id 	=$this->xss_html_filter(trim($_REQUEST['account_id_'.$i]));

@@ -348,10 +348,10 @@ class GstInvoice extends MyPDF{
 		if ($pageWidth < 160) {
 			$widthArray = array(
 				'sl_no' 		=> '4',
-				'description' 	=> '49',
+				'description' 	=> '47',
 				'unit' 			=> '5',
 				'qty' 			=> '5',
-				'rate' 	        => '8',
+				'rate' 	        => '10',
 				'dis'           => '6',
 				'tax'           => '12',
 				'amount' 		=> '11',
@@ -359,10 +359,10 @@ class GstInvoice extends MyPDF{
 		} else {
 			$widthArray = array(
 				'sl_no' 		=> '4',
-				'description' 	=> '52',
+				'description' 	=> '50',
 				'unit' 			=> '5',
 				'qty' 			=> '6',
-				'rate' 	        => '7',
+				'rate' 	        => '9',
 				'dis'           => '6',
 				'tax'           => '10',
 				'amount' 		=> '10',
@@ -450,7 +450,7 @@ class GstInvoice extends MyPDF{
 
 			$tbl .= '<td colspan="1" style="text-align:center;width: ' . $colW['qty'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . format_qty($res2->sales_qty) . '</td>';
 
-			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['rate'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . store_number_format($res2->price_per_unit) . '</td>';
+			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['rate'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;"><nobr>' . store_number_format($res2->price_per_unit) . '</nobr></td>';
 			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['dis'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . store_number_format($res2->discount_amt) . '</td>';
 			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['tax'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . store_number_format($res2->tax_amt) . '</td>';
 			$tbl .= '<td colspan="1" class="text-right" style="width: ' . $colW['amount'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . (store_number_format($res2->total_cost)) . '</td>';
@@ -490,7 +490,11 @@ class GstInvoice extends MyPDF{
 		';
 
 		$tax_perchantage = round(store_number_format(($tot_tax_amt / $tot_total_cost) * 100));
-		$invoice_discount_amt = $tot_discount_amt + (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0);
+		// POS stores the complete discount (item + invoice discount) in
+		// tot_discount_to_all_amt, so adding item discounts again duplicates them.
+		$invoice_discount_amt = (isset($sales->pos) && (int) $sales->pos === 1)
+			? (float) $sales->tot_discount_to_all_amt
+			: $tot_discount_amt + (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0);
 		$invoice_net_total = (float) $sales->grand_total;
 
 
@@ -723,10 +727,10 @@ class GstInvoice extends MyPDF{
 		if ($pageWidth < 160) {
 			$widthArray = array(
 				'sl_no' 		=> '4',
-				'description' 	=> '49',
+				'description' 	=> '47',
 				'unit' 			=> '5',
 				'qty' 			=> '5',
-				'rate' 	        => '8',
+				'rate' 	        => '10',
 				'dis'           => '6',
 				'tax'           => '12',
 				'amount' 		=> '11',
@@ -734,10 +738,10 @@ class GstInvoice extends MyPDF{
 		} else {
 			$widthArray = array(
 				'sl_no' 		=> '4',
-				'description' 	=> '52',
+				'description' 	=> '50',
 				'unit' 			=> '5',
 				'qty' 			=> '6',
-				'rate' 	        => '7',
+				'rate' 	        => '9',
 				'dis'           => '6',
 				'tax'           => '10',
 				'amount' 		=> '10',
@@ -825,7 +829,7 @@ class GstInvoice extends MyPDF{
 				      
 				      $tbl .='<td colspan="1" style="text-align:center;width: '.$colW['qty'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.format_qty($res2->sales_qty).'</td>';
 
-				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['rate'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.store_number_format($res2->price_per_unit).'</td>';
+				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['rate'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;"><nobr>'.store_number_format($res2->price_per_unit).'</nobr></td>';
 				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['dis'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.store_number_format($res2->discount_amt).'</td>';
 				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['tax'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.store_number_format($res2->tax_amt).'</td>';
 				      $tbl .='<td colspan="1" class="text-right" style="width: '.$colW['amount'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.(store_number_format($res2->total_cost)).'</td>';
@@ -865,7 +869,11 @@ class GstInvoice extends MyPDF{
 		';
 		
 		$tax_perchantage = round(store_number_format( ($tot_tax_amt / $tot_total_cost) * 100)) ;
-		$invoice_discount_amt = $tot_discount_amt + (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0);
+		// POS stores the complete discount (item + invoice discount) in
+		// tot_discount_to_all_amt, so adding item discounts again duplicates them.
+		$invoice_discount_amt = (isset($sales->pos) && (int) $sales->pos === 1)
+			? (float) $sales->tot_discount_to_all_amt
+			: $tot_discount_amt + (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0);
 		$invoice_net_total = (float) $sales->grand_total;
 		
 		

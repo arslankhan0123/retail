@@ -388,6 +388,7 @@ $('.show_payments_modal').on("click",function (e) {
     }
     else{
     	$('#multiple-payments-modal').data('card-payment', false);
+    	$("#direct_payment_type").val("");
     	$("#payment_mode_icon").attr("class", "fa fa-list");
     	$("#amount_1").prop("readonly", false);
     	$("#amount_1").parent().parent().show();
@@ -407,10 +408,19 @@ $('#show_cash_modal').on("click",function (e) {
     }
     else{
     	$('#multiple-payments-modal').data('card-payment', false);
+    	$("#direct_payment_type").val("Cash");
     	$("#payment_mode_icon").attr("class", "fa fa-money");
     	$("#amount_1").prop("readonly", false);
     	$("#amount_1").parent().parent().show();
-    	$("#payment_type_1").val("Cash");
+    	var cash_option = $("#payment_type_1 option").filter(function(){
+    		return $.trim($(this).val()).toUpperCase() === "CASH";
+    	}).first();
+    	if(cash_option.length){
+    		$("#payment_type_1").val(cash_option.val());
+    	}
+    	else{
+    		$("#payment_type_1").append('<option value="Cash">Cash</option>').val("Cash");
+    	}
     	$("#payment_note_1").val("Paid By Cash");
     	adjust_payments();
     	$("#add_payment_row,#payment_type_1").parent().hide();
@@ -430,6 +440,7 @@ $(document).on("click", "#show_card_modal", function (e) {
     }
     else{
     	$('#multiple-payments-modal').data('card-payment', true);
+    	$("#direct_payment_type").val("CARD");
     	$("#payment_mode_icon").attr("class", "fa fa-credit-card");
     	adjust_payments();
 

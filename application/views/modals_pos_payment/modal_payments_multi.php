@@ -1,4 +1,5 @@
 <div class="modal fade" id="multiple-payments-modal" tabindex='-1'>
+  <input type="hidden" id="direct_payment_type" name="direct_payment_type" value="">
   
   <div class="modal-dialog modal-lg">
     <div class="modal-content">

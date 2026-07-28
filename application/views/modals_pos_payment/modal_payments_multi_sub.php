@@ -2,7 +2,7 @@
 $rowcount = $this->input->post('payment_row_count') +1;
 ?>
 <div class="col-md-12 payments_div payments_div_<?=$rowcount?>">
-          <div class="box box-solid bg-gray">
+          <div class="box box-solid bg-blue">
             <div class="box-header">
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" onclick="remove_row('<?=$rowcount?>')"><i class="fa fa-times fa-2x"></i></button>

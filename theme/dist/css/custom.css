@@ -368,3 +368,21 @@ select[readonly].select2 + .select2-container {
     cursor: not-allowed;
     opacity: 1;
 }
+
+#multiple-payments-modal .payment-summary-label {
+    font-size: 17px;
+}
+
+#multiple-payments-modal .modal-header {
+    position: relative;
+}
+
+#multiple-payments-modal .payment-mode-icon {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    color: #fff;
+    font-size: 28px;
+    line-height: 1;
+    transform: translateY(-50%);
+}

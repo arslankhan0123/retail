@@ -388,6 +388,7 @@ $('.show_payments_modal').on("click",function (e) {
     }
     else{
     	$('#multiple-payments-modal').data('card-payment', false);
+    	$("#payment_mode_icon").attr("class", "fa fa-list");
     	$("#amount_1").prop("readonly", false);
     	$("#amount_1").parent().parent().show();
     	adjust_payments();
@@ -406,6 +407,7 @@ $('#show_cash_modal').on("click",function (e) {
     }
     else{
     	$('#multiple-payments-modal').data('card-payment', false);
+    	$("#payment_mode_icon").attr("class", "fa fa-money");
     	$("#amount_1").prop("readonly", false);
     	$("#amount_1").parent().parent().show();
     	$("#payment_type_1").val("Cash");
@@ -428,6 +430,7 @@ $(document).on("click", "#show_card_modal", function (e) {
     }
     else{
     	$('#multiple-payments-modal').data('card-payment', true);
+    	$("#payment_mode_icon").attr("class", "fa fa-credit-card");
     	adjust_payments();
 
     	// CARD may not exist in the configured payment-type list.

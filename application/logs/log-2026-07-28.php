@@ -69,3 +69,7 @@ ERROR - 2026-07-28 11:16:45 --> 404 Page Not Found: Uploads/items
 ERROR - 2026-07-28 11:16:45 --> 404 Page Not Found: Uploads/items
 ERROR - 2026-07-28 11:16:45 --> 404 Page Not Found: Uploads/items
 ERROR - 2026-07-28 11:16:50 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-28 11:22:59 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-28 11:25:51 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-28 11:34:47 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-28 15:35:01 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264

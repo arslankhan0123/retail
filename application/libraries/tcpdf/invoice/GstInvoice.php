@@ -348,22 +348,22 @@ class GstInvoice extends MyPDF{
 		if ($pageWidth < 160) {
 			$widthArray = array(
 				'sl_no' 		=> '4',
-				'description' 	=> '47',
+				'description' 	=> '45',
 				'unit' 			=> '5',
 				'qty' 			=> '5',
 				'rate' 	        => '10',
-				'dis'           => '6',
+				'dis'           => '8',
 				'tax'           => '12',
 				'amount' 		=> '11',
 			);
 		} else {
 			$widthArray = array(
 				'sl_no' 		=> '4',
-				'description' 	=> '50',
+				'description' 	=> '48',
 				'unit' 			=> '5',
 				'qty' 			=> '6',
 				'rate' 	        => '9',
-				'dis'           => '6',
+				'dis'           => '8',
 				'tax'           => '10',
 				'amount' 		=> '10',
 			);
@@ -451,7 +451,7 @@ class GstInvoice extends MyPDF{
 			$tbl .= '<td colspan="1" style="text-align:center;width: ' . $colW['qty'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . format_qty($res2->sales_qty) . '</td>';
 
 			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['rate'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;"><nobr>' . store_number_format($res2->price_per_unit) . '</nobr></td>';
-			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['dis'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . store_number_format($res2->discount_amt) . '</td>';
+			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['dis'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;"><nobr>' . store_number_format($res2->discount_amt) . '</nobr></td>';
 			$tbl .= '<td colspan="1" class="text-center" style="width: ' . $colW['tax'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . store_number_format($res2->tax_amt) . '</td>';
 			$tbl .= '<td colspan="1" class="text-right" style="width: ' . $colW['amount'] . ';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">' . (store_number_format($res2->total_cost)) . '</td>';
 
@@ -727,22 +727,22 @@ class GstInvoice extends MyPDF{
 		if ($pageWidth < 160) {
 			$widthArray = array(
 				'sl_no' 		=> '4',
-				'description' 	=> '47',
+				'description' 	=> '45',
 				'unit' 			=> '5',
 				'qty' 			=> '5',
 				'rate' 	        => '10',
-				'dis'           => '6',
+				'dis'           => '8',
 				'tax'           => '12',
 				'amount' 		=> '11',
 			);
 		} else {
 			$widthArray = array(
 				'sl_no' 		=> '4',
-				'description' 	=> '50',
+				'description' 	=> '48',
 				'unit' 			=> '5',
 				'qty' 			=> '6',
 				'rate' 	        => '9',
-				'dis'           => '6',
+				'dis'           => '8',
 				'tax'           => '10',
 				'amount' 		=> '10',
 			);
@@ -830,7 +830,7 @@ class GstInvoice extends MyPDF{
 				      $tbl .='<td colspan="1" style="text-align:center;width: '.$colW['qty'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.format_qty($res2->sales_qty).'</td>';
 
 				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['rate'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;"><nobr>'.store_number_format($res2->price_per_unit).'</nobr></td>';
-				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['dis'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.store_number_format($res2->discount_amt).'</td>';
+				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['dis'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;"><nobr>'.store_number_format($res2->discount_amt).'</nobr></td>';
 				      $tbl .='<td colspan="1" class="text-center" style="width: '.$colW['tax'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.store_number_format($res2->tax_amt).'</td>';
 				      $tbl .='<td colspan="1" class="text-right" style="width: '.$colW['amount'].';font-size:12px;border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:none;">'.(store_number_format($res2->total_cost)).'</td>';
 				      

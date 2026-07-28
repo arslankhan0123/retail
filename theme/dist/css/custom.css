@@ -351,3 +351,13 @@ select[readonly].select2 + .select2-container {
 .btnhold {
     font-size: 20px !important;
 }
+
+.pos-action-buttons {
+    display: flex;
+}
+
+.pos-action-button {
+    flex: 1 1 20%;
+    min-width: 0;
+    padding: 0 10px;
+}

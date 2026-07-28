@@ -387,6 +387,9 @@ $('.show_payments_modal').on("click",function (e) {
 		return;
     }
     else{
+    	$('#multiple-payments-modal').data('card-payment', false);
+    	$("#amount_1").prop("readonly", false);
+    	$("#amount_1").parent().parent().show();
     	adjust_payments();
     	$("#add_payment_row,#payment_type_1").parent().show();
     	$("#amount_1").parent().parent().removeClass('col-md-12').addClass('col-md-6');
@@ -402,6 +405,11 @@ $('#show_cash_modal').on("click",function (e) {
 		return;
     }
     else{
+    	$('#multiple-payments-modal').data('card-payment', false);
+    	$("#amount_1").prop("readonly", false);
+    	$("#amount_1").parent().parent().show();
+    	$("#payment_type_1").val("Cash");
+    	$("#payment_note_1").val("Paid By Cash");
     	adjust_payments();
     	$("#add_payment_row,#payment_type_1").parent().hide();
     	$("#amount_1").focus();
@@ -409,6 +417,35 @@ $('#show_cash_modal').on("click",function (e) {
     	$('#multiple-payments-modal').modal('toggle');
     }
 }); //hold_invoice end
+
+$(document).on("click", "#show_card_modal", function (e) {
+	//table should not be empty
+	if($(".items_table tr").length==1){
+    	toastr["error"]("Please Select Items from List!!");
+    	failed.currentTime = 0;
+		failed.play();
+		return;
+    }
+    else{
+    	$('#multiple-payments-modal').data('card-payment', true);
+    	adjust_payments();
+
+    	// CARD may not exist in the configured payment-type list.
+    	if($("#payment_type_1 option[value='CARD']").length==0){
+    		$("#payment_type_1").append('<option value="CARD">CARD</option>');
+    	}
+    	$("#payment_type_1").val("CARD");
+    	$("#payment_note_1").val("Paid By Card");
+
+    	// Card payments collect the exact net amount after discount.
+    	$("#amount_1").val($(".sales_div_tot_payble").text()).prop("readonly", true);
+    	adjust_payments();
+
+    	$("#add_payment_row,#payment_type_1").parent().hide();
+    	$("#amount_1").parent().parent().hide();
+    	$('#multiple-payments-modal').modal('toggle');
+    }
+}); //show_card_modal end
 
 $('#add_payment_row').on("click",function (e) {
 	
@@ -541,7 +578,7 @@ $("#item_search").autocomplete({
                 if (res.length) {
                     result = $.map(res, function(el){
                         return {
-                            label: el.item_code +'--[Qty:'+el.stock+'] --'+ el.label,
+                            label: el.item_code +' -- '+(el.custom_barcode || '')+' -- Qty: '+el.stock+' -- '+el.label,
                             value: '',
                             id: el.id,
                             item_name: el.value,

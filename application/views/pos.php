@@ -155,12 +155,12 @@
     <!-- **********************MODALS END***************** -->
     <!-- Main content -->
     <section class="content">
-      <div class="row">
+      <div class="row pos-main-row">
         <!-- left column -->
-        <div class="col-md-7">
+        <div class="col-md-7 pos-left-column">
          
           <!-- general form elements -->
-          <div class="box box-primary">
+          <div class="box box-primary pos-left-box">
             <!-- form start -->
             <form class="form-horizontal" id="pos-form" >
             <div class="box-header with-border" style="padding-bottom: 0px;">
@@ -398,28 +398,35 @@
                   <?php if(isset($sales_id)){ $btn_id='update';$btn_name="Cash"; ?>
                     <input type="hidden" name="sales_id" id="sales_id" value="<?php echo $sales_id;?>"/>
                   <?php } else{ $btn_id='save';$btn_name="Cash";} ?>
-                  <div class="col-md-12 text-right">
+                  <div class="col-md-12 text-right pos-action-buttons">
 
-                    <div class="col-sm-3">
+                    <div class="pos-action-button">
                       <button type="button" id="hold_invoice" name="" class="btn bg-yellow btn-block btn-lg btnhold" title="Hold Invoice [Alt+H]" style="border-radius: 20px !important;">
                       <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
                        Hold
                      </button>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="pos-action-button">
                       <button type="button" id="" name="" class="btn btn-primary btnhold btn-block btn-lg show_payments_modal" title="Multiple Payments [Alt+M]" style="border-radius: 20px !important;">
                             <i class="fa fa-credit-card" aria-hidden="true"></i>
                              Multiple
                            </button>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="pos-action-button">
                       <button type="button" id="<?php echo "show_cash_modal";?>" name="" class="btn btnhold btn-success btn-block btn-lg Alt_c" title="By Cash & Save [Alt+C]" style="border-radius: 20px !important;">
                             <i class="fa fa-money" aria-hidden="true"></i>
                              <?php echo $btn_name;?>
                            </button>
                     </div>
 
-                    <div class="col-sm-3">
+                    <div class="pos-action-button">
+                      <button type="button" id="show_card_modal" name="" class="btn btn-info btnhold btn-block btn-lg" title="Pay Full Amount By Card" style="border-radius: 20px !important;">
+                            <i class="fa fa-credit-card" aria-hidden="true"></i>
+                             Card
+                           </button>
+                    </div>
+
+                    <div class="pos-action-button">
                       <button type="button" id="pay_all" name="" class="btn bg-purple btnhold btn-block btn-lg Alt_a" title="By Cash & Save [Alt+A]" style="border-radius: 20px !important;">
                             <i class="fa fa-money" aria-hidden="true"></i>
                              Pay
@@ -433,9 +440,9 @@
         </div>
         <!--/.col (left) -->
         <!-- right column -->
-        <div class="col-md-5">
+        <div class="col-md-5 pos-right-column">
           <!-- Horizontal Form -->
-          <div class="box box-info">
+          <div class="box box-info pos-right-box">
             <!-- form start -->
             
               <div class="box-body">
@@ -492,8 +499,8 @@
                       </style> -->
                      
 
-                            <section class="content .sec_div" >
-                              <div class="row search_div" style="overflow-y: scroll;min-height: 100px;height: 550px">
+                            <section class="content sec_div" >
+                              <div class="row search_div" style="overflow-y: auto;min-height: 100px;">
                               </div>
                               <h4 class='text-danger text-center error_div' style="display: none;">No More Records Found</h4>
                             </section>
@@ -559,7 +566,7 @@
     store_module=true;
   <?php } ?>
 </script>
-<script src="<?php echo $theme_link; ?>js/pos.js"></script>
+<script src="<?php echo $theme_link; ?>js/pos.js?v=<?php echo time(); ?>"></script>
 <script>
     var base_url=$("#base_url").val();
     /*$("#store_id").on("change",function(){
@@ -1029,6 +1036,11 @@ $(document).on("input", ".payment_discount_input", function(){
   $("#discount_input").val(discount);
   final_total();
   adjust_payments();
+
+  if($("#multiple-payments-modal").data("card-payment")){
+    $("#amount_1").val($(".sales_div_tot_payble").text());
+    adjust_payments();
+  }
 });
 
 $(document).ready(function(){
@@ -1058,6 +1070,27 @@ $(document).ready(function(){
   $(".items_table").parent().css("height",(first_div-second_div)+items_table+230);/**/
   $(".search_div").height(((parseFloat(second_div)-parseFloat(items_table))>500) ? 500 : (second_div-items_table) );/**/
   $(".sec_div").height(((parseFloat(second_div)-parseFloat(items_table))>500) ? (parseFloat(second_div)-parseFloat(items_table)) : (second_div-items_table) );/**/
+
+  function sync_pos_panel_heights(){
+    if($(window).width() < 992){
+      $(".pos-right-box, .search_div, .sec_div").css("height", "");
+      return;
+    }
+
+    var left_height = $(".pos-left-box").outerHeight();
+    var right_box = $(".pos-right-box");
+    var search_div = $(".search_div");
+
+    right_box.outerHeight(left_height);
+
+    var used_height = search_div.offset().top - right_box.offset().top;
+    var search_height = Math.max(100, left_height - used_height - 25);
+    $(".sec_div").css("height", "auto");
+    search_div.height(search_height);
+  }
+
+  sync_pos_panel_heights();
+  $(window).on("resize", sync_pos_panel_heights);
 
   
 
@@ -1139,7 +1172,7 @@ $(document).ready(function(){
       }
     });
       //DISABLE THE HOLD BUTTON
-      $("#hold_invoice,#show_cash_modal,#pay_all").attr('disabled',true).removeAttr('id');
+      $("#hold_invoice,#show_cash_modal,#show_card_modal,#pay_all").attr('disabled',true).removeAttr('id');
 
  <?php } ?>
   //UPDATE PROCESS END

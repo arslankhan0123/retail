@@ -333,6 +333,7 @@ public function get_sub_bin_data()
 				  $json_arr["value"] = $res->item_name;
 				  $json_arr["label"] = $res->item_name;
 				  $json_arr["item_code"] = $res->item_code;
+				  $json_arr["custom_barcode"] = isset($res->custom_barcode) ? $res->custom_barcode : '';
 				  $json_arr["stock"] = (isset($search_for) && $search_for=='sales') ? total_available_qty_items_of_warehouse($warehouse_id,$store_id,$res->id) : $res->stock;
 				  $json_arr["purchase_price"] = ($show_purchase_price) ? store_number_format($res->purchase_price) : '';
 				  $json_arr["service_bit"] = $res->service_bit;

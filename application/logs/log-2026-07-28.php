@@ -12,3 +12,4 @@ ERROR - 2026-07-28 00:24:49 --> Severity: Notice --> Undefined variable: warehou
 ERROR - 2026-07-28 00:28:35 --> Severity: Notice --> Undefined variable: tax_id F:\Projects\retail\application\views\services\services.php 133
 ERROR - 2026-07-28 00:32:44 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
 ERROR - 2026-07-28 00:34:02 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 10:55:42 --> 404 Page Not Found: Theme/plugins

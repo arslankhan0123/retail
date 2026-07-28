@@ -346,3 +346,8 @@ select[readonly].select2 + .select2-container {
          
 
 /*****************************ASKARALI CSS 19-JUNE-2021 END*****************************/
+
+/* POS primary action buttons */
+.btnhold {
+    font-size: 20px !important;
+}

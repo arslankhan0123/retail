@@ -401,7 +401,7 @@
                   <div class="col-md-12 text-right">
 
                     <div class="col-sm-3">
-                      <button type="button" id="hold_invoice" name="" class="btn bg-maroon btn-block btn-lg btnhold" title="Hold Invoice [Alt+H]" style="border-radius: 20px !important;">
+                      <button type="button" id="hold_invoice" name="" class="btn bg-yellow btn-block btn-lg btnhold" title="Hold Invoice [Alt+H]" style="border-radius: 20px !important;">
                       <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
                        Hold
                      </button>
@@ -422,7 +422,7 @@
                     <div class="col-sm-3">
                       <button type="button" id="pay_all" name="" class="btn bg-purple btnhold btn-block btn-lg Alt_a" title="By Cash & Save [Alt+A]" style="border-radius: 20px !important;">
                             <i class="fa fa-money" aria-hidden="true"></i>
-                             Pay All
+                             Pay
                            </button>
                     </div>
                   </div>

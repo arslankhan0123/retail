@@ -361,3 +361,10 @@ select[readonly].select2 + .select2-container {
     min-width: 0;
     padding: 0 10px;
 }
+
+.pos-system-field:disabled {
+    color: #777 !important;
+    background-color: #e5e5e5 !important;
+    cursor: not-allowed;
+    opacity: 1;
+}

@@ -320,7 +320,7 @@
                           <th width="10%"><?= $this->lang->line('discount'); ?>(<?=$CI->currency()?>)</th>
                           <th width="5%"><?= $this->lang->line('tax'); ?></th>
                           <th width="10%"><?= $this->lang->line('subtotal'); ?></th>
-                          <th width="5%"><i class="fa fa-close"></i></th>
+                          <th width="5%"><img src="<?= base_url('uploads/icon02.png') ?>" class="pos-remove-icon" alt="Remove"></th>
                         </thead>
                         <tbody id="pos-form-tbody" style="font-size: 16px;font-weight: bold;overflow: scroll;">
                           <!-- body code -->
@@ -692,7 +692,7 @@ function proceed_addrow(id='',item_obj=''){
         quantity       +='<input typ="text" value="'+format_qty(1)+'" class="form-control no-padding text-center min_width" onchange="item_qty_input('+item_id+','+rowcount+')" id="item_qty_'+rowcount+'" name="item_qty_'+rowcount+'">';
         quantity       +='<span class="input-group-btn"><button onclick="increment_qty('+item_id+','+rowcount+')" type="button" class="btn btn-default btn-flat"><i class="fa fa-plus text-success"></i></button></span></div>';
     var sub_total       =(to_Fixed(1)*to_Fixed(sales_price));//Initial
-    var remove_btn      ='<a class="fa fa-fw fa-trash-o text-red" style="cursor: pointer;font-size: 20px;" onclick="removerow('+rowcount+')" title="Delete Item?"></a>';
+    var remove_btn      ='<img src="<?= base_url('uploads/icon02.png') ?>" class="pos-remove-icon" onclick="removerow('+rowcount+')" title="Delete Item?" alt="Remove">';
 
     var custom_barcode = (item_obj=='') ? ($('#div_'+id).attr('data-custom-barcode') || '') : (item_obj.custom_barcode || '');
 

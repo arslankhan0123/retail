@@ -386,3 +386,15 @@ select[readonly].select2 + .select2-container {
     line-height: 1;
     transform: translateY(-50%);
 }
+
+.pos-remove-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.items_table thead .pos-remove-icon {
+    cursor: default;
+}

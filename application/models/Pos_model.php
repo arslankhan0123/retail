@@ -688,7 +688,7 @@ class Pos_model extends CI_Model {
 			    $quantity       .='<input typ="text" value="'.format_qty($res3->sales_qty).'" class="form-control min_width" onkeyup="item_qty_input('.$res3->item_id.','.$i.')" id="item_qty_'.$i.'" name="item_qty_'.$i.'">';
 			    $quantity       .='<span class="input-group-btn"><button onclick="increment_qty('.$res3->item_id.','.$i.')" type="button" class="btn btn-default btn-flat"><i class="fa fa-plus text-success"></i></button></span></div>';
 			    $sub_total       =$res3->total_cost;
-			    $remove_btn      ='<a class="fa fa-fw fa-trash-o text-red" style="cursor: pointer;font-size: 20px;" onclick="removerow('.$i.')" title="Delete Item?"></a>';
+			    $remove_btn      ='<img src="'.base_url('uploads/icon02.png').'" class="pos-remove-icon" onclick="removerow('.$i.')" title="Delete Item?" alt="Remove">';
 			    
 		  		echo '<tr id="row_'.$i.'" data-row="0" data-item-id="'.$res3->item_id.'" >'; /*item id */
 		  		echo '<td id="td_'.$i.'_0">
@@ -833,7 +833,7 @@ class Pos_model extends CI_Model {
 			    $quantity       .='<input typ="text" value="'.$res3->sales_qty.'" class="form-control min_width" onkeyup="item_qty_input('.$res3->item_id.','.$i.')" id="item_qty_'.$i.'" name="item_qty_'.$i.'">';
 			    $quantity       .='<span class="input-group-btn"><button onclick="increment_qty('.$res3->item_id.','.$i.')" type="button" class="btn btn-default btn-flat"><i class="fa fa-plus text-success"></i></button></span></div>';
 			    $sub_total       =$res3->total_cost;
-			    $remove_btn      ='<a class="fa fa-fw fa-trash-o text-red" style="cursor: pointer;font-size: 20px;" onclick="removerow('.$i.')" title="Delete Item?"></a>';
+			    $remove_btn      ='<img src="'.base_url('uploads/icon02.png').'" class="pos-remove-icon" onclick="removerow('.$i.')" title="Delete Item?" alt="Remove">';
 			    
 		  		echo '<tr id="row_'.$i.'" data-row="0" data-item-id="'.$res3->item_id.'" >'; /*item id */
 		  		echo '<td id="td_'.$i.'_0">

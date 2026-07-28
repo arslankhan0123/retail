@@ -87,3 +87,5 @@ ERROR - 2026-07-28 12:02:41 --> 404 Page Not Found: Faviconico/index
 ERROR - 2026-07-28 16:05:20 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
 ERROR - 2026-07-28 16:06:21 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
 ERROR - 2026-07-28 16:06:36 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-28 12:43:37 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-07-28 12:46:25 --> 404 Page Not Found: Theme/plugins

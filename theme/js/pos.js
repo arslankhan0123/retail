@@ -57,7 +57,8 @@ function save(print=false,pay_all=false){
     var customer_id=$("#customer_id").val();
 
     /* walk_in_customer_name defined in pos.php */
-    if($('option:selected', "#customer_id").attr('data-delete_bit')==1 && balance!=0){
+    var is_credit_sale = $("#direct_payment_type").val() === "CREDIT";
+    if($('option:selected', "#customer_id").attr('data-delete_bit')==1 && balance!=0 && !is_credit_sale){
     	toastr["warning"]("Walk-in Customer Should Pay Complete Amount!!");
 		return;
     }
@@ -392,6 +393,7 @@ $('.show_payments_modal').on("click",function (e) {
     	$("#payment_mode_icon").attr("class", "fa fa-list");
     	$("#amount_1").prop("readonly", false);
     	$("#amount_1").parent().parent().show();
+    	$(".payment_discount_input").parent().parent().removeClass('col-md-12').addClass('col-md-6');
     	adjust_payments();
     	$("#add_payment_row,#payment_type_1").parent().show();
     	$("#amount_1").parent().parent().removeClass('col-md-12').addClass('col-md-6');
@@ -412,6 +414,7 @@ $('#show_cash_modal').on("click",function (e) {
     	$("#payment_mode_icon").attr("class", "fa fa-money");
     	$("#amount_1").prop("readonly", false);
     	$("#amount_1").parent().parent().show();
+    	$(".payment_discount_input").parent().parent().removeClass('col-md-12').addClass('col-md-6');
     	var cash_option = $("#payment_type_1 option").filter(function(){
     		return $.trim($(this).val()).toUpperCase() === "CASH";
     	}).first();
@@ -457,9 +460,41 @@ $(document).on("click", "#show_card_modal", function (e) {
 
     	$("#add_payment_row,#payment_type_1").parent().hide();
     	$("#amount_1").parent().parent().hide();
+    	$(".payment_discount_input").parent().parent().removeClass('col-md-6').addClass('col-md-12');
     	$('#multiple-payments-modal').modal('toggle');
     }
 }); //show_card_modal end
+
+$(document).on("click", "#show_credit_modal", function (e) {
+	//table should not be empty
+	if($(".items_table tr").length==1){
+		toastr["error"]("Please Select Items from List!!");
+		failed.currentTime = 0;
+		failed.play();
+		return;
+	}
+
+	// Keep the hidden payment equal to Net when the discount changes.
+	$('#multiple-payments-modal').data('card-payment', true);
+	$("#direct_payment_type").val("CREDIT");
+	$("#payment_mode_icon").attr("class", "fa fa-clock-o");
+
+	if($("#payment_type_1 option[value='CREDIT']").length==0){
+		$("#payment_type_1").append('<option value="CREDIT">CREDIT</option>');
+	}
+	$("#payment_type_1").val("CREDIT");
+	$("#payment_note_1").val("Credit Sale");
+
+	// Credit collects the complete net amount after discount.
+	adjust_payments();
+	$("#amount_1").val($(".sales_div_tot_payble").text()).prop("readonly", true);
+	adjust_payments();
+
+	$("#add_payment_row,#payment_type_1").parent().hide();
+	$("#amount_1").parent().parent().hide();
+	$(".payment_discount_input").parent().parent().removeClass('col-md-6').addClass('col-md-12');
+	$('#multiple-payments-modal').modal('toggle');
+}); //show_credit_modal end
 
 $('#add_payment_row').on("click",function (e) {
 	

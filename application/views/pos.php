@@ -429,6 +429,13 @@
                     </div>
 
                     <div class="pos-action-button">
+                      <button type="button" id="show_credit_modal" name="" class="btn bg-navy btnhold btn-block btn-lg" title="Save As Credit Sale" style="border-radius: 20px !important;">
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                             Credit
+                           </button>
+                    </div>
+
+                    <div class="pos-action-button">
                       <button type="button" id="pay_all" name="" class="btn bg-purple btnhold btn-block btn-lg Alt_a" title="By Cash & Save [Alt+A]" style="border-radius: 20px !important;">
                             <i class="fa fa-money" aria-hidden="true"></i>
                              Pay
@@ -1147,7 +1154,7 @@ $(document).ready(function(){
       }
     });
       //DISABLE THE HOLD BUTTON
-      $("#hold_invoice,#show_cash_modal,#show_card_modal,#pay_all").attr('disabled',true).removeAttr('id');
+      $("#hold_invoice,#show_cash_modal,#show_card_modal,#show_credit_modal,#pay_all").attr('disabled',true).removeAttr('id');
 
  <?php } ?>
   //UPDATE PROCESS END

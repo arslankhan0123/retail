@@ -270,13 +270,11 @@
                 <div class="col-md-4">
                   <div class="input-group" data-toggle="tooltip" title="Invoice Initial Code">
                     <span class="input-group-addon"><i class="fa fa-th-list"></i></span>
-                     <input type="text" class="form-control pos-system-field" placeholder="Invioce Initial Code" id="init_code" value="<?= $init_code ?>" disabled>
-                     <input type="hidden" name="init_code" value="<?= $init_code ?>">
+                     <input type="text" class="form-control pos-system-field" placeholder="Invioce Initial Code" id="init_code" name="init_code" value="<?= $init_code ?>">
                   </div>
                 </div> 
                 <div class="col-md-2">
-                     <input type="text" class="form-control pos-system-field" data-toggle="tooltip" title="Invoice Count ID" placeholder="Invioce Number" id="count_id" value="<?= $count_id ?>" disabled>
-                     <input type="hidden" name="count_id" value="<?= $count_id ?>">
+                     <input type="text" class="form-control pos-system-field" data-toggle="tooltip" title="Invoice Count ID" placeholder="Invioce Number" id="count_id" name="count_id" value="<?= $count_id ?>">
                 </div> 
 
               </div><!-- row end -->
@@ -428,14 +426,12 @@
                            </button>
                     </div>
 
-                    <!--
                     <div class="pos-action-button">
                       <button type="button" id="show_credit_modal" name="" class="btn bg-navy btnhold btn-block btn-lg" title="Save As Credit Sale" style="border-radius: 20px !important;">
                             <i class="fa fa-clock-o" aria-hidden="true"></i>
                              Credit
                            </button>
                     </div>
-                    -->
 
                     <div class="pos-action-button">
                       <button type="button" id="pay_all" name="" class="btn bg-purple btnhold btn-block btn-lg Alt_a" title="By Cash & Save [Alt+A]" style="border-radius: 20px !important;">

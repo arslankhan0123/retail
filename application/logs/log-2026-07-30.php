@@ -54,3 +54,4 @@ ERROR - 2026-07-30 10:57:43 --> Query error: No connection could be made because
  - Invalid query: SELECT `version`
 FROM `db_sitesettings`
 ERROR - 2026-07-30 10:57:43 --> Severity: error --> Exception: Call to a member function row() on bool F:\Projects\retail\application\models\Updates_model.php 25
+ERROR - 2026-07-30 13:33:01 --> 404 Page Not Found: Faviconico/index

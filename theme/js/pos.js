@@ -58,6 +58,15 @@ function save(print=false,pay_all=false){
 
     /* walk_in_customer_name defined in pos.php */
     var is_credit_sale = $("#direct_payment_type").val() === "CREDIT";
+    $("select[id^='payment_type_']").each(function(){
+		if(String($(this).val()).toUpperCase() === "CREDIT"){
+			is_credit_sale = true;
+		}
+    });
+    if($('option:selected', "#customer_id").attr('data-delete_bit')==1 && is_credit_sale){
+		toastr["warning"]("Credit sale is not allowed for Walk-in Customer. Please select another customer.");
+		return;
+    }
     if($('option:selected', "#customer_id").attr('data-delete_bit')==1 && balance!=0 && !is_credit_sale){
     	toastr["warning"]("Walk-in Customer Should Pay Complete Amount!!");
 		return;
@@ -473,6 +482,12 @@ $(document).on("click", "#show_credit_modal", function (e) {
 		failed.play();
 		return;
 	}
+	if($('option:selected', "#customer_id").attr('data-delete_bit')==1){
+		toastr["warning"]("Credit sale is not allowed for Walk-in Customer. Please select another customer.");
+		failed.currentTime = 0;
+		failed.play();
+		return;
+	}
 
 	// Keep the hidden payment equal to Net when the discount changes.
 	$('#multiple-payments-modal').data('card-payment', true);
@@ -495,6 +510,19 @@ $(document).on("click", "#show_credit_modal", function (e) {
 	$(".payment_discount_input").parent().parent().removeClass('col-md-6').addClass('col-md-12');
 	$('#multiple-payments-modal').modal('toggle');
 }); //show_credit_modal end
+
+$(document).on("change", "select[id^='payment_type_']", function(){
+	if(String($(this).val()).toUpperCase() === "CREDIT" &&
+		$('option:selected', "#customer_id").attr('data-delete_bit')==1){
+		var fallback_value = $(this).find("option").filter(function(){
+			return String(this.value).toUpperCase() !== "CREDIT";
+		}).first().val();
+		$(this).val(typeof fallback_value === "undefined" ? "" : fallback_value);
+		toastr["warning"]("Credit sale is not allowed for Walk-in Customer. Please select another customer.");
+		failed.currentTime = 0;
+		failed.play();
+	}
+});
 
 $('#add_payment_row').on("click",function (e) {
 	

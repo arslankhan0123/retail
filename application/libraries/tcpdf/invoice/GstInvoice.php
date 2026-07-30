@@ -99,21 +99,31 @@ class GstInvoice extends MyPDF{
         $w = $w_invoice;
         $h = 30;
         
-        $payment = $this->CI->db->from('db_salespayments')
-                            ->where('sales_id',$sales->id)->order_by('id','desc')
-                            ->get()->first_row();
-        
-        $inv_type = "CREDIT";
-        // print_r($payment->payment_type);
-        if(!empty($payment)){
-            $inv_type = $payment->payment_type;
+        $payments = $this->CI->db->select('payment_type')
+                            ->from('db_salespayments')
+                            ->where('sales_id', $sales->id)
+                            ->order_by('id', 'asc')
+                            ->get();
+
+        $payment_types = array();
+        $payment_type_keys = array();
+        foreach($payments->result() as $payment){
+            $payment_type = trim($payment->payment_type);
+            $payment_type_key = strtoupper($payment_type);
+            if($payment_type !== '' && !in_array($payment_type_key, $payment_type_keys, true)){
+                $payment_types[] = $payment_type;
+                $payment_type_keys[] = $payment_type_key;
+            }
         }
-  
-        if($inv_type == 'CASH'){
+
+        $inv_type = !empty($payment_types) ? implode(', ', $payment_types) : 'CREDIT';
+        $primary_inv_type = !empty($payment_types) ? strtoupper($payment_types[0]) : 'CREDIT';
+
+        if($primary_inv_type == 'CASH'){
 			// $sales->due_date = $sales->sales_date;
 			$sales->due_date = '';
 			}
-			if ($inv_type == 'CREDIT') {
+			if ($primary_inv_type == 'CREDIT') {
 				if(!$sales->due_date){
 				$sales->due_date = $sales->sales_date;
 				}
@@ -123,7 +133,7 @@ class GstInvoice extends MyPDF{
         $due_date = !empty($sales->due_date) ? show_date($sales->due_date) : '';
         $invoice_details = '<table border="0" cellpadding="0" cellspacing="0" style="width:100%;">';
         $invoice_details .= '<tr><td style="width:38%;"><b>'.$this->CI->lang->line('invoice_no').'</b></td><td style="width:4%;"><b>:</b></td><td style="width:58%;">'.$sales->sales_code.'</td></tr>';
-        $invoice_details .= '<tr><td style="width:38%;"><b>Invoice Type</b></td><td style="width:4%;"><b>:</b></td><td style="width:58%;">'.$inv_type.'</td></tr>';
+        $invoice_details .= '<tr><td style="width:38%;"><b>Payment Types</b></td><td style="width:4%;"><b>:</b></td><td style="width:58%;">'.html_escape($inv_type).'</td></tr>';
         $invoice_details .= '<tr><td style="width:38%;"><b>Invoice Date</b></td><td style="width:4%;"><b>:</b></td><td style="width:58%;">'.show_date($sales->sales_date).'</td></tr>';
         $invoice_details .= '<tr><td style="width:38%;"><b>'.$this->CI->lang->line('due_date').'</b></td><td style="width:4%;"><b>:</b></td><td style="width:58%;">'.$due_date.'</td></tr>';
         $invoice_details .= '<tr><td style="width:38%;"><b>Reference</b></td><td style="width:4%;"><b>:</b></td><td style="width:58%;">'.$sales->reference_no.'</td></tr>';
@@ -496,6 +506,7 @@ class GstInvoice extends MyPDF{
 			? (float) $sales->tot_discount_to_all_amt
 			: $tot_discount_amt + (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0);
 		$invoice_net_total = (float) $sales->grand_total;
+		$change_return_amount = (float) get_change_return_amount($sales->id);
 
 
 		$tbl .= '<div style="font-size:20px;line-height:20px;">&nbsp;</div>';
@@ -510,8 +521,9 @@ class GstInvoice extends MyPDF{
 		$col_r_right = $col_right * 0.4;
 
 		$tbl .= '<tr>';
-		// Bank Details spans 3 rows
-		$tbl .= '<td rowspan="3" colspan="3" style="border:none;border-bottom:none;padding-top:20px;width:'.$col_left.'%;">';
+		// Bank Details spans the subtotal, discount, VAT and optional change rows.
+		$bank_details_rows = ($change_return_amount > 0) ? 4 : 3;
+		$tbl .= '<td rowspan="'.$bank_details_rows.'" colspan="3" style="border:none;border-bottom:none;padding-top:20px;width:'.$col_left.'%;">';
 		if(!empty($store->bank_details)){
 			$tbl .= '<span style="font-size:12px;color:rgb(0, 0, 128);font-style:italic;font-weight:bold;">Bank Details:</span><br/>';
 			$tbl .= '<span style="text-align:justify;font-size:11px;line-height:1.2;">' . nl2br($store->bank_details) . '</span>';
@@ -541,7 +553,16 @@ class GstInvoice extends MyPDF{
 		$tbl .= '</td>';
 		$tbl .= '</tr>';
 
-		// Row 4: Amount in Words + Net Total
+		if($change_return_amount > 0){
+			$tbl .= '<tr>';
+			$tbl .= '<td class="text-left" style="height:22px; width: '.$col_r_left.'%; font-size:15px; border-bottom:none; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">Change</td>';
+			$tbl .= '<td class="text-right" style="height:22px; font-size:15px; width: '.$col_r_right.'%; border-bottom:none; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">';
+			$tbl .= store_number_format($change_return_amount);
+			$tbl .= '</td>';
+			$tbl .= '</tr>';
+		}
+
+		// Final row: Amount in Words + Net Total
 		$tbl .= '<tr>';
 		$tbl .= '<td colspan="3" style="width:'.$col_left.'%;border-top:none;"><div style="font-size:12px;"><b>' . $this->CI->lang->line("amount_in_words") . ':</b> ';
 		$tbl .= no_to_words($invoice_net_total);
@@ -875,6 +896,7 @@ class GstInvoice extends MyPDF{
 			? (float) $sales->tot_discount_to_all_amt
 			: $tot_discount_amt + (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0);
 		$invoice_net_total = (float) $sales->grand_total;
+		$change_return_amount = (float) get_change_return_amount($sales->id);
 		
 		
 		$tbl .= '<div style="font-size:20px;line-height:20px;">&nbsp;</div>';
@@ -887,8 +909,9 @@ class GstInvoice extends MyPDF{
 		$col_r_right = $col_right * 0.4;
 
 		$tbl .= '<tr>';
-		// Bank Details spans 3 rows
-		$tbl .= '<td rowspan="3" colspan="3" style="border:none;border-bottom:none;padding-top:20px;width:'.$col_left.'%;">';
+		// Bank Details spans the subtotal, discount, VAT and optional change rows.
+		$bank_details_rows = ($change_return_amount > 0) ? 4 : 3;
+		$tbl .= '<td rowspan="'.$bank_details_rows.'" colspan="3" style="border:none;border-bottom:none;padding-top:20px;width:'.$col_left.'%;">';
 		if(!empty($store->bank_details)){
 			$tbl .= '<span style="font-size:12px;color:rgb(0, 0, 128);font-style:italic;font-weight:bold;">Bank Details:</span><br/>';
 			$tbl .= '<span style="text-align:justify;font-size:11px;line-height:1.2;">' . nl2br($store->bank_details) . '</span>';
@@ -918,7 +941,16 @@ class GstInvoice extends MyPDF{
 		$tbl .= '</td>';
 		$tbl .= '</tr>';
 
-		// Row 4: Amount in Words + Net Total
+		if($change_return_amount > 0){
+			$tbl .= '<tr>';
+			$tbl .= '<td class="text-left" style="height:22px; width: '.$col_r_left.'%; font-size:13px; border-bottom:none; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">Change</td>';
+			$tbl .= '<td class="text-right" style="height:22px; font-size:13px; width: '.$col_r_right.'%; border-bottom:none; border-left:0.5px solid #000000; border-right:0.5px solid #000000;">';
+			$tbl .= store_number_format($change_return_amount);
+			$tbl .= '</td>';
+			$tbl .= '</tr>';
+		}
+
+		// Final row: Amount in Words + Net Total
 		$tbl .= '<tr>';
 		$tbl .= '<td colspan="3" style="width:'.$col_left.'%;border-top:none;"><div style="font-size:12px;"><b>'.$this->CI->lang->line("amount_in_words").':</b> ';
 		$tbl .=no_to_words($invoice_net_total);

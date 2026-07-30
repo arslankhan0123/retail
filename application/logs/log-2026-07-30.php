@@ -55,3 +55,54 @@ ERROR - 2026-07-30 10:57:43 --> Query error: No connection could be made because
 FROM `db_sitesettings`
 ERROR - 2026-07-30 10:57:43 --> Severity: error --> Exception: Call to a member function row() on bool F:\Projects\retail\application\models\Updates_model.php 25
 ERROR - 2026-07-30 13:33:01 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-30 20:50:00 --> Severity: Notice --> A non well formed numeric value encountered F:\Projects\retail\application\models\Pos_model.php 511
+ERROR - 2026-07-30 20:54:48 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-30 20:54:52 --> Could not find the language line "company_address"
+ERROR - 2026-07-30 20:55:03 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-30 20:56:17 --> Could not find the language line "company_address"
+ERROR - 2026-07-30 20:57:45 --> Could not find the language line "company_address"
+ERROR - 2026-07-30 21:47:01 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-30 21:47:09 --> Could not find the language line "company_address"
+ERROR - 2026-07-30 17:49:09 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-30 17:50:16 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:16 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:16 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:16 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:17 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:17 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:17 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:17 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:23 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:23 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:23 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:23 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:23 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:23 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:23 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:23 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:23 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:23 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:23 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:23 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:24 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 17:50:24 --> 404 Page Not Found: Uploads/items
+ERROR - 2026-07-30 22:41:15 --> Could not find the language line "company_address"
+ERROR - 2026-07-30 22:47:23 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-30 22:47:41 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-30 22:47:54 --> Could not find the language line "company_address"
+ERROR - 2026-07-30 22:49:32 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-30 22:50:33 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-30 22:58:38 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-30 22:59:28 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-30 23:01:58 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-30 23:02:33 --> Could not find the language line "company_address"
+ERROR - 2026-07-30 19:03:14 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-07-30 23:04:13 --> Could not find the language line "company_address"
+ERROR - 2026-07-30 23:06:14 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-30 23:06:23 --> Could not find the language line "company_address"
+ERROR - 2026-07-30 23:13:51 --> Could not find the language line "company_address"
+ERROR - 2026-07-30 23:15:11 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-30 23:15:31 --> Could not find the language line "company_address"
+ERROR - 2026-07-30 23:15:53 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
+ERROR - 2026-07-30 23:32:53 --> Could not find the language line "company_address"
+ERROR - 2026-07-30 23:34:00 --> Could not find the language line "company_address"

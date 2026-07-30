@@ -134,6 +134,22 @@
     $tot_discount_to_all_amt=$res3->tot_discount_to_all_amt;
     $round_off=$res3->round_off;
     $payment_status=$res3->payment_status;
+
+    // A POS sale can be paid using more than one payment type.
+    $payment_types = array();
+    $payments_query = $this->db
+        ->select('payment_type')
+        ->where('sales_id', $sales_id)
+        ->order_by('id', 'asc')
+        ->get('db_salespayments');
+    foreach($payments_query->result() as $payment){
+        $payment_type = trim($payment->payment_type);
+        if($payment_type !== '' && !in_array($payment_type, $payment_types, true)){
+            $payment_types[] = $payment_type;
+        }
+    }
+    $payment_types_text = !empty($payment_types) ? implode(', ', $payment_types) : '-';
+    $change_return_amount = (float) get_change_return_amount($sales_id);
     
     if($discount_to_all_input>0){
     	$str="($discount_to_all_input%)";
@@ -150,6 +166,9 @@
     }
 
     $overall_discounted = $tot_discount_to_all_amt + $coupon_amt;
+    // Keep the POS print totals consistent with the GST PDF invoice. For POS
+    // sales this column already contains the complete saved discount.
+    $invoice_discount_amt = (float) $tot_discount_to_all_amt;
 
     $q1=$this->db->query("select * from db_store where id=".$res3->store_id." ");
     $res1=$q1->row();
@@ -259,7 +278,7 @@
                         <td align="right">Bill Date&nbsp;:&nbsp;<strong><?= $sales_date ?> <?= $created_time ?></strong></td>
                     </tr>
                     <tr>
-                        <td>Payment&nbsp;:&nbsp;<strong>Cash</strong></td>
+                        <td>Payment Types&nbsp;:&nbsp;<strong><?= html_escape($payment_types_text); ?></strong></td>
                         <td align="right">Customer&nbsp;:&nbsp;<strong><?= $customer_name; ?></strong></td>
                     </tr>
                 </table>
@@ -307,7 +326,11 @@
 			              $tot_qty=0;
 			              $subtotal=0;
 			              $tax_amt=0;
-			              $q2=$this->db->query("select b.mrp, b.item_name,a.sales_qty,a.unit_total_cost,a.price_per_unit,a.tax_amt,c.tax,a.total_cost,a.discount_amt from db_salesitems a,db_items b,db_tax c where c.id=a.tax_id and b.id=a.item_id and a.sales_id='$sales_id'");
+			              $q2=$this->db->query("select b.mrp, b.item_name,a.sales_qty,a.unit_total_cost,a.price_per_unit,a.tax_amt,c.tax,a.total_cost,a.discount_amt
+                                from db_salesitems a
+                                left join db_items b on b.id=a.item_id
+                                left join db_tax c on c.id=a.tax_id
+                                where a.sales_id='$sales_id'");
 			              foreach ($q2->result() as $res2) {
 			                  echo "<tr>";  
 			                  echo "<td style='padding-left: 2px; padding-right: 2px;' valign='top'>".++$i."</td>";
@@ -321,7 +344,8 @@
 			                  echo "<td style='text-align: right;padding-left: 2px; padding-right: 2px;' >".store_number_format($res2->total_cost)."</td>";
 			                  echo "</tr>";  
 			                  //$tot_qty+=$res2->sales_qty;
-			                  $subtotal+=($res2->total_cost);
+			                  // Same subtotal formula used by the GST PDF.
+			                  $subtotal+=($res2->price_per_unit * $res2->sales_qty);
 			                  $tax_amt+=$res2->tax_amt;
 			                  $overall_discounted+=$res2->discount_amt;
 			              }
@@ -407,17 +431,17 @@
 
                         -->
 
-                        <!-- Screenshot totals layout: 2x2 grid (Taxable | Sub Total) (Total VAT | Discount) + big Net Total -->
+                        <!-- Use the same totals and formulas as the GST PDF invoice. -->
                         <tr>
                             <td colspan="<?=$mrp_column+5?>" style="padding-top: 4px;">
                                 <table width="100%" style="border-collapse: collapse;">
                                     <tr>
                                         <td style="padding: 2px;">Sub Total&nbsp;:&nbsp;<strong><?= store_number_format($subtotal); ?></strong></td>
-                                        <td style="padding: 2px;" align="right">Discount&nbsp;:&nbsp;<strong><?= store_number_format($overall_discounted); ?></strong></td>
+                                        <td style="padding: 2px;" align="right">Discount&nbsp;:&nbsp;<strong><?= store_number_format($invoice_discount_amt); ?></strong></td>
                                     </tr>
                                     <tr>
-                                        <td style="padding: 2px;">Taxable&nbsp;:&nbsp;<strong><?= store_number_format($before_tax); ?></strong></td>
-                                        <td style="padding: 2px;" align="right">Total VAT&nbsp;:&nbsp;<strong><?= store_number_format($tax_amt); ?></strong></td>
+                                        <td style="padding: 2px;">VAT (5%)&nbsp;:&nbsp;<strong><?= store_number_format($tax_amt); ?></strong></td>
+                                        <td style="padding: 2px;" align="right">Change&nbsp;:&nbsp;<strong><?= store_number_format($change_return_amount); ?></strong></td>
                                     </tr>
                                 </table>
                             </td>

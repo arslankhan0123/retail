@@ -951,7 +951,7 @@ function adjust_payments(){
   var paid_amount =parseFloat(0);
   for (var i = 1; i <=payments_row; i++) {
     if(document.getElementById("amount_"+i)){
-      var amount = parseFloat(get_id_value("amount_"+i));
+      var amount = parseFloat(String(get_id_value("amount_"+i)).replace(/,/g, ''));
           amount = isNaN(amount) ? 0 : amount;
           console.log("amount_"+i+"="+amount);
       paid_amount += amount;

@@ -199,9 +199,24 @@ class Pos_model extends CI_Model {
 		
 
 		//FIND CUSTOMER INFORMATION BY ITS ID
-		$q1=$this->db->query("select customer_name,mobile from db_customers where id=$customer_id");
+		$q1=$this->db->query("select customer_name,mobile,delete_bit from db_customers where id=$customer_id");
 		$customer_name 	= $q1->row()->customer_name;
 		$mobile 		= $q1->row()->mobile;
+
+		// Walk-in customers cannot have credit payments. Enforce this on the
+		// server as well as in the POS UI so the rule cannot be bypassed.
+		if((int)$q1->row()->delete_bit === 1){
+			$has_credit_payment = isset($direct_payment_type) && strtoupper(trim($direct_payment_type)) === 'CREDIT';
+			for($payment_index=1; !$has_credit_payment && $payment_index<=(int)$payment_row_count; $payment_index++){
+				$payment_type_key = 'payment_type_'.$payment_index;
+				if(isset($_REQUEST[$payment_type_key]) && strtoupper(trim($_REQUEST[$payment_type_key])) === 'CREDIT'){
+					$has_credit_payment = true;
+				}
+			}
+			if($has_credit_payment){
+				return "Credit sale is not allowed for Walk-in Customer. Please select another customer.";
+			}
+		}
 
 
 		//Get coupon details
@@ -398,6 +413,13 @@ class Pos_model extends CI_Model {
 		}
 
 		$tot_received_amt = 0;
+		// Calculate change from the complete tendered amount. This also handles
+		// multiple payments where no single row exceeds the invoice total.
+		$tendered_total = isset($paid_amt) ? str_replace(',', '', trim($paid_amt)) : 0;
+		$invoice_total = str_replace(',', '', trim($tot_grand));
+		$expected_change_return = (is_numeric($tendered_total) && is_numeric($invoice_total))
+			? max(0, (float)$tendered_total - (float)$invoice_total)
+			: 0;
 		//UPDATE CUSTMER MULTPLE PAYMENTS
 		for($i=1;$i<=$payment_row_count;$i++){
 		
@@ -411,7 +433,14 @@ class Pos_model extends CI_Model {
 				}
 				else{
 					//RECEIVE VALUES FROM FORM
-					$amount 		=$this->xss_html_filter(trim($_REQUEST['amount_'.$i]));
+					$amount_input = $this->xss_html_filter(trim($_REQUEST['amount_'.$i]));
+					// Payment fields may contain thousands separators from formatted
+					// POS values. Convert them before doing arithmetic or saving.
+					$amount_input = str_replace(',', '', $amount_input);
+					if(!is_numeric($amount_input) || $amount_input < 0){
+						return "Invalid payment amount in payment row ".$i.".";
+					}
+					$amount 		= (float) $amount_input;
 					$requested_payment_type = isset($_REQUEST['payment_type_'.$i])
 						? $_REQUEST['payment_type_'.$i]
 						: (isset($_REQUEST['direct_payment_type']) ? $_REQUEST['direct_payment_type'] : '');
@@ -428,6 +457,9 @@ class Pos_model extends CI_Model {
 				if($amount>$tot_grand){
 					$change_return =$amount-$tot_grand;
 					$amount =$tot_grand;
+				}
+				if($i===1 && $expected_change_return>$change_return){
+					$change_return = $expected_change_return;
 				}
 				//end
 				$payment_code=get_init_code('sales_payment');
@@ -479,6 +511,18 @@ class Pos_model extends CI_Model {
 			    if(!$q7)
 				{
 					return "failed";
+				}
+
+				// Persist returned change explicitly. Some existing database
+				// configurations/defaults have been observed resetting this
+				// value during the initial payment insert.
+				if($change_return > 0){
+					$change_update = $this->db
+						->where('id', $last_insert_id)
+						->update('db_salespayments', array('change_return' => $change_return));
+					if(!$change_update){
+						return "failed";
+					}
 				}
 
 				if(!set_customer_tot_advance($customer_id)){

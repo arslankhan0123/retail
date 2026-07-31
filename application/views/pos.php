@@ -310,15 +310,15 @@
                     <div class="col-sm-12" style="overflow-y:auto;height: 300px;border:1px solid #337ab7;" >
                       <table class="table table-condensed table-bordered  table-responsive items_table" style="">
                         <thead class="bg-gray">
-                          <th width="15%">Barcode</th>
-                          <th width="20%"><?= $this->lang->line('item_name'); ?></th>
-                          <th width="10%"><?= $this->lang->line('stock'); ?></th>
-                          <th width="20%"><?= $this->lang->line('quantity'); ?></th>
-                          <th width="10%"><?= $this->lang->line('price'); ?></th>
-                          <th width="10%"><?= $this->lang->line('discount'); ?>(<?=$CI->currency()?>)</th>
-                          <th width="5%"><?= $this->lang->line('tax'); ?></th>
-                          <th width="10%"><?= $this->lang->line('subtotal'); ?></th>
-                          <th width="5%"><img src="<?= base_url('uploads/icon02.png') ?>" class="pos-remove-icon" alt="Remove"></th>
+                          <th class="text-center" width="15%">Barcode</th>
+                          <th class="text-center" width="20%"><?= $this->lang->line('item_name'); ?></th>
+                          <th class="text-center" width="10%"><?= $this->lang->line('stock'); ?></th>
+                          <th class="text-center" width="20%"><?= $this->lang->line('quantity'); ?></th>
+                          <th class="text-center" width="10%"><?= $this->lang->line('price'); ?></th>
+                          <th class="text-center" width="10%"><?= $this->lang->line('discount'); ?>(<?=$CI->currency()?>)</th>
+                          <th class="text-center" width="5%"><?= $this->lang->line('tax'); ?></th>
+                          <th class="text-center" width="10%"><?= $this->lang->line('subtotal'); ?></th>
+                          <th class="text-center" width="5%">Void</th>
                         </thead>
                         <tbody id="pos-form-tbody" style="font-size: 16px;font-weight: bold;overflow: scroll;">
                           <!-- body code -->
@@ -347,6 +347,7 @@
 
                     ?>
                    
+                    <!-- Send Message to Customer option
                     <div class="col-xs-4 ">
                            <div class="checkbox icheck">
                             <label>
@@ -357,7 +358,8 @@
                               </label>
                             </label>
                           </div>
-                    </div> 
+                    </div>
+                    -->
                     
                     <div class="col-md-6">
                         <label class="control-label pull-right hide div2 text-blue">
@@ -365,11 +367,13 @@
                         </label>
                       </div>
 
+                      <!-- T&C option
                       <div class="col-md-2">
                       <label class="control-label pull-left text-blue pointer" toggle="tooltip" title="<?= $this->lang->line('edit_invoice_tc')?>" data-toggle="modal" data-target="#terms-modal">
                          <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> T&C
                         </label>
                     </div>
+                      -->
                 </div>
            
               </div>
@@ -383,33 +387,33 @@
                   </div>
                   <div class="col-md-3 text-right">
                           <label><?= $this->lang->line('total_amount'); ?>:</label><br>
-                          <?= $CI->currency('<span style="font-size: 19px;" class="tot_amt text-bold"></span>');?>
+                          <span style="font-size: 19px;" class="tot_amt text-bold"></span>
                   </div>
                   <div class="col-md-3 text-right">
                           <label><?= $this->lang->line('total_discount'); ?>:<a class="fa fa-pencil-square-o cursor-pointer" data-toggle="modal" data-target="#discount-modal"></a></label><br>
-                          <?= $CI->currency('<span style="font-size: 19px;" class="tot_disc text-bold"></span>');?>
+                          <span style="font-size: 19px;" class="tot_disc text-bold"></span>
                   </div>
                   <div class="col-md-3 text-right">
                           <label><?= $this->lang->line('grand_total'); ?>:</label><br>
-                          <?= $CI->currency('<span style="font-size: 19px;" class="tot_grand text-bold"></span>');?>
+                          <span style="font-size: 19px;" class="tot_grand text-bold"></span>
                   </div>
                 </div>
                
-                  <?php if(isset($sales_id)){ $btn_id='update';$btn_name="Cash"; ?>
+                  <?php if(isset($sales_id)){ $btn_id='update';$btn_name="CASH"; ?>
                     <input type="hidden" name="sales_id" id="sales_id" value="<?php echo $sales_id;?>"/>
-                  <?php } else{ $btn_id='save';$btn_name="Cash";} ?>
+                  <?php } else{ $btn_id='save';$btn_name="CASH";} ?>
                   <div class="col-md-12 text-right pos-action-buttons">
 
                     <div class="pos-action-button">
                       <button type="button" id="hold_invoice" name="" class="btn bg-yellow btn-block btn-lg btnhold" title="Hold Invoice [Alt+H]" style="border-radius: 20px !important;">
                       <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
-                       Hold
+                       HOLD
                      </button>
                     </div>
                     <div class="pos-action-button">
                       <button type="button" id="" name="" class="btn btn-primary btnhold btn-block btn-lg show_payments_modal" title="Multiple Payments [Alt+M]" style="border-radius: 20px !important;">
                             <i class="fa fa-credit-card" aria-hidden="true"></i>
-                             Multiple
+                             SPLIT
                            </button>
                     </div>
                     <div class="pos-action-button">
@@ -422,21 +426,21 @@
                     <div class="pos-action-button">
                       <button type="button" id="show_card_modal" name="" class="btn btn-info btnhold btn-block btn-lg" title="Pay Full Amount By Card" style="border-radius: 20px !important;">
                             <i class="fa fa-credit-card" aria-hidden="true"></i>
-                             Card
+                             CARD
                            </button>
                     </div>
 
                     <div class="pos-action-button">
-                      <button type="button" id="show_credit_modal" name="" class="btn bg-navy btnhold btn-block btn-lg" title="Save As Credit Sale" style="border-radius: 20px !important;">
+                      <button type="button" id="show_credit_modal" name="" class="btn btn-danger btnhold btn-block btn-lg" title="Save As Credit Sale" style="border-radius: 20px !important;">
                             <i class="fa fa-clock-o" aria-hidden="true"></i>
-                             Credit
+                             CREDIT
                            </button>
                     </div>
 
                     <div class="pos-action-button">
                       <button type="button" id="pay_all" name="" class="btn bg-purple btnhold btn-block btn-lg Alt_a" title="By Cash & Save [Alt+A]" style="border-radius: 20px !important;">
                             <i class="fa fa-money" aria-hidden="true"></i>
-                             Pay
+                             PAY
                            </button>
                     </div>
                   </div>
@@ -670,7 +674,7 @@ function proceed_addrow(id='',item_obj=''){
     var item_name = (item_obj=='') ? $('#div_'+id).attr('data-item-name') : item_obj.item_name; 
 
     var stock   =(item_obj=='') ? $('#div_'+id).attr('data-item-available-qty') : item_obj.stock;
-        stock     =(parseFloat(stock)).toFixed(2);
+        stock     =(parseFloat(stock)).toFixed(0);
 
     var tax_type   =(item_obj=='') ? $('#div_'+id).attr('data-item-tax-type') : item_obj.tax_type;  
     var tax_id   =(item_obj=='') ? $('#div_'+id).attr('data-item-tax-id') : item_obj.tax_id;  
@@ -694,7 +698,7 @@ function proceed_addrow(id='',item_obj=''){
         console.log($('#div_'+id).attr('data-mrp'));
 
     var quantity        ='<div class="input-group input-group-sm"><span class="input-group-btn"><button onclick="decrement_qty('+item_id+','+rowcount+')" type="button" class="btn btn-default btn-flat"><i class="fa fa-minus text-danger"></i></button></span>';
-        quantity       +='<input typ="text" value="'+format_qty(1)+'" class="form-control no-padding text-center min_width" onchange="item_qty_input('+item_id+','+rowcount+')" id="item_qty_'+rowcount+'" name="item_qty_'+rowcount+'">';
+        quantity       +='<input typ="text" value="'+format_pos_qty(1)+'" class="form-control no-padding text-center min_width" style="font-size:16px;font-weight:bold;" onchange="item_qty_input('+item_id+','+rowcount+')" id="item_qty_'+rowcount+'" name="item_qty_'+rowcount+'">';
         quantity       +='<span class="input-group-btn"><button onclick="increment_qty('+item_id+','+rowcount+')" type="button" class="btn btn-default btn-flat"><i class="fa fa-plus text-success"></i></button></span></div>';
     var sub_total       =(to_Fixed(1)*to_Fixed(sales_price));//Initial
     var remove_btn      ='<img src="<?= base_url('uploads/icon02.png') ?>" class="pos-remove-icon" onclick="removerow('+rowcount+')" title="Delete Item?" alt="Remove">';
@@ -703,21 +707,21 @@ function proceed_addrow(id='',item_obj=''){
 
     var str=' <tr id="row_'+rowcount+'" data-row="0" data-item-id='+item_id+'>';/*item id*/
         str+='<td id="td_'+rowcount+'_barcode">'+ custom_barcode +'</td>';
-        str+='<td id="td_'+rowcount+'_0"><a data-toggle="tooltip" title="Click to Change Tax" class="pointer" id="td_data_'+rowcount+'_0" onclick="show_sales_item_modal('+rowcount+')">'+ item_name     +'</a> <i onclick="show_sales_item_modal('+rowcount+')" class="fa fa-edit pointer"></i></td>';/* td_0_0 item name*/
-        str+='<td id="td_'+rowcount+'_1">'+ stock +'</td>';/* td_0_1 item available qty*/
+        str+='<td id="td_'+rowcount+'_0"><span class="text-blue" id="td_data_'+rowcount+'_0">'+ item_name     +'</span><!-- <i onclick="show_sales_item_modal('+rowcount+')" class="fa fa-edit pointer"></i> --></td>';/* td_0_0 item name*/
+        str+='<td id="td_'+rowcount+'_1" class="text-right">'+ stock +'</td>';/* td_0_1 item available qty*/
         str+='<td id="td_'+rowcount+'_2">'+ quantity      +'</td>';/* td_0_2 item available qty*/
-            info='<input id="sales_price_'+rowcount+'" onblur="set_to_original('+rowcount+','+item_cost+')" onkeyup="update_price('+rowcount+','+item_cost+')" name="sales_price_'+rowcount+'" type="text" class="form-control no-padding min_width" value="'+sales_price+'">';
+            info='<input id="sales_price_'+rowcount+'" onblur="set_to_original('+rowcount+','+item_cost+')" onkeyup="update_price('+rowcount+','+item_cost+')" name="sales_price_'+rowcount+'" type="text" class="form-control no-padding min_width text-right" value="'+sales_price+'">';
         str+='<td id="td_'+rowcount+'_3" class="text-right">'+ info   +'</td>';/* td_0_3 item sales price*/
 
         /*Discount*/
-         info='<input data-toggle="tooltip" title="Click to Change" onclick="show_sales_item_modal('+rowcount+')" id="item_discount_'+rowcount+'" readonly name="item_discount_'+rowcount+'" type="text" class="form-control no-padding min_width pointer" value="0">';
+         info='<input data-toggle="tooltip" title="Click to Change" onclick="show_sales_item_modal('+rowcount+')" id="item_discount_'+rowcount+'" readonly name="item_discount_'+rowcount+'" type="text" class="form-control no-padding min_width pointer text-right" value="0">';
          
         str+='<td id="td_'+rowcount+'_6" class="text-right">'+ info   +'</td>';
 
         /*Tax amt*/
-        str+='<td id="td_'+rowcount+'_11"><input data-toggle="tooltip" title="Click to Change" id="td_data_'+rowcount+'_11" onclick="show_sales_item_modal('+rowcount+')" name="td_data_'+rowcount+'_11" type="text" class="form-control no-padding pointer min_width" readonly value="'+tax_amt+'"></td>';
+        str+='<td id="td_'+rowcount+'_11" class="text-right"><input data-toggle="tooltip" title="Click to Change" id="td_data_'+rowcount+'_11" onclick="show_sales_item_modal('+rowcount+')" name="td_data_'+rowcount+'_11" type="text" class="form-control no-padding pointer min_width text-right" readonly value="'+tax_amt+'"></td>';
 
-        str+='<td id="td_'+rowcount+'_4" class="text-right"><input data-toggle="tooltip" title="Total" id="td_data_'+rowcount+'_4" name="td_data_'+rowcount+'_4" type="text" class="form-control no-padding pointer" readonly value="'+sub_total+'"></td>';/* td_0_4 item sub_total */
+        str+='<td id="td_'+rowcount+'_4" class="text-right"><input data-toggle="tooltip" title="Total" id="td_data_'+rowcount+'_4" name="td_data_'+rowcount+'_4" type="text" class="form-control no-padding pointer text-right" readonly value="'+sub_total+'"></td>';/* td_0_4 item sub_total */
         str+='<td id="td_'+rowcount+'_5">'+ remove_btn    +'</td>';/* td_0_5 item gst_amt */
 
         str+='<input type="hidden" name="tr_item_id_'+rowcount+'" id="tr_item_id_'+rowcount+'" value="'+item_id+'">';
@@ -780,20 +784,24 @@ function set_to_original(row_id,item_cost) {
 
 
 //INCREMENT ITEM
+function format_pos_qty(value){
+  return isNaN(parseFloat(value)) ? '0' : parseFloat(value).toFixed(0);
+}
+
 function increment_qty(item_id,rowcount){
   var item_qty=$("#item_qty_"+rowcount).val();
   item_qty=parseFloat(item_qty)+1;
-  $("#item_qty_"+rowcount).val(format_qty(item_qty));
+  $("#item_qty_"+rowcount).val(format_pos_qty(item_qty));
   make_subtotal(item_id,rowcount);
 }
 //DECREMENT ITEM
 function decrement_qty(item_id,rowcount){
   var item_qty=$("#item_qty_"+rowcount).val();
   if(item_qty<=1){
-    $("#item_qty_"+rowcount).val(format_qty(1));
+    $("#item_qty_"+rowcount).val(format_pos_qty(1));
     return;
   }
-  $("#item_qty_"+rowcount).val(format_qty(parseFloat(item_qty)-1));
+  $("#item_qty_"+rowcount).val(format_pos_qty(parseFloat(item_qty)-1));
   make_subtotal(item_id,rowcount);
 }
 //LEFT SIDE: IF ITEM QTY CHANGED MANUALLY
@@ -802,8 +810,10 @@ function item_qty_input(item_id,rowcount){
 
   // Selling above available stock is allowed; only keep quantity positive.
   if(isNaN(parseFloat(item_qty)) || parseFloat(item_qty)<=0){
-    $("#item_qty_"+rowcount).val(format_qty(1));
+    $("#item_qty_"+rowcount).val(format_pos_qty(1));
     toastr["warning"]("You must have at least one Quantity");
+  }else{
+    $("#item_qty_"+rowcount).val(format_pos_qty(item_qty));
   }
 
   make_subtotal(item_id,rowcount);

@@ -227,6 +227,11 @@
 	      	
 	      	$customer_previous_due -=get_paid_cob($res1->id);
 
+	      	// A walk-in customer does not carry a previous balance into the POS.
+	      	if ((int) $res1->delete_bit === 1) {
+	      		$customer_previous_due = 0;
+	      	}
+
 	      	$tot_advance = store_number_format($res1->tot_advance,0);
 	        $selected = ($select_id==$res1->id)? 'selected' : '';
 	        $str.="<option $selected data-delete_bit='".$res1->delete_bit."' data-tot_advance='".$tot_advance."' data-previous_due='".store_number_format($customer_previous_due,false)."' value='".$res1->id."'>".$res1->customer_code."-".$res1->customer_name."</option>";

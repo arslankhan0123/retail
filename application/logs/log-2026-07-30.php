@@ -106,3 +106,4 @@ ERROR - 2026-07-30 23:15:31 --> Could not find the language line "company_addres
 ERROR - 2026-07-30 23:15:53 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 264
 ERROR - 2026-07-30 23:32:53 --> Could not find the language line "company_address"
 ERROR - 2026-07-30 23:34:00 --> Could not find the language line "company_address"
+ERROR - 2026-07-30 22:47:27 --> 404 Page Not Found: Faviconico/index

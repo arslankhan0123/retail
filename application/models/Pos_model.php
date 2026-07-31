@@ -123,7 +123,7 @@ class Pos_model extends CI_Model {
 
 	        	$img_src = (!empty($item_image) && file_exists($item_image)) ? base_url(return_item_image_thumb($item_image)) : base_url('theme/images/no_image.png');
 
-	        	$table .= '<div class="col-md-3 col-xs-6 " id="item_parent_'.$i.'" '.$disabled.' data-toggle="tooltip" style="padding-left:5px;padding-right:5px;" title="'.$res2->item_name.'">
+	        	$table .= '<div class="col-md-3 col-xs-6 " id="item_parent_'.$i.'" '.$disabled.' style="padding-left:5px;padding-right:5px;">
 	          <div class="box box-default item_box" id="div_'.$res2->id.'" onclick="'.$str.'"
 	          				data-item-id="'.$res2->id.'"
 	          				data-item-name="'.$res2->item_name.'"
@@ -142,15 +142,19 @@ class Pos_model extends CI_Model {
 	          				data-custom-barcode="'.$res2->custom_barcode.'"
 	           				style="max-height: 150px;min-height: 150px;cursor: pointer;'.$bg_color.'">';
 
-	           	$table .= '<span class="label label-danger push-right" style="font-weight: bold;font-family: sans-serif;" data-toggle="tooltip" title="'.$label_title.'">'.$label.'</span>
-	          
+	           	if ($service_bit) {
+	           		$table .= '<span class="label label-danger push-right" style="font-weight: bold;font-family: sans-serif;" data-toggle="tooltip" title="'.$label_title.'">'.$label.'</span>';
+	           	} else {
+	           		$table .= '<!-- <span class="label label-danger push-right" style="font-weight: bold;font-family: sans-serif;" data-toggle="tooltip" title="'.$label_title.'">'.$label.'</span> -->';
+	           	}
 
-	            <div class="box-body box-profile">
+
+	           	$table .= '<div class="box-body box-profile">
 	            	<center>
 	            	<img class=" img-responsive item_image" style="border: 1px solid gray;"  src="'.$img_src.'" alt="Item picture">
 	              </center>
 	              <lable class="text-center search_item" style="font-weight: bold;font-family: sans-serif;" id="item_'.$i.'">'.substr($res2->item_name,0,25).'</label><br>
-	              <span class="" style="font-family: sans-serif;font-size:150%; " >'.$CI->currency(store_number_format($item_mrp)).'
+	              <span class="" style="font-family: sans-serif;font-size:150%; " >'.store_number_format($item_mrp).'
 	              </span>
 	            </div>
 

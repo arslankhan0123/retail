@@ -109,9 +109,7 @@ class Pos_model extends CI_Model {
 	        	// Negative stock sales are allowed in POS.
 	        	$str="addrow($res2->id)";
 	        	$disabled='';
-	        	$bg_color=($w_stock < 1 && !$service_bit)
-	        		? "background-color:#28ACE2"
-	        		: "background-color:#dbf4cd";
+	        	$bg_color="background-color:#82d6a3";
 
 	        	$label_title = (!$service_bit) ? $w_stock.' Quantity in Stock' : 'Service Item';
 	        	$label = (!$service_bit) ? "Qty: ".$w_stock : 'Service';
@@ -154,7 +152,7 @@ class Pos_model extends CI_Model {
 	            	<img class=" img-responsive item_image" style="border: 1px solid gray;"  src="'.$img_src.'" alt="Item picture">
 	              </center>
 	              <lable class="text-center search_item" style="font-weight: bold;font-family: sans-serif;" id="item_'.$i.'">'.substr($res2->item_name,0,25).'</label><br>
-	              <span class="" style="font-family: sans-serif;font-size:150%; " >'.store_number_format($item_sales_price).'
+	              <span class="item_price" style="font-family: sans-serif;" >'.store_number_format($item_sales_price).'
 	              </span>
 	            </div>
 

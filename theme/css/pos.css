@@ -35,8 +35,8 @@
     }
     .search_item{
       text-transform: uppercase;
-      font-size: 10px;
-      color: #000000;
+      font-size: 14px;
+      color: #ffffff !important;
       text-align: center;
       text-overflow: hidden;
       display: -webkit-box;
@@ -51,6 +51,13 @@
     }
     .item_box{
       border-top:none;
+      background-color: #82d6a3 !important;
+    }
+    .item_box .item_price{
+      display: inline-block;
+      color: #ffffff !important;
+      font-size: 19px;
+      font-weight: 600;
     }
     /*.text-primary {
     color: #605ca8;
@@ -124,10 +131,30 @@
 
 /* Match the items header and totals footer with the POS navigation blue. */
 .items_table > thead,
-.items_table > thead > tr > th,
-.pos-left-box > form > .box-footer {
+.items_table > thead > th,
+.items_table > thead > tr > th {
     background-color: var(--pos-nav-light-blue, #29abe2) !important;
-    color: #000000 !important;
+}
+
+.pos-left-box > form > .box-footer {
+    background-color: #82d6a3 !important;
+}
+
+.items_table > thead > th,
+.items_table > thead > tr > th {
+    color: #ffffff !important;
+}
+
+.pos-left-box > form > .box-footer label,
+.pos-left-box > form > .box-footer span,
+.pos-left-box > form > .box-footer a {
+    color: #ffffff !important;
+}
+
+.pos-action-buttons .btn {
+    background-color: #00c0ef !important;
+    border-color: #00acd6 !important;
+    color: #ffffff !important;
 }
 
 

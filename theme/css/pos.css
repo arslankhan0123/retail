@@ -107,4 +107,27 @@
     color: #000000 !important;
 }
 
+/* Keep table data values regular; column headings remain bold. */
+.items_table > tbody > tr > td,
+.items_table > tbody > tr > td a,
+.items_table > tbody > tr > td span,
+.items_table > tbody > tr > td input,
+.items_table > tbody > tr > td button {
+    font-weight: 400 !important;
+}
+
+/* Calculated Tax/Subtotal values keep the input appearance without interaction. */
+.items_table input.pos-calculated-field {
+    pointer-events: none;
+    cursor: default !important;
+}
+
+/* Match the items header and totals footer with the POS navigation blue. */
+.items_table > thead,
+.items_table > thead > tr > th,
+.pos-left-box > form > .box-footer {
+    background-color: var(--pos-nav-light-blue, #29abe2) !important;
+    color: #000000 !important;
+}
+
 

@@ -1,4 +1,29 @@
 
+document.addEventListener('DOMContentLoaded', function(){
+    var navbar = document.querySelector('.main-header .navbar');
+    if(navbar){
+        document.documentElement.style.setProperty(
+            '--pos-nav-light-blue',
+            window.getComputedStyle(navbar).backgroundColor
+        );
+    }
+});
+
+// Salesman is mandatory before any POS action button can continue.
+document.addEventListener('click', function(event){
+    var actionButton = event.target.closest(
+        '#hold_invoice, #show_credit_modal, .show_payments_modal, #show_card_modal, #show_cash_modal, #pay_all'
+    );
+
+    if(actionButton && !$("#salesman_id").val()){
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        toastr["warning"]("Please Select Salesman!!");
+        $("#salesman_id").select2("open");
+    }
+}, true);
+
 //On Enter Move the cursor to desigtation Id
 function shift_cursor(kevent,target){
 
@@ -34,6 +59,12 @@ function save(print=false,pay_all=false){
 //$('.make_sale').on("click",function (e) {
 	
 	var base_url=$("#base_url").val();
+
+    if(!$("#salesman_id").val()){
+        toastr["warning"]("Please Select Salesman!!");
+        $("#salesman_id").select2("open");
+        return;
+    }
     
     if($(".items_table tr").length==1){
     	toastr["warning"]("Empty Sales List!!");

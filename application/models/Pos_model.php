@@ -178,6 +178,11 @@ class Pos_model extends CI_Model {
 		extract($this->xss_html_filter(array_merge($this->data,$_POST,$_GET)));
 		//print_r($this->xss_html_filter(array_merge($this->data,$_POST,$_GET)));exit();
 
+		if(empty($salesman_id)){
+			$this->db->trans_rollback();
+			return "Please Select Salesman!!";
+		}
+
 		//varify max sales usage of the package subscription
 		validate_package_offers('max_invoices','db_sales');
 		//END
@@ -750,9 +755,9 @@ class Pos_model extends CI_Model {
 
 		  		echo '<td id="td_'.$i.'_6" class="text-right" >'.$info.'</td>';
 
-		  		echo '<td id="td_'.$i.'_11" class="text-center"><input data-toggle="tooltip" title="Click to Change" id="td_data_'.$i.'_11" onclick="show_sales_item_modal('.$i.')" name="td_data_'.$i.'_11" type="text" class="form-control no-padding pointer min_width text-center" readonly value="'.$tax_amt.'"></td>';
+		  		echo '<td id="td_'.$i.'_11" class="text-center"><input tabindex="-1" id="td_data_'.$i.'_11" name="td_data_'.$i.'_11" type="text" class="form-control no-padding min_width text-center pos-calculated-field" readonly value="'.$tax_amt.'"></td>';
 		  		echo '<td id="td_'.$i.'_4" class="text-right" >
-		  		<input data-toggle="tooltip" title="Total" id="td_data_'.$i.'_4" name="td_data_'.$i.'_4" type="text" class="form-control no-padding pointer min_width text-center" readonly value="'.store_number_format($sub_total,false).'"></td>';    /*td_0_4 item sub_total */
+		  		<input tabindex="-1" id="td_data_'.$i.'_4" name="td_data_'.$i.'_4" type="text" class="form-control no-padding min_width text-center pos-calculated-field" readonly value="'.store_number_format($sub_total,false).'"></td>';    /*td_0_4 item sub_total */
 		  		echo '<td id="td_'.$i.'_5">'.$remove_btn.'</td>';    /* td_0_5 item gst_amt  */
 
 		  		echo '<input type="hidden" name="tr_item_id_'.$i.'" id="tr_item_id_'.$i.'" value="'.$res3->item_id.'">'; 
@@ -895,9 +900,9 @@ class Pos_model extends CI_Model {
 
 		  		echo '<td id="td_'.$i.'_6" class="text-right" >'.$info.'</td>';
 
-		  		echo '<td id="td_'.$i.'_11"><input data-toggle="tooltip" title="Click to Change" id="td_data_'.$i.'_11" onclick="show_sales_item_modal('.$i.')" name="td_data_'.$i.'_11" type="text" class="form-control no-padding pointer min_width" readonly value="'.$tax_amt.'"></td>';
+		  		echo '<td id="td_'.$i.'_11"><input tabindex="-1" id="td_data_'.$i.'_11" name="td_data_'.$i.'_11" type="text" class="form-control no-padding min_width text-center pos-calculated-field" readonly value="'.$tax_amt.'"></td>';
 		  		echo '<td id="td_'.$i.'_4" class="text-right" >
-		  		<input data-toggle="tooltip" title="Total" id="td_data_'.$i.'_4" name="td_data_'.$i.'_4" type="text" class="form-control no-padding pointer min_width" readonly value="'.store_number_format($sub_total,false).'"></td>';    /*td_0_4 item sub_total */
+		  		<input tabindex="-1" id="td_data_'.$i.'_4" name="td_data_'.$i.'_4" type="text" class="form-control no-padding min_width text-center pos-calculated-field" readonly value="'.store_number_format($sub_total,false).'"></td>';    /*td_0_4 item sub_total */
 		  		echo '<td id="td_'.$i.'_5">'.$remove_btn.'</td>';    /* td_0_5 item gst_amt  */
 
 		  		echo '<input type="hidden" name="tr_item_id_'.$i.'" id="tr_item_id_'.$i.'" value="'.$res3->item_id.'">'; 

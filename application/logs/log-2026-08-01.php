@@ -68,3 +68,14 @@ ERROR - 2026-08-01 19:09:50 --> Severity: Warning --> Undefined variable $wareho
 ERROR - 2026-08-01 19:09:51 --> Severity: Warning --> Undefined variable $tax_id F:\Projects\retail\application\views\items.php 336
 ERROR - 2026-08-01 19:15:23 --> Severity: Warning --> Undefined variable $warehouse_id F:\Projects\retail\application\views\pos.php 264
 ERROR - 2026-08-01 16:43:59 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-08-01 17:09:19 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-08-01 17:10:58 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-08-01 17:11:16 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-08-01 17:30:10 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-08-01 20:29:01 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-08-01 20:31:18 --> Severity: Warning --> mysqli::real_connect(): (HY000/2002): No connection could be made because the target machine actively refused it.
+ F:\Projects\retail\system\database\drivers\mysqli\mysqli_driver.php 201
+ERROR - 2026-08-01 20:31:18 --> Unable to connect to the database
+ERROR - 2026-08-01 20:31:22 --> Severity: Warning --> mysqli::real_connect(): (HY000/2002): No connection could be made because the target machine actively refused it.
+ F:\Projects\retail\system\database\drivers\mysqli\mysqli_driver.php 201
+ERROR - 2026-08-01 20:31:22 --> Unable to connect to the database

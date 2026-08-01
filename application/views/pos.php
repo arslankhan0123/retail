@@ -287,7 +287,16 @@
               <br>
 
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-3">
+                  <div class="input-group" data-toggle="tooltip" title="Salesman (Required)">
+                    <span class="input-group-addon"><i class="fa fa-user-circle"></i></span>
+                    <select class="form-control select2" id="salesman_id" name="salesman_id" style="width: 100%;" required>
+                      <option value="">Select Salesman</option>
+                      <?= get_salesmans_select_list(isset($salesman_id) ? $salesman_id : '', get_current_store_id()); ?>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-3">
                   <div class="input-group" data-toggle="tooltip" title="Customer">
                     <span class="input-group-addon" ><i class="fa fa-user"></i></span>
                      <select class="form-control select2" id="customer_id" name="customer_id"  style="width: 100%;"  >
@@ -309,18 +318,7 @@
                   </div>
                 </div>                
               </div><!-- row end -->
-
-              <div class="row" style="margin-top: 10px;">
-                <div class="col-md-6">
-                  <div class="input-group" data-toggle="tooltip" title="Salesman">
-                    <span class="input-group-addon"><i class="fa fa-user-circle"></i></span>
-                    <select class="form-control select2" id="salesman_id" name="salesman_id" style="width: 100%;">
-                      <?= get_salesmans_select_list(isset($salesman_id) ? $salesman_id : '', get_current_store_id()); ?>
-                    </select>
-                  </div>
-                </div>
-              </div>
-             
+              
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
@@ -422,21 +420,16 @@
                   <div class="col-md-12 text-right pos-action-buttons">
 
                     <div class="pos-action-button">
-                      <button type="button" id="pay_all" name="" class="btn bg-purple btnhold btn-block btn-lg Alt_a" title="By Cash & Save [Alt+A]" style="border-radius: 20px !important;">
-                            <i class="fa fa-money" aria-hidden="true"></i>
-                             PAY
-                           </button>
+                      <button type="button" id="hold_invoice" name="" class="btn bg-yellow btn-block btn-lg btnhold" title="Hold Invoice [Alt+H]" style="border-radius: 20px !important;">
+                      <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
+                       HOLD
+                     </button>
                     </div>
+
                     <div class="pos-action-button">
-                      <button type="button" id="<?php echo "show_cash_modal";?>" name="" class="btn btnhold btn-success btn-block btn-lg Alt_c" title="By Cash & Save [Alt+C]" style="border-radius: 20px !important;">
-                            <i class="fa fa-money" aria-hidden="true"></i>
-                             <?php echo $btn_name;?>
-                           </button>
-                    </div>
-                    <div class="pos-action-button">
-                      <button type="button" id="show_card_modal" name="" class="btn btn-info btnhold btn-block btn-lg" title="Pay Full Amount By Card" style="border-radius: 20px !important;">
-                            <i class="fa fa-credit-card" aria-hidden="true"></i>
-                             CARD
+                      <button type="button" id="show_credit_modal" name="" class="btn btn-danger btnhold btn-block btn-lg" title="Save As Credit Sale" style="border-radius: 20px !important;">
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                             CREDIT
                            </button>
                     </div>
 
@@ -448,17 +441,24 @@
                     </div>
 
                     <div class="pos-action-button">
-                      <button type="button" id="show_credit_modal" name="" class="btn btn-danger btnhold btn-block btn-lg" title="Save As Credit Sale" style="border-radius: 20px !important;">
-                            <i class="fa fa-clock-o" aria-hidden="true"></i>
-                             CREDIT
+                      <button type="button" id="show_card_modal" name="" class="btn btn-info btnhold btn-block btn-lg" title="Pay Full Amount By Card" style="border-radius: 20px !important;">
+                            <i class="fa fa-credit-card" aria-hidden="true"></i>
+                             CARD
                            </button>
                     </div>
 
                     <div class="pos-action-button">
-                      <button type="button" id="hold_invoice" name="" class="btn bg-yellow btn-block btn-lg btnhold" title="Hold Invoice [Alt+H]" style="border-radius: 20px !important;">
-                      <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
-                       HOLD
-                     </button>
+                      <button type="button" id="<?php echo "show_cash_modal";?>" name="" class="btn btnhold btn-success btn-block btn-lg Alt_c" title="By Cash & Save [Alt+C]" style="border-radius: 20px !important;">
+                            <i class="fa fa-money" aria-hidden="true"></i>
+                             <?php echo $btn_name;?>
+                           </button>
+                    </div>
+
+                    <div class="pos-action-button">
+                      <button type="button" id="pay_all" name="" class="btn bg-purple btnhold btn-block btn-lg Alt_a" title="By Cash & Save [Alt+A]" style="border-radius: 20px !important;">
+                            <i class="fa fa-money" aria-hidden="true"></i>
+                             PAY
+                           </button>
                     </div>
                   </div>
               </div>
@@ -736,9 +736,9 @@ function proceed_addrow(id='',item_obj=''){
         str+='<td id="td_'+rowcount+'_6" class="text-right">'+ info   +'</td>';
 
         /*Tax amt*/
-        str+='<td id="td_'+rowcount+'_11" class="text-center"><input data-toggle="tooltip" title="Click to Change" id="td_data_'+rowcount+'_11" onclick="show_sales_item_modal('+rowcount+')" name="td_data_'+rowcount+'_11" type="text" class="form-control no-padding pointer min_width text-center" readonly value="'+tax_amt+'"></td>';
+        str+='<td id="td_'+rowcount+'_11" class="text-center"><input tabindex="-1" id="td_data_'+rowcount+'_11" name="td_data_'+rowcount+'_11" type="text" class="form-control no-padding min_width text-center pos-calculated-field" readonly value="'+tax_amt+'"></td>';
 
-        str+='<td id="td_'+rowcount+'_4" class="text-center"><input data-toggle="tooltip" title="Total" id="td_data_'+rowcount+'_4" name="td_data_'+rowcount+'_4" type="text" class="form-control no-padding pointer text-center" readonly value="'+sub_total+'"></td>';/* td_0_4 item sub_total */
+        str+='<td id="td_'+rowcount+'_4" class="text-center"><input tabindex="-1" id="td_data_'+rowcount+'_4" name="td_data_'+rowcount+'_4" type="text" class="form-control no-padding text-center pos-calculated-field" readonly value="'+sub_total+'"></td>';/* td_0_4 item sub_total */
         str+='<td id="td_'+rowcount+'_5">'+ remove_btn    +'</td>';/* td_0_5 item gst_amt */
 
         str+='<input type="hidden" name="tr_item_id_'+rowcount+'" id="tr_item_id_'+rowcount+'" value="'+item_id+'">';

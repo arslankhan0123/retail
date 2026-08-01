@@ -226,7 +226,7 @@
                               </div>
                               
                               <div class="form-group col-md-4">
-                                 <label for="unit_id"><?= $this->lang->line('unit'); ?></label>
+                                 <label for="unit_id"><?= $this->lang->line('unit'); ?><span class="text-danger">*</span></label>
                                  <div class="input-group">
                                  <select class="form-control select2" id="unit_id" name="unit_id"  style="width: 100%;"  >
                                     <?= get_units_select_list($unit_id);  ?>
@@ -330,7 +330,7 @@
                                  <span id="price_msg" style="display:none" class="text-danger"></span>
                               </div>
                               <div class="form-group col-md-4">
-                                 <label for="tax_id"><?= $this->lang->line('tax'); ?></label>
+                                 <label for="tax_id"><?= $this->lang->line('tax'); ?><span class="text-danger">*</span></label>
                                  <div class="input-group">
                                  <select class="form-control select2" id="tax_id" name="tax_id"  style="width: 100%;"  >
                                     <?= get_tax_select_list($tax_id);  ?>
@@ -372,8 +372,8 @@
                                  <input type="text" class="form-control only_currency " id="sales_price" name="sales_price" placeholder="Sales Price"  value="<?php print $sales_price; ?>" >
                                  <span id="sales_price_msg" style="display:none" class="text-danger"></span>
                               </div>
-                              <div class="form-group col-md-4">
-                                 <label for="mrp"><?= $this->lang->line('mrp'); ?><i class="hover-q " data-container="body" data-toggle="popover" data-placement="top" data-content="<?= $this->lang->line('mrp_definition'); ?>" data-html="true" data-trigger="hover" data-original-title="">
+                              <div class="form-group col-md-4" style="display:none;">
+                                 <label for="mrp"><?= $this->lang->line('mrp'); ?><span class="text-danger">*</span><i class="hover-q " data-container="body" data-toggle="popover" data-placement="top" data-content="<?= $this->lang->line('mrp_definition'); ?>" data-html="true" data-trigger="hover" data-original-title="">
                                   <i class="fa fa-info-circle text-maroon text-black hover-q"></i>
                                 </i></label>
                                  <input type="text" class="form-control only_currency" id="mrp" name="mrp" placeholder="Maximum Retail Price"  value="<?php print $mrp; ?>" >
@@ -496,7 +496,7 @@
       <!-- TABLES CODE -->
       <?php include"comman/code_js.php"; ?>
       <script>var barcode_type = '<?= $barcode_type; ?>';</script>
-      <script src="<?php echo $theme_link; ?>js/items.js"></script>
+      <script src="<?php echo $theme_link; ?>js/items.js?v=<?= filemtime(FCPATH.'theme/js/items.js'); ?>"></script>
       <script src="<?php echo $theme_link; ?>js/modals.js"></script>
       <script type="text/javascript">
          $("#discount_type").val('<?=$discount_type; ?>');

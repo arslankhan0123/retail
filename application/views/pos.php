@@ -6,7 +6,7 @@
 <?php include"comman/code_css.php"; ?>
 <!-- iCheck -->
   <link rel="stylesheet" href="<?php echo $theme_link; ?>plugins/iCheck/square/blue.css">
-  <link rel="stylesheet" href="<?= base_url('theme/css/pos.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('theme/css/pos.css') ?>?v=<?= filemtime(FCPATH.'theme/css/pos.css'); ?>">
 </head>
 
 <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
@@ -267,7 +267,13 @@
                   </div>
                   
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
+                  <div class="input-group" data-toggle="tooltip" title="System Date">
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    <input type="text" class="form-control pos-system-field" id="pos_system_date" value="<?= show_date($CUR_DATE); ?>" disabled>
+                  </div>
+                </div>
+                <div class="col-md-2">
                   <div class="input-group" data-toggle="tooltip" title="Invoice Initial Code">
                     <span class="input-group-addon"><i class="fa fa-th-list"></i></span>
                      <input type="text" class="form-control pos-system-field" placeholder="Invioce Initial Code" id="init_code" name="init_code" value="<?= $init_code ?>">
@@ -303,6 +309,17 @@
                   </div>
                 </div>                
               </div><!-- row end -->
+
+              <div class="row" style="margin-top: 10px;">
+                <div class="col-md-6">
+                  <div class="input-group" data-toggle="tooltip" title="Salesman">
+                    <span class="input-group-addon"><i class="fa fa-user-circle"></i></span>
+                    <select class="form-control select2" id="salesman_id" name="salesman_id" style="width: 100%;">
+                      <?= get_salesmans_select_list(isset($salesman_id) ? $salesman_id : '', get_current_store_id()); ?>
+                    </select>
+                  </div>
+                </div>
+              </div>
              
               <div class="row">
                 <div class="col-md-12">
@@ -315,7 +332,7 @@
                           <th class="text-center" width="10%"><?= $this->lang->line('stock'); ?></th>
                           <th class="text-center" width="20%"><?= $this->lang->line('quantity'); ?></th>
                           <th class="text-center" width="10%"><?= $this->lang->line('price'); ?></th>
-                          <th class="text-center" width="10%"><?= $this->lang->line('discount'); ?>(<?=$CI->currency()?>)</th>
+                          <th class="text-center" width="10%"><?= $this->lang->line('discount'); ?></th>
                           <th class="text-center" width="5%"><?= $this->lang->line('tax'); ?></th>
                           <th class="text-center" width="10%"><?= $this->lang->line('subtotal'); ?></th>
                           <th class="text-center" width="5%">Void</th>
@@ -381,19 +398,19 @@
 
               <div class="box-footer bg-gray">
                 <div class="row">
-                  <div class="col-md-3 text-right">
+                  <div class="col-md-3 text-center">
                           <label> <?= $this->lang->line('quantity'); ?>:</label><br>
                           <span class="text-bold tot_qty"></span>
                   </div>
-                  <div class="col-md-3 text-right">
+                  <div class="col-md-3 text-center">
                           <label><?= $this->lang->line('total_amount'); ?>:</label><br>
                           <span style="font-size: 19px;" class="tot_amt text-bold"></span>
                   </div>
-                  <div class="col-md-3 text-right">
+                  <div class="col-md-3 text-center">
                           <label><?= $this->lang->line('total_discount'); ?>:<a class="fa fa-pencil-square-o cursor-pointer" data-toggle="modal" data-target="#discount-modal"></a></label><br>
                           <span style="font-size: 19px;" class="tot_disc text-bold"></span>
                   </div>
-                  <div class="col-md-3 text-right">
+                  <div class="col-md-3 text-center">
                           <label><?= $this->lang->line('grand_total'); ?>:</label><br>
                           <span style="font-size: 19px;" class="tot_grand text-bold"></span>
                   </div>
@@ -405,15 +422,9 @@
                   <div class="col-md-12 text-right pos-action-buttons">
 
                     <div class="pos-action-button">
-                      <button type="button" id="hold_invoice" name="" class="btn bg-yellow btn-block btn-lg btnhold" title="Hold Invoice [Alt+H]" style="border-radius: 20px !important;">
-                      <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
-                       HOLD
-                     </button>
-                    </div>
-                    <div class="pos-action-button">
-                      <button type="button" id="" name="" class="btn btn-primary btnhold btn-block btn-lg show_payments_modal" title="Multiple Payments [Alt+M]" style="border-radius: 20px !important;">
-                            <i class="fa fa-credit-card" aria-hidden="true"></i>
-                             SPLIT
+                      <button type="button" id="pay_all" name="" class="btn bg-purple btnhold btn-block btn-lg Alt_a" title="By Cash & Save [Alt+A]" style="border-radius: 20px !important;">
+                            <i class="fa fa-money" aria-hidden="true"></i>
+                             PAY
                            </button>
                     </div>
                     <div class="pos-action-button">
@@ -422,11 +433,17 @@
                              <?php echo $btn_name;?>
                            </button>
                     </div>
-
                     <div class="pos-action-button">
                       <button type="button" id="show_card_modal" name="" class="btn btn-info btnhold btn-block btn-lg" title="Pay Full Amount By Card" style="border-radius: 20px !important;">
                             <i class="fa fa-credit-card" aria-hidden="true"></i>
                              CARD
+                           </button>
+                    </div>
+
+                    <div class="pos-action-button">
+                      <button type="button" id="" name="" class="btn btn-primary btnhold btn-block btn-lg show_payments_modal" title="Multiple Payments [Alt+M]" style="border-radius: 20px !important;">
+                            <i class="fa fa-credit-card" aria-hidden="true"></i>
+                             SPLIT
                            </button>
                     </div>
 
@@ -438,10 +455,10 @@
                     </div>
 
                     <div class="pos-action-button">
-                      <button type="button" id="pay_all" name="" class="btn bg-purple btnhold btn-block btn-lg Alt_a" title="By Cash & Save [Alt+A]" style="border-radius: 20px !important;">
-                            <i class="fa fa-money" aria-hidden="true"></i>
-                             PAY
-                           </button>
+                      <button type="button" id="hold_invoice" name="" class="btn bg-yellow btn-block btn-lg btnhold" title="Hold Invoice [Alt+H]" style="border-radius: 20px !important;">
+                      <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
+                       HOLD
+                     </button>
                     </div>
                   </div>
               </div>
@@ -692,7 +709,7 @@ function proceed_addrow(id='',item_obj=''){
     //var gst_amt         =$('#div_'+id).attr('data-item-gst-amt');
 
     var item_cost     =(item_obj=='') ? $('#div_'+id).attr('data-item-cost') : item_obj.purchase_price;  
-    var sales_price     =(item_obj=='') ? $('#div_'+id).attr('data-mrp') : item_obj.mrp ; 
+    var sales_price     =(item_obj=='') ? $('#div_'+id).attr('data-mrp') : item_obj.sales_price;
     var sales_price_temp=sales_price;
         sales_price     =to_Fixed(sales_price);
         console.log($('#div_'+id).attr('data-mrp'));
@@ -708,20 +725,20 @@ function proceed_addrow(id='',item_obj=''){
     var str=' <tr id="row_'+rowcount+'" data-row="0" data-item-id='+item_id+'>';/*item id*/
         str+='<td id="td_'+rowcount+'_barcode">'+ custom_barcode +'</td>';
         str+='<td id="td_'+rowcount+'_0"><span class="text-blue" id="td_data_'+rowcount+'_0">'+ item_name     +'</span><!-- <i onclick="show_sales_item_modal('+rowcount+')" class="fa fa-edit pointer"></i> --></td>';/* td_0_0 item name*/
-        str+='<td id="td_'+rowcount+'_1" class="text-right">'+ stock +'</td>';/* td_0_1 item available qty*/
+        str+='<td id="td_'+rowcount+'_1" class="text-center">'+ stock +'</td>';/* td_0_1 item available qty*/
         str+='<td id="td_'+rowcount+'_2">'+ quantity      +'</td>';/* td_0_2 item available qty*/
-            info='<input id="sales_price_'+rowcount+'" onblur="set_to_original('+rowcount+','+item_cost+')" onkeyup="update_price('+rowcount+','+item_cost+')" name="sales_price_'+rowcount+'" type="text" class="form-control no-padding min_width text-right" value="'+sales_price+'">';
-        str+='<td id="td_'+rowcount+'_3" class="text-right">'+ info   +'</td>';/* td_0_3 item sales price*/
+            info='<input id="sales_price_'+rowcount+'" onblur="set_to_original('+rowcount+','+item_cost+')" onkeyup="update_price('+rowcount+','+item_cost+')" name="sales_price_'+rowcount+'" type="text" class="form-control no-padding min_width text-center" value="'+sales_price+'">';
+        str+='<td id="td_'+rowcount+'_3" class="text-center">'+ info   +'</td>';/* td_0_3 item sales price*/
 
         /*Discount*/
-         info='<input data-toggle="tooltip" title="Click to Change" onclick="show_sales_item_modal('+rowcount+')" id="item_discount_'+rowcount+'" readonly name="item_discount_'+rowcount+'" type="text" class="form-control no-padding min_width pointer text-right" value="0">';
+         info='<input data-toggle="tooltip" title="Click to Change" onclick="show_sales_item_modal('+rowcount+')" id="item_discount_'+rowcount+'" readonly name="item_discount_'+rowcount+'" type="text" class="form-control no-padding min_width pointer text-center" value="0">';
          
         str+='<td id="td_'+rowcount+'_6" class="text-right">'+ info   +'</td>';
 
         /*Tax amt*/
-        str+='<td id="td_'+rowcount+'_11" class="text-right"><input data-toggle="tooltip" title="Click to Change" id="td_data_'+rowcount+'_11" onclick="show_sales_item_modal('+rowcount+')" name="td_data_'+rowcount+'_11" type="text" class="form-control no-padding pointer min_width text-right" readonly value="'+tax_amt+'"></td>';
+        str+='<td id="td_'+rowcount+'_11" class="text-center"><input data-toggle="tooltip" title="Click to Change" id="td_data_'+rowcount+'_11" onclick="show_sales_item_modal('+rowcount+')" name="td_data_'+rowcount+'_11" type="text" class="form-control no-padding pointer min_width text-center" readonly value="'+tax_amt+'"></td>';
 
-        str+='<td id="td_'+rowcount+'_4" class="text-right"><input data-toggle="tooltip" title="Total" id="td_data_'+rowcount+'_4" name="td_data_'+rowcount+'_4" type="text" class="form-control no-padding pointer text-right" readonly value="'+sub_total+'"></td>';/* td_0_4 item sub_total */
+        str+='<td id="td_'+rowcount+'_4" class="text-center"><input data-toggle="tooltip" title="Total" id="td_data_'+rowcount+'_4" name="td_data_'+rowcount+'_4" type="text" class="form-control no-padding pointer text-center" readonly value="'+sub_total+'"></td>';/* td_0_4 item sub_total */
         str+='<td id="td_'+rowcount+'_5">'+ remove_btn    +'</td>';/* td_0_5 item gst_amt */
 
         str+='<input type="hidden" name="tr_item_id_'+rowcount+'" id="tr_item_id_'+rowcount+'" value="'+item_id+'">';
@@ -919,7 +936,7 @@ function final_total(){
   );
 }
 function set_total(tot_qty=0, tot_amt=0, tot_disc=0, tot_grand=0, payment_discount=0){
-  $(".tot_qty   ").html(tot_qty);
+  $(".tot_qty   ").html(format_pos_qty(tot_qty));
   $(".tot_amt   ").html(to_Fixed(tot_amt));
   $(".tot_disc  ").html(to_Fixed(tot_disc));
   $(".tot_grand ").html(to_Fixed(round_off(tot_grand)));
@@ -986,7 +1003,7 @@ function adjust_payments(){
   }
   
   balance =round_off(balance);
-  $(".sales_div_tot_qty").html(format_qty(item_qty));
+  $(".sales_div_tot_qty").html(format_pos_qty(item_qty));
   $(".sales_div_tot_amt").html(to_Fixed(total + item_discount_total));
   $(".sales_div_tot_discount").html(to_Fixed(discount_amt + item_discount_total));
   $(".coupon_discount_div_amt").html((to_Fixed(coupon_amt))); 

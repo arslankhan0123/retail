@@ -31,6 +31,7 @@ class Pos extends MY_Controller {
 		
 
 		$data['warehouse_id'] = '';
+		$data['salesman_id'] = '';
 		$data['result'] = $this->get_hold_invoice_list();
 		$data['tot_count'] = $this->get_hold_invoice_count();
 		$this->load->view('pos',$data);
@@ -91,6 +92,7 @@ class Pos extends MY_Controller {
 	    $count_id = $sales_details->count_id;
 
 	    $data['customer_id']=$customer_id;
+	    $data['salesman_id']=$sales_details->salesman_id;
 	    $data['init_code']=$init_code;
 	    $data['count_id']=$count_id;
 	    $data['result'] = $this->get_hold_invoice_list();

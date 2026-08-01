@@ -96,4 +96,15 @@
     color: #fff;
 }     
 
+/* Keep every text value inside the POS items table black. */
+.items_table,
+.items_table th,
+.items_table td,
+.items_table a,
+.items_table span,
+.items_table input,
+.items_table button {
+    color: #000000 !important;
+}
+
 

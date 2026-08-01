@@ -701,12 +701,14 @@ $("#item_search").autocomplete({
               var item_id=ui.item.id;
               var service_bit=ui.item.service_bit;
             }
+            /* Zero-stock items are allowed from autocomplete, matching POS cards.
             if(service_bit==0 && parseFloat(stock)<=0){
               toastr["warning"](stock+" Items in Stock!!");
-              failed.currentTime = 0; 
+              failed.currentTime = 0;
               failed.play();
               return false;
             }
+            */
 
            /* if(service_bit==1){
               return_row_with_data(item_id);  

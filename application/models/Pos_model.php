@@ -137,13 +137,13 @@ class Pos_model extends CI_Model {
 	          				data-item-tax-amt="'.$item_tax_amt.'"
 	          				data-service_bit="'.$service_bit.'"
 	          				data-discount_type="'.$discount_type.'"
-	          				data-mrp="'.$item_mrp.'"
+	          		data-mrp="'.$item_sales_price.'"
 	          				data-discount="'.$discount.'"
 	          				data-custom-barcode="'.$res2->custom_barcode.'"
 	           				style="max-height: 150px;min-height: 150px;cursor: pointer;'.$bg_color.'">';
 
 	           	if ($service_bit) {
-	           		$table .= '<span class="label label-danger push-right" style="font-weight: bold;font-family: sans-serif;" data-toggle="tooltip" title="'.$label_title.'">'.$label.'</span>';
+	           		$table .= '<!-- <span class="label label-danger push-right" style="font-weight: bold;font-family: sans-serif;" data-toggle="tooltip" title="'.$label_title.'">'.$label.'</span> -->';
 	           	} else {
 	           		$table .= '<!-- <span class="label label-danger push-right" style="font-weight: bold;font-family: sans-serif;" data-toggle="tooltip" title="'.$label_title.'">'.$label.'</span> -->';
 	           	}
@@ -154,7 +154,7 @@ class Pos_model extends CI_Model {
 	            	<img class=" img-responsive item_image" style="border: 1px solid gray;"  src="'.$img_src.'" alt="Item picture">
 	              </center>
 	              <lable class="text-center search_item" style="font-weight: bold;font-family: sans-serif;" id="item_'.$i.'">'.substr($res2->item_name,0,25).'</label><br>
-	              <span class="" style="font-family: sans-serif;font-size:150%; " >'.store_number_format($item_mrp).'
+	              <span class="" style="font-family: sans-serif;font-size:150%; " >'.store_number_format($item_sales_price).'
 	              </span>
 	            </div>
 
@@ -254,6 +254,7 @@ class Pos_model extends CI_Model {
 		    				'sales_date' 				=> $sales_date,
 		    				'sales_status' 				=> 'Final',
 		    				'customer_id' 				=> $customer_id,
+		    				'salesman_id' 				=> empty($salesman_id) ? null : $salesman_id,
 		    				/*'warehouse_id' 				=> $warehouse_id,*/
 		    				/*Discount*/
 		    				'discount_to_all_input' 	=> $discount_input,
@@ -289,6 +290,7 @@ class Pos_model extends CI_Model {
 		    				'sales_date' 				=> $sales_date,
 		    				'sales_status' 				=> 'Final',
 		    				'customer_id' 				=> $customer_id,
+		    				'salesman_id' 				=> empty($salesman_id) ? null : $salesman_id,
 		    				/*'warehouse_id' 				=> $warehouse_id,*/
 		    				/*Discount*/
 		    				'discount_to_all_input' 	=> $discount_input,
@@ -729,30 +731,28 @@ class Pos_model extends CI_Model {
 				$tax_value = $q6->tax;
 
 		  		$quantity        ='<div class="input-group input-group-sm"><span class="input-group-btn"><button onclick="decrement_qty('.$res3->item_id.','.$i.')" type="button" class="btn btn-default btn-flat"><i class="fa fa-minus text-danger"></i></button></span>';
-			    $quantity       .='<input typ="text" value="'.format_qty($res3->sales_qty).'" class="form-control min_width" onkeyup="item_qty_input('.$res3->item_id.','.$i.')" id="item_qty_'.$i.'" name="item_qty_'.$i.'">';
+		  		$quantity       .='<input typ="text" value="'.number_format($res3->sales_qty,0,'.','').'" class="form-control no-padding text-center min_width" style="font-size:16px;font-weight:bold;" onkeyup="item_qty_input('.$res3->item_id.','.$i.')" id="item_qty_'.$i.'" name="item_qty_'.$i.'">';
 			    $quantity       .='<span class="input-group-btn"><button onclick="increment_qty('.$res3->item_id.','.$i.')" type="button" class="btn btn-default btn-flat"><i class="fa fa-plus text-success"></i></button></span></div>';
 			    $sub_total       =$res3->total_cost;
 			    $remove_btn      ='<img src="'.base_url('uploads/icon02.png').'" class="pos-remove-icon" onclick="removerow('.$i.')" title="Delete Item?" alt="Remove">';
 			    
 		  		echo '<tr id="row_'.$i.'" data-row="0" data-item-id="'.$res3->item_id.'" >'; /*item id */
 		  		echo '<td id="td_'.$i.'_barcode">'.$q5->row()->custom_barcode.'</td>';
-		  		echo '<td id="td_'.$i.'_0">
-		  		<a data-toggle="tooltip" title="Click to Change Tax" class="pointer" id="td_data_'.$i.'_0" onclick="show_sales_item_modal('.$i.')">'.$q5->row()->item_name.'</a>
-		  		</td>';  /*td_0_0 item name*/
-		  		echo '<td id="td_'.$i.'_1">'.$stock.'</td>';  /*td_0_1 item available qty*/
+		  		echo '<td id="td_'.$i.'_0"><span id="td_data_'.$i.'_0">'.$q5->row()->item_name.'</span></td>';  /*td_0_0 item name*/
+		  		echo '<td id="td_'.$i.'_1" class="text-center">'.number_format($stock,0,'.','').'</td>';  /*td_0_1 item available qty*/
 		  		echo '<td id="td_'.$i.'_2">'.$quantity.'</td>';    /*td_0_2 item available qty */
 
-		  		$info = '<input id="sales_price_'.$i.'" onblur="set_to_original('.$i.','.$q5->row()->purchase_price.')" onkeyup="update_price('.$i.','.$q5->row()->purchase_price.')" name="sales_price_'.$i.'" type="text" class="form-control min_width" value="'.$per_item_price_inc_tax.'">';
+		  		$info = '<input id="sales_price_'.$i.'" onblur="set_to_original('.$i.','.$q5->row()->purchase_price.')" onkeyup="update_price('.$i.','.$q5->row()->purchase_price.')" name="sales_price_'.$i.'" type="text" class="form-control min_width text-center" value="'.$per_item_price_inc_tax.'">';
 
 		  		echo '<td id="td_'.$i.'_3" class="text-right" >'.$info.'</td>';    /*td_0_3 item sales price */
 
-		  		$info = '<input data-toggle="tooltip" title="Click to Change" onclick="show_sales_item_modal('.$i.')" id="item_discount_'.$i.'" readonly name="item_discount_'.$i.'" type="text" class="form-control text-left no-padding" value="'.$item_discount.'">';
+		  		$info = '<input data-toggle="tooltip" title="Click to Change" onclick="show_sales_item_modal('.$i.')" id="item_discount_'.$i.'" readonly name="item_discount_'.$i.'" type="text" class="form-control text-center no-padding" value="'.$item_discount.'">';
 
 		  		echo '<td id="td_'.$i.'_6" class="text-right" >'.$info.'</td>';
 
-		  		echo '<td id="td_'.$i.'_11"><input data-toggle="tooltip" title="Click to Change" id="td_data_'.$i.'_11" onclick="show_sales_item_modal('.$i.')" name="td_data_'.$i.'_11" type="text" class="form-control no-padding pointer min_width" readonly value="'.$tax_amt.'"></td>';
+		  		echo '<td id="td_'.$i.'_11" class="text-center"><input data-toggle="tooltip" title="Click to Change" id="td_data_'.$i.'_11" onclick="show_sales_item_modal('.$i.')" name="td_data_'.$i.'_11" type="text" class="form-control no-padding pointer min_width text-center" readonly value="'.$tax_amt.'"></td>';
 		  		echo '<td id="td_'.$i.'_4" class="text-right" >
-		  		<input data-toggle="tooltip" title="Total" id="td_data_'.$i.'_4" name="td_data_'.$i.'_4" type="text" class="form-control no-padding pointer min_width" readonly value="'.store_number_format($sub_total,false).'"></td>';    /*td_0_4 item sub_total */
+		  		<input data-toggle="tooltip" title="Total" id="td_data_'.$i.'_4" name="td_data_'.$i.'_4" type="text" class="form-control no-padding pointer min_width text-center" readonly value="'.store_number_format($sub_total,false).'"></td>';    /*td_0_4 item sub_total */
 		  		echo '<td id="td_'.$i.'_5">'.$remove_btn.'</td>';    /* td_0_5 item gst_amt  */
 
 		  		echo '<input type="hidden" name="tr_item_id_'.$i.'" id="tr_item_id_'.$i.'" value="'.$res3->item_id.'">'; 

@@ -45,6 +45,7 @@ class Db_reset extends CI_Controller {
             'db_emailtemplates',
             'db_paymenttypes',
             'db_store',
+            'db_customers',
             'db_bankdetails',
             'db_fivemojo',
             'db_instamojo',

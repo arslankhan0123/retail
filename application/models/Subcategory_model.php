@@ -75,16 +75,8 @@ public function verify_and_save()
   {
     //Filtering XSS and html escape from user inputs 
   extract($this->security->xss_clean(html_escape(array_merge($this->data,$_POST))));
-    //Validate This category already exist or not
   $store_id=(store_module() && is_admin()) ? $store_id : get_current_store_id();
-  $query=$this->db->query("select * from db_subcategory where upper(scatName)=upper('$scatName') and store_id=$store_id");
-  if($query->num_rows()>0)
-    {
-    return "This Sub Category Name already Exist.";
-    }
-  else
-    {
-    $info = array(
+  $info = array(
       'count_id'    => get_count_id('db_subcategory'), 
       'dptid'       => $dptid,
       'catid'       => $catid,
@@ -106,7 +98,6 @@ public function verify_and_save()
       {
       return "failed";
       }
-    }
 }
   //Get category_details
 public function get_details($id,$data)
@@ -137,16 +128,8 @@ public function update_category()
   {
     //Filtering XSS and html escape from user inputs 
   extract($this->security->xss_clean(html_escape(array_merge($this->data,$_POST))));
-    //Validate This category already exist or not
   $store_id=(store_module() && is_admin()) ? $store_id : get_current_store_id();
-  $query = $this->db->query("select * from db_subcategory where upper(scatName)=upper('$scatName') and scatid<>$q_id and store_id=$store_id");
-  if($query->num_rows()>0)
-    {
-    return "This Sub Category Name already Exist.";
-    }
-  else
-    {
-    $info = array(
+  $info = array(
       'dptid'       => $dptid,
       'catid'       => $catid,
       'scatName'    => $scatName,
@@ -163,7 +146,6 @@ public function update_category()
       {
       return "failed";
       }
-    }
 }
 
 public function update_status($id,$status)

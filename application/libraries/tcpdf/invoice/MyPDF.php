@@ -229,10 +229,12 @@ class MyPDF extends TCPDF {
         }
         
         $pageWidth = $this->getPageWidth();
-        $logo_w = ($pageWidth < 160) ? 18 : 27;
-        $logo_x = ($pageWidth < 160) ? 6 : 6;
+		$isA5 = ($pageWidth < 160);
+		$logo_w = $isA5 ? 19 : 27;
+		$logo_x = ($pageWidth < 160) ? 6 : 6;
+		$logo_y = $isA5 ? 11 : 12;
 
-        $this->Image($image_file, $x = $logo_x, $y = 12, $logo_w, '', '', '', 'T', false, 300, '', false, false, $border =0, false, false, false);
+		$this->Image($image_file, $x = $logo_x, $y = $logo_y, $logo_w, '', '', '', 'T', false, 300, '', false, false, $border =0, false, false, false);
         return $this;
     }
     
@@ -244,17 +246,17 @@ class MyPDF extends TCPDF {
 		$pageWidth = $this->getPageWidth();
 		$isA5 = ($pageWidth < 160);
 		$this->setFont($this->get_font_name(), '', $isA5 ? 8 : 14, '', true);
-		$store_name_size = $isA5 ? 14 : 22;
-		$detail_size = $isA5 ? 8 : 12;
+		$store_name_size = $isA5 ? 17 : 22;
+		$detail_size = $isA5 ? 9.5 : 12;
 		$detail_spacer = $isA5 ? '' : '<tr><td colspan="2" style="font-size: 5px;">&nbsp;</td></tr>';
 
         // Check if logo exists and is shown
         $has_logo = (!empty($store->store_logo) && file_exists($store->store_logo));
 
         if ($has_logo) {
-            $logo_w = ($pageWidth < 160) ? 18 : 27;
-            $logo_x = ($pageWidth < 160) ? 6 : 6;
-			$x = $logo_x + $logo_w + ($isA5 ? 2 : 5); // Start company details after the logo
+			$logo_w = $isA5 ? 19 : 27;
+			$logo_x = ($pageWidth < 160) ? 6 : 6;
+			$x = $logo_x + $logo_w + ($isA5 ? 3 : 5); // Start company details after the logo
             $w = $pageWidth - $x - 10;
             $align = 'L'; // Keep the company block left-aligned beside the logo
         } else {
@@ -298,7 +300,8 @@ class MyPDF extends TCPDF {
         
         $html .= '</table>';
 
-        $this->writeHTMLCell($w, 0, $x, $y='12', $html, $border = 0, 0, 0, true, $align, true);
+		$company_y = $isA5 ? 11 : 12;
+		$this->writeHTMLCell($w, 0, $x, $y=$company_y, $html, $border = 0, 0, 0, true, $align, true);
 
         return $this;
     }

@@ -487,7 +487,7 @@ class GstInvoice extends MyPDF{
 		$mCount = count($q2->result());
 
 		// Keep a compact item area so totals, signatures and footer fit on page one.
-		$target_rows = ($pageWidth < 160) ? 6 : 18;
+		$target_rows = ($pageWidth < 160) ? 11 : 18;
 		if ($mCount < $target_rows) {
 			$blank_lines = str_repeat('<br/>', $target_rows - $mCount);
 			$tbl .= '<tr nobr="true">';
@@ -885,7 +885,7 @@ class GstInvoice extends MyPDF{
               $mCount = count($q2->result());
               
             // Keep a compact item area so totals, signatures and footer fit on page one.
-			$target_rows = ($pageWidth < 160) ? 6 : 18;
+			$target_rows = ($pageWidth < 160) ? 11 : 18;
             if($mCount < $target_rows){
                 $blank_lines = str_repeat('<br/>', $target_rows - $mCount);
 				$tbl .='<tr nobr="true">';
@@ -990,10 +990,10 @@ class GstInvoice extends MyPDF{
 		
 	$signature_padding = ($pageWidth < 160) ? 2 : 8;
 	$signature_breaks = ($pageWidth < 160) ? '<br><br>' : '<br><br><br><br><br>';
-	$signature_font_size = ($pageWidth < 160) ? 7 : 11;
-	$signature_image_size = ($pageWidth < 160) ? 45 : 80;
-	$policy_font_size = ($pageWidth < 160) ? 7 : 11;
-	$policy_text_size = ($pageWidth < 160) ? 6 : 10;
+	$signature_font_size = ($pageWidth < 160) ? 8 : 11;
+	$signature_image_size = ($pageWidth < 160) ? 50 : 80;
+	$policy_font_size = ($pageWidth < 160) ? 8 : 11;
+	$policy_text_size = ($pageWidth < 160) ? 7 : 10;
 	$policy_spacing = ($pageWidth < 160) ? '' : '<br/><br/>';
 	$footer_spacing = ($pageWidth < 160) ? '' : '<br/>';
 	$tbl .='<table cellpadding="'.$signature_padding.'" class="signatures-table" nobr="true" style="width:100%;">

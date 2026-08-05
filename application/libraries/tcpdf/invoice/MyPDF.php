@@ -241,8 +241,12 @@ class MyPDF extends TCPDF {
         $store = $this->store;
         $warehouse = $this->warehouse;
 
-        $this->setFont($this->get_font_name(), '', 14, '', true);
-        $pageWidth = $this->getPageWidth();
+		$pageWidth = $this->getPageWidth();
+		$isA5 = ($pageWidth < 160);
+		$this->setFont($this->get_font_name(), '', $isA5 ? 8 : 14, '', true);
+		$store_name_size = $isA5 ? 14 : 22;
+		$detail_size = $isA5 ? 8 : 12;
+		$detail_spacer = $isA5 ? '' : '<tr><td colspan="2" style="font-size: 5px;">&nbsp;</td></tr>';
 
         // Check if logo exists and is shown
         $has_logo = (!empty($store->store_logo) && file_exists($store->store_logo));
@@ -250,7 +254,7 @@ class MyPDF extends TCPDF {
         if ($has_logo) {
             $logo_w = ($pageWidth < 160) ? 18 : 27;
             $logo_x = ($pageWidth < 160) ? 6 : 6;
-            $x = $logo_x + $logo_w + 5; // Start company details after the logo
+			$x = $logo_x + $logo_w + ($isA5 ? 2 : 5); // Start company details after the logo
             $w = $pageWidth - $x - 10;
             $align = 'L'; // Keep the company block left-aligned beside the logo
         } else {
@@ -263,15 +267,15 @@ class MyPDF extends TCPDF {
         $store_name = str_replace('&AMP;', '&amp;', $store_name);
 
         $html = '<table border="0" cellpadding="0" cellspacing="0" style="width:100%; line-height:1;">';
-        $html .= '<tr><td colspan="2" style="text-align:left;"><span style="font-size:22px;font-weight:bold;">'.$store_name.'</span></td></tr>';
+		$html .= '<tr><td colspan="2" style="text-align:left;"><span style="font-size:'.$store_name_size.'px;font-weight:bold;">'.$store_name.'</span></td></tr>';
         
         $address_txt = $store->address;
         if(!empty($store->city)){
             $address_txt .= ', '.$store->city;
         }
         if(!empty($address_txt)){
-            $html .= '<tr><td colspan="2" style="font-size: 5px;">&nbsp;</td></tr>';
-            $html .= '<tr><td colspan="2" style="text-align:left;"><span style="font-size:12px;">'.$address_txt.'</span></td></tr>';
+			$html .= $detail_spacer;
+			$html .= '<tr><td colspan="2" style="text-align:left;"><span style="font-size:'.$detail_size.'px;">'.$address_txt.'</span></td></tr>';
         }
 
         $phones = [];
@@ -279,17 +283,17 @@ class MyPDF extends TCPDF {
         if(!empty($store->phone)) $phones[] = $store->phone;
         $phone_str = implode(", ", $phones);
         if(!empty($phone_str)) {
-            $html .= '<tr><td style="width:9%; text-align:left; font-size:12px;">Mobile</td><td style="width:91%; text-align:left; font-size:12px;">: '.$phone_str.'</td></tr>';
+			$html .= '<tr><td style="width:14%; text-align:left; font-size:'.$detail_size.'px;">Mobile</td><td style="width:86%; text-align:left; font-size:'.$detail_size.'px;">: '.$phone_str.'</td></tr>';
         }
         
         if(!empty($store->email)){
-            $html .= '<tr><td style="width:9%; font-size: 5px;">&nbsp;</td><td style="width:91%; font-size: 5px;">&nbsp;</td></tr>';
-            $html .= '<tr><td style="width:9%; text-align:left; font-size:12px;">Email</td><td style="width:91%; text-align:left; font-size:12px;">: '.$store->email.'</td></tr>';
+			$html .= $detail_spacer;
+			$html .= '<tr><td style="width:14%; text-align:left; font-size:'.$detail_size.'px;">Email</td><td style="width:86%; text-align:left; font-size:'.$detail_size.'px;">: '.$store->email.'</td></tr>';
         }
         
         if(!empty($store->store_website)){
-            $html .= '<tr><td style="width:9%; font-size: 5px;">&nbsp;</td><td style="width:91%; font-size: 5px;">&nbsp;</td></tr>';
-            $html .= '<tr><td style="width:9%; text-align:left; font-size:12px;">Website</td><td style="width:91%; text-align:left; font-size:12px;">: '.$store->store_website.'</td></tr>';
+			$html .= $detail_spacer;
+			$html .= '<tr><td style="width:14%; text-align:left; font-size:'.$detail_size.'px;">Website</td><td style="width:86%; text-align:left; font-size:'.$detail_size.'px;">: '.$store->store_website.'</td></tr>';
         }
         
         $html .= '</table>';

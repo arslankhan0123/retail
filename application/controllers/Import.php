@@ -344,12 +344,20 @@ class Import extends MY_Controller {
                     //Save flag
                     $flag=true;
 
-                    
-
                     $this->db->trans_begin();
                     $i=1;
                     while(($importdata = fgetcsv($file, NULL, ",")) !== FALSE){
-                        if($i++==1){ continue; }
+                        if($i++==1){
+                            $required_headers = array('ITEM NAME','DEPARTMENT NAME','CATEGORY NAME','SUB CATEGORY NAME');
+                            $actual_headers = array_map('strtoupper', array_map('trim', array_slice($importdata,0,4)));
+                            if($actual_headers !== $required_headers){
+                                $this->db->trans_rollback();
+                                fclose($file);
+                                echo 'Invalid CSV format. Please download and use the latest example file.';
+                                return;
+                            }
+                            continue;
+                        }
 
                         //Item name should not be empty
                         if(empty($importdata[0])){
@@ -358,19 +366,27 @@ class Import extends MY_Controller {
                         $item_name = $this->xss_html_filter($importdata[0]);
                        
                     
-                        $category_name =$this->xss_html_filter($importdata[1]);
-                        $unit_name =$this->xss_html_filter($importdata[4]);
-                        $brand_name =$this->xss_html_filter($importdata[6]);
-                        $tax_name =$this->xss_html_filter($importdata[10]);
-                        $tax_per =$this->xss_html_filter($importdata[11]);
-                        $category_id=(!empty($category_name)) ? $this->get_category_id($category_name,$store_id) : null;
+                        $department_name = trim($this->xss_html_filter($importdata[1] ?? ''));
+                        $category_name = trim($this->xss_html_filter($importdata[2] ?? ''));
+                        $subcategory_name = trim($this->xss_html_filter($importdata[3] ?? ''));
+                        if(empty($department_name) || empty($category_name) || empty($subcategory_name)){
+                            $flag=false;
+                            break;
+                        }
+
+                        $unit_name =$this->xss_html_filter($importdata[6]);
+                        $brand_name =$this->xss_html_filter($importdata[8]);
+                        $tax_name =$this->xss_html_filter($importdata[12]);
+                        $tax_per =$this->xss_html_filter($importdata[13]);
+                        $department_id = $this->get_department_id($department_name,$store_id);
+                        $category_id = $this->get_category_id($category_name,$store_id,$department_id);
+                        $subcategory_id = $this->get_subcategory_id($subcategory_name,$store_id,$department_id,$category_id);
                         $unit_id=(!empty($unit_name)) ? $this->get_unit_id($unit_name,$store_id) : null;
                         $brand_id=(!empty($brand_name)) ? $this->get_brand_id($brand_name,$store_id) : null;
                         $tax_id=(!empty($tax_name)) ? $this->get_tax_id($tax_name,$tax_per,$store_id) : null;
 
-                        $sales_price = !empty($this->xss_html_filter($importdata[13]))?$this->xss_html_filter(string_to_number($importdata[13])):0;
-                        $purchase_price = !empty($this->xss_html_filter($importdata[9]))?$this->xss_html_filter(string_to_number($importdata[9])):0;
-                        $mrp = !empty($this->xss_html_filter($importdata[20]))?$this->xss_html_filter(string_to_number($importdata[20])):0;
+                        $sales_price = !empty($this->xss_html_filter($importdata[15]))?$this->xss_html_filter(string_to_number($importdata[15])):0;
+                        $purchase_price = !empty($this->xss_html_filter($importdata[10]))?$this->xss_html_filter(string_to_number($importdata[10])):0;
                         //Calculate Profit Margin
                         $profit_margin = ($sales_price-$purchase_price);
 
@@ -383,27 +399,29 @@ class Import extends MY_Controller {
                             'count_id'          =>  get_count_id('db_items'), 
                             'item_code'         =>  get_init_code('item'), 
                             'item_name'         =>  $item_name,//0
-                            'category_id'       =>  $category_id,//1
-                            'sku'               =>  !empty($this->xss_html_filter($importdata[2]))?$this->xss_html_filter($importdata[2]):'',
-                            'hsn'               =>  !empty($this->xss_html_filter($importdata[3]))?$this->xss_html_filter($importdata[3]):'',
+                            'dptid'             =>  $department_id,
+                            'category_id'       =>  $category_id,
+                            'scatid'            =>  $subcategory_id,
+                            'sku'               =>  !empty($this->xss_html_filter($importdata[4]))?$this->xss_html_filter($importdata[4]):'',
+                            'hsn'               =>  !empty($this->xss_html_filter($importdata[5]))?$this->xss_html_filter($importdata[5]):'',
                             'unit_id'           =>  $unit_id,//4
-                            'alert_qty'         =>  !empty($this->xss_html_filter($importdata[5]))?$this->xss_html_filter($importdata[5]):'',
+                            'alert_qty'         =>  !empty($this->xss_html_filter($importdata[7]))?$this->xss_html_filter($importdata[7]):'',
                             'brand_id'          =>  $brand_id,//6
-                            'lot_number'        =>  !empty($this->xss_html_filter($importdata[7]))?$this->xss_html_filter($importdata[7]):'',
+                            'lot_number'        =>  !empty($this->xss_html_filter($importdata[9]))?$this->xss_html_filter($importdata[9]):'',
                             
-                            'price'             =>  !empty($this->xss_html_filter($importdata[8]))?$this->xss_html_filter(string_to_number($importdata[8])):0,//Actual Price
+                            'price'             =>  !empty($this->xss_html_filter($importdata[11]))?$this->xss_html_filter(string_to_number($importdata[11])):0,//Actual Price
                             'tax_id'            =>  $tax_id,//10 //ok
                             'purchase_price'    =>  $purchase_price,//Calculate autocalculate
-                            'tax_type'          =>  !empty($this->xss_html_filter($importdata[12]))?$this->xss_html_filter($importdata[12]):'Exclusive',//ok
+                            'tax_type'          =>  !empty($this->xss_html_filter($importdata[14]))?$this->xss_html_filter($importdata[14]):'Exclusive',//ok
                             'sales_price'       =>  $sales_price,//ok
                             'profit_margin'       =>  $profit_margin,
-                            'mrp'       =>  $mrp,
-                            'stock'             =>  !empty($this->xss_html_filter($importdata[14]))?$this->xss_html_filter($importdata[14]):0,//ok
-                            'custom_barcode'    =>  !empty($this->xss_html_filter($importdata[15]))?$this->xss_html_filter($importdata[15]):0,//ok
-                            'seller_points'    =>  !empty($this->xss_html_filter($importdata[16]))?$this->xss_html_filter($importdata[16]):0,//ok
-                            'description'    =>  !empty($this->xss_html_filter($importdata[17]))?$this->xss_html_filter($importdata[17]):0,//ok
-                            'discount_type'    =>  !empty($this->xss_html_filter($importdata[18]))?$this->xss_html_filter($importdata[18]):0,//ok
-                            'discount'    =>  !empty($this->xss_html_filter($importdata[19]))?$this->xss_html_filter(string_to_number($importdata[19])):0,//ok
+                            'opening_stock'     =>  !empty($this->xss_html_filter($importdata[16]))?$this->xss_html_filter($importdata[16]):0,
+                            'stock'             =>  !empty($this->xss_html_filter($importdata[16]))?$this->xss_html_filter($importdata[16]):0,//ok
+                            'custom_barcode'    =>  !empty($this->xss_html_filter($importdata[17]))?$this->xss_html_filter($importdata[17]):0,//ok
+                            'seller_points'    =>  !empty($this->xss_html_filter($importdata[18]))?$this->xss_html_filter($importdata[18]):0,//ok
+                            'description'    =>  !empty($this->xss_html_filter($importdata[19]))?$this->xss_html_filter($importdata[19]):0,//ok
+                            'discount_type'    =>  !empty($this->xss_html_filter($importdata[20]))?$this->xss_html_filter($importdata[20]):0,//ok
+                            'discount'    =>  !empty($this->xss_html_filter($importdata[21]))?$this->xss_html_filter(string_to_number($importdata[21])):0,//ok
                             'item_group'        =>  'Single',//10 //ok
                             /*System Info*/
                             'created_date'              => $CUR_DATE,
@@ -426,11 +444,13 @@ class Import extends MY_Controller {
                         $item_id = $this->db->insert_id();
 
 
-                        if(!empty($this->xss_html_filter($importdata[14])) && $this->xss_html_filter($importdata[14])>0){
+                        if(!empty($this->xss_html_filter($importdata[16])) && $this->xss_html_filter($importdata[16])>0){
                             $array_params = array(  'store_id'=> $store_id,
                                                     'item_id'=>$item_id, 
                                                     'warehouse_id'=>$warehouse_id, 
-                                                    'adjustment_qty'=>$this->xss_html_filter($importdata[14]));
+                                                    'adjustment_qty'=>$this->xss_html_filter($importdata[16]),
+                                                    'opening_stock'=>0,
+                                                    'force_new'=>true);
                             $this->load->model('items_model');
                             $q2 = $this->items_model->add_opening_stock($array_params); 
                             if(!$q2){
@@ -469,9 +489,36 @@ class Import extends MY_Controller {
             //unlink('uploads/csv/items/'.$file_name);
         }
 
-        public function get_category_id($category_name='',$store_id){
+        public function get_department_id($department_name='',$store_id=null){
+            $q2=$this->db->select('dptid')
+                         ->where('UPPER(dptName)', strtoupper($department_name))
+                         ->where('store_id',$store_id)
+                         ->get('db_department');
+            if($q2->num_rows()>0){
+                return $q2->row()->dptid;
+            }
 
-            $q2=$this->db->query("select id from db_category where upper(category_name)=upper('$category_name') and store_id=$store_id");
+            $info = array(
+                'count_id'   => get_count_id('db_department',$store_id),
+                'dptCode'    => get_init_code('category',$store_id),
+                'store_id'   => $store_id,
+                'dptName'    => $department_name,
+                'dptDetails' => '',
+                'status'     => 1,
+            );
+            $this->db->insert('db_department', $info);
+            return $this->db->insert_id();
+        }
+
+        public function get_category_id($category_name='',$store_id=null,$department_id=null){
+
+            $this->db->select('id')
+                     ->where('UPPER(category_name)', strtoupper($category_name))
+                     ->where('store_id',$store_id);
+            if($department_id !== null){
+                $this->db->where('dptid',$department_id);
+            }
+            $q2=$this->db->get('db_category');
             if($q2->num_rows()>0){
                 return $q2->row()->id;
             }
@@ -481,6 +528,7 @@ class Import extends MY_Controller {
                         'count_id'                  => get_count_id('db_category',$store_id), 
                         'category_code'             => get_init_code('category',$store_id), 
                         'store_id'                  => $store_id, 
+                        'dptid'                     => $department_id,
                         'category_name'             => $category_name, 
                         'description'               => '',
                         'status'                    => 1,
@@ -488,6 +536,30 @@ class Import extends MY_Controller {
                     $q1 = $this->db->insert('db_category', $info);
                     return $this->db->insert_id();                    
             }
+        }
+        public function get_subcategory_id($subcategory_name='',$store_id=null,$department_id=null,$category_id=null){
+            $q2=$this->db->select('scatid')
+                         ->where('UPPER(scatName)', strtoupper($subcategory_name))
+                         ->where('store_id',$store_id)
+                         ->where('dptid',$department_id)
+                         ->where('catid',$category_id)
+                         ->get('db_subcategory');
+            if($q2->num_rows()>0){
+                return $q2->row()->scatid;
+            }
+
+            $info = array(
+                'count_id'    => get_count_id('db_subcategory',$store_id),
+                'scatCode'    => get_init_code('category',$store_id),
+                'store_id'    => $store_id,
+                'dptid'       => $department_id,
+                'catid'       => $category_id,
+                'scatName'    => $subcategory_name,
+                'scatDetails' => '',
+                'status'      => 1,
+            );
+            $this->db->insert('db_subcategory', $info);
+            return $this->db->insert_id();
         }
         public function get_unit_id($unit_name='',$store_id){
             $q2=$this->db->query("select id from db_units where upper(unit_name)=upper('$unit_name') and store_id=$store_id");

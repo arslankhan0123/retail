@@ -122,7 +122,19 @@
                   </tr>
                   <tr>
                     <td><?=$i++;?></td>
+                    <td>Department Name</td>
+                    <td style="color:green;"><span class="label label-success"><?= $this->lang->line('required'); ?></span></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><?=$i++;?></td>
                     <td><?= $this->lang->line('category_name'); ?></td>
+                    <td style="color:green;"><span class="label label-success"><?= $this->lang->line('required'); ?></span></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><?=$i++;?></td>
+                    <td>Sub Category Name</td>
                     <td style="color:green;"><span class="label label-success"><?= $this->lang->line('required'); ?></span></td>
                     <td></td>
                   </tr>
@@ -238,13 +250,6 @@
                       <td></td>
                   </tr>
 
-                  <tr>
-                    <td><?=$i++;?></td>
-                    <td><?= $this->lang->line('mrp'); ?></td>
-                    <td style="font-style: italic;"><span class="label label-default"><?= $this->lang->line('optional'); ?></td>
-                      <td></td>
-                  </tr>
-                  
                 </tbody>
               </table>
               

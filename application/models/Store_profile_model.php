@@ -16,6 +16,19 @@ class Store_profile_model extends CI_Model {
 			}
 		}
 
+		$required_fields = array(
+			'bank_details' => 'Bank Details',
+			'country'      => 'Country',
+			'state'        => 'State',
+			'address'      => 'Address',
+		);
+		foreach ($required_fields as $field => $label) {
+			if (!isset($_POST[$field]) || trim($_POST[$field]) === '') {
+				echo $label.' is required.';
+				exit();
+			}
+		}
+
 		$this->db->trans_begin();
 		
 		$store_logo='';
@@ -63,7 +76,7 @@ class Store_profile_model extends CI_Model {
 		}
 
 		$change_return = (isset($change_return)) ? 1 : 0;
-		$mrp_column = (isset($mrp_column)) ? 1 : 0;
+		$mrp_column = (isset($mrp_column) && (int)$mrp_column === 1) ? 1 : 0;
 		$previous_balance_bit = (isset($previous_balance_bit)) ? 1 : 0;
 		$round_off = (isset($round_off)) ? 1 : 0;
 
@@ -82,7 +95,9 @@ class Store_profile_model extends CI_Model {
 		    				'address'					=> $address,
 		    				'postcode'					=> $postcode,
 		    				'bank_details'				=> $bank_details,
+		    				'department_init'			=> $department_init,
 		    				'category_init'				=> $category_init,
+		    				'subcategory_init'			=> $subcategory_init,
 		    				'item_init'					=> $item_init,
 		    				'supplier_init'				=> $supplier_init,
 		    				'purchase_init'				=> $purchase_init,
@@ -123,6 +138,7 @@ class Store_profile_model extends CI_Model {
 		    				't_and_c_status'	=> $t_and_c_status,
 		    				't_and_c_status_pos'	=> $t_and_c_status_pos,
 		    				'number_to_words'	=> $number_to_words,
+		    				'number_to_words_pos'	=> $number_to_words_pos,
 		    			);
 
 		if(!empty($store_logo)){
@@ -132,14 +148,8 @@ class Store_profile_model extends CI_Model {
 			$data['qr_image']=$qr_image;
 		}
 		/*custom helper*/
-		if(gst_number()){
-			$data['gst_no']=$gst_no;
-		}
 		if(vat_number()){
 			$data['vat_no']=$vat_no;
-		}
-		if(pan_number()){
-			$data['pan_no']=$pan_no;
 		}
 		/*end*/
 

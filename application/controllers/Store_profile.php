@@ -18,7 +18,7 @@ class Store_profile extends MY_Controller {
 
 		$this->permission_check('store_edit');
 		$data=$this->store->get_details($id);
-		$data['page_title']=$this->lang->line('store');
+		$data['page_title']='Branch';
 		$this->load->view('store', $data);
 	}
 	public function update_store(){

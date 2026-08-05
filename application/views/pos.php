@@ -691,7 +691,7 @@ function proceed_addrow(id='',item_obj=''){
     var item_name = (item_obj=='') ? $('#div_'+id).attr('data-item-name') : item_obj.item_name; 
 
     var stock   =(item_obj=='') ? $('#div_'+id).attr('data-item-available-qty') : item_obj.stock;
-        stock     =(parseFloat(stock)).toFixed(0);
+        stock     =format_pos_qty(stock);
 
     var tax_type   =(item_obj=='') ? $('#div_'+id).attr('data-item-tax-type') : item_obj.tax_type;  
     var tax_id   =(item_obj=='') ? $('#div_'+id).attr('data-item-tax-id') : item_obj.tax_id;  
@@ -802,7 +802,7 @@ function set_to_original(row_id,item_cost) {
 
 //INCREMENT ITEM
 function format_pos_qty(value){
-  return isNaN(parseFloat(value)) ? '0' : parseFloat(value).toFixed(0);
+  return format_qty(value);
 }
 
 function increment_qty(item_id,rowcount){

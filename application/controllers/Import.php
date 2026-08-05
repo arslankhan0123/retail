@@ -500,7 +500,7 @@ class Import extends MY_Controller {
 
             $info = array(
                 'count_id'   => get_count_id('db_department',$store_id),
-                'dptCode'    => get_init_code('category',$store_id),
+                'dptCode'    => get_init_code('department',$store_id),
                 'store_id'   => $store_id,
                 'dptName'    => $department_name,
                 'dptDetails' => '',
@@ -550,7 +550,7 @@ class Import extends MY_Controller {
 
             $info = array(
                 'count_id'    => get_count_id('db_subcategory',$store_id),
-                'scatCode'    => get_init_code('category',$store_id),
+                'scatCode'    => get_init_code('subcategory',$store_id),
                 'store_id'    => $store_id,
                 'dptid'       => $department_id,
                 'catid'       => $category_id,

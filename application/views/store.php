@@ -22,6 +22,8 @@
                 $mobile=$phone=$email=$country=$state=$city=
                 $postcode=$address=$gst_no=$vat_no=
                 $store_website=$pan_no=$bank_details=$store_logo=$qr_image='';
+                $department_init=$subcategory_init='';
+                $number_to_words=$number_to_words_pos='Yes';
 
                 $decimals=2;
                 $qty_decimals=2;
@@ -57,7 +59,7 @@
                      <!-- Custom Tabs -->
                      <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                           <li class="active"><a href="#tab_4" id='tab_4_btn' data-toggle="tab"><?= $this->lang->line('store'); ?></a></li>
+                           <li class="active"><a href="#tab_4" id='tab_4_btn' data-toggle="tab">Branch</a></li>
                            <li><a href="#tab_1" id='tab_1_btn' data-toggle="tab"><?= $this->lang->line('system'); ?></a></li>
                            <?php if(!is_user()){?>
                            <li><a href="#tab_2" id='tab_2_btn' data-toggle="tab"><?= $this->lang->line('sales'); ?></a></li>
@@ -76,14 +78,14 @@
                                           <div class="row">
                                              <div class="col-md-5">
                                                 <div class="form-group">
-                                                   <label for="store_code" class="col-sm-4 control-label"><?= $this->lang->line('store_code'); ?><label class="text-danger">*</label></label>
+                                                   <label for="store_code" class="col-sm-4 control-label">Branch Code<label class="text-danger">*</label></label>
                                                    <div class="col-sm-8">
                                                       <input type="text" class="form-control" id="store_code" name="store_code" readonly=""  placeholder="" onkeyup="shift_cursor(event,'mobile')" value="<?php print $store_code; ?>" >
                                                       <span id="store_code_msg" style="display:none" class="text-danger"></span>
                                                    </div>
                                                 </div>
                                                 <div class="form-group">
-                                                   <label for="store_name" class="col-sm-4 control-label"><?= $this->lang->line('store_name'); ?><label class="text-danger">*</label></label>
+                                                   <label for="store_name" class="col-sm-4 control-label">Branch Name<label class="text-danger">*</label></label>
                                                    <div class="col-sm-8">
                                                       <input type="text" class="form-control" id="store_name" name="store_name" placeholder="" onkeyup="shift_cursor(event,'mobile')" value="<?php print $store_name; ?>" >
                                                       <span id="store_name_msg" style="display:none" class="text-danger"></span>
@@ -106,20 +108,10 @@
                                                 <div class="form-group">
                                                    <label for="phone" class="col-sm-4 control-label"><?= $this->lang->line('phone'); ?></label>
                                                    <div class="col-sm-8">
-                                                      <input type="text" class="form-control no_special_char_no_space" id="phone" name="phone" placeholder="" value="<?php print $phone; ?>" onkeyup="shift_cursor(event,'gst_no')" >
+                                                      <input type="text" class="form-control no_special_char_no_space" id="phone" name="phone" placeholder="" value="<?php print $phone; ?>" onkeyup="shift_cursor(event,'vat_no')" >
                                                       <span id="phone_msg" style="display:none" class="text-danger"></span>
                                                    </div>
                                                 </div>
-
-                                                <?php if(gst_number()){ ?>
-                                                <div class="form-group">
-                                                   <label for="gst_no" class="col-sm-4 control-label"><?= $this->lang->line('gst_number'); ?></label>
-                                                   <div class="col-sm-8">
-                                                      <input type="text" class="form-control" id="gst_no" name="gst_no" placeholder="" value="<?php print $gst_no; ?>" onkeyup="shift_cursor(event,'vat_no')">
-                                                      <span id="gstin_msg" style="display:none" class="text-danger"></span>
-                                                   </div>
-                                                </div>
-                                                <?php } ?>
 
                                                 <?php if(vat_number()){ ?>
                                                 <div class="form-group">
@@ -130,17 +122,8 @@
                                                    </div>
                                                 </div>
                                                 <?php } ?>
-                                                <?php if(pan_number()){ ?>
                                                 <div class="form-group">
-                                                   <label for="pan_no" class="col-sm-4 control-label"><?= $this->lang->line('pan_number'); ?></label>
-                                                   <div class="col-sm-8">
-                                                      <input type="text" class="form-control" id="pan_no" name="pan_no" placeholder="" value="<?php print $pan_no; ?>" onkeyup="shift_cursor(event,'store_website')">
-                                                      <span id="pan_msg" style="display:none" class="text-danger"></span>
-                                                   </div>
-                                                </div>
-                                                <?php } ?>
-                                                <div class="form-group">
-                                                   <label for="store_website" class="col-sm-4 control-label"><?= $this->lang->line('store_website'); ?></label>
+                                                   <label for="store_website" class="col-sm-4 control-label">Website</label>
                                                    <div class="col-sm-8">
                                                       <input type="text" class="form-control" id="store_website" name="store_website" placeholder="" value="<?php print $store_website; ?>" onkeyup="shift_cursor(event,'country')">
                                                       <span id="website_msg" style="display:none" class="text-danger"></span>
@@ -170,16 +153,16 @@
                                              </div>
                                              <div class="col-md-5">
                                                 <div class="form-group">
-                                                   <label for="bank_details" class="col-sm-4 control-label"><?= $this->lang->line('bank_details'); ?></label>
+                                                   <label for="bank_details" class="col-sm-4 control-label"><?= $this->lang->line('bank_details'); ?><label class="text-danger">*</label></label>
                                                    <div class="col-sm-8">
-                                                      <textarea type="text" class="form-control" id="bank_details" name="bank_details" placeholder="" ><?php print $bank_details; ?></textarea>
+                                                      <textarea type="text" class="form-control" id="bank_details" name="bank_details" placeholder="" required><?php print $bank_details; ?></textarea>
                                                       <span id="bank_details_msg" style="display:none" class="text-danger"></span>
                                                    </div>
                                                 </div>
                                                 <div class="form-group">
-                                                   <label for="country" class="col-sm-4 control-label"><?= $this->lang->line('country'); ?></label>
+                                                   <label for="country" class="col-sm-4 control-label"><?= $this->lang->line('country'); ?><label class="text-danger">*</label></label>
                                                    <div class="col-sm-8">
-                                                      <select class="form-control select2" id="country" name="country"  style="width: 100%;" onkeyup="shift_cursor(event,'state')" value="<?php print $country; ?>">
+                                                      <select class="form-control select2" id="country" name="country" required style="width: 100%;" onkeyup="shift_cursor(event,'state')" value="<?php print $country; ?>">
                                                          <?php
                                                             $query1="select * from db_country where status=1";
                                                             $q1=$this->db->query($query1);
@@ -204,9 +187,9 @@
                                                    </div>
                                                 </div>
                                                 <div class="form-group">
-                                                   <label for="state" class="col-sm-4 control-label"><?= $this->lang->line('state'); ?></label>
+                                                   <label for="state" class="col-sm-4 control-label"><?= $this->lang->line('state'); ?><label class="text-danger">*</label></label>
                                                    <div class="col-sm-8">
-                                                      <select class="form-control select2" id="state" name="state"  style="width: 100%;" onkeyup="shift_cursor(event,'city')">
+                                                      <select class="form-control select2" id="state" name="state" required style="width: 100%;" onkeyup="shift_cursor(event,'city')">
                                                          <?php
                                                             $query2="select * from db_states where status=1";
                                                             $q2=$this->db->query($query2);
@@ -246,14 +229,14 @@
                                                    </div>
                                                 </div>
                                                 <div class="form-group">
-                                                   <label for="address" class="col-sm-4 control-label"><?= $this->lang->line('address'); ?></label>
+                                                   <label for="address" class="col-sm-4 control-label"><?= $this->lang->line('address'); ?><label class="text-danger">*</label></label>
                                                    <div class="col-sm-8">
-                                                      <textarea type="text" class="form-control" id="address" name="address" placeholder="" ><?php print $address; ?></textarea>
+                                                      <textarea type="text" class="form-control" id="address" name="address" placeholder="" required><?php print $address; ?></textarea>
                                                       <span id="address_msg" style="display:none" class="text-danger"></span>
                                                    </div>
                                                 </div>
                                                 <div class="form-group">
-                                                   <label for="store_logo" class="col-sm-4 control-label"><?= $this->lang->line('store_logo'); ?></label>
+                                                   <label for="store_logo" class="col-sm-4 control-label">Logo</label>
                                                    <div class="col-sm-8">
                                                       <input type="file" id="store_logo" name="store_logo">
                                                       <span id="store_logo_msg" style="display:block;" class="text-danger">Max Width/Height: 1000px * 1000px & Size: 1024kb </span>
@@ -380,7 +363,7 @@
                                                    </div>
                                                 </div>
                                                 <div class="form-group">
-                                                   <label for="decimals" class="col-sm-4 control-label"><?= $this->lang->line('decimals'); ?><label class="text-danger">*</label> </label>
+                                                   <label for="decimals" class="col-sm-4 control-label">Decimals for Amount<label class="text-danger">*</label> </label>
                                                    <div class="col-sm-8">
                                                       <select class="form-control select2" id="decimals" name="decimals"  style="width: 100%;">
                                                          <option value="0">0</option>
@@ -485,12 +468,6 @@
                             $change_return_checkbox='checked';
                            }
 
-                           //MRP Column Checkbox
-                           $mrp_column_checkbox ='';
-                           if($mrp_column==1){
-                            $mrp_column_checkbox='checked';
-                           }
-
                            //Previous Balance Checkbox
                            $previous_balance_checkbox ='';
                            if($previous_balance_bit==1){
@@ -563,15 +540,7 @@
                                               </div>
 
 
-                                              <div class="col-md-12">
-                                                <div class="form-group">
-                                                   <label for="mrp_column" class="col-sm-3 control-label"><?= $this->lang->line('show_mrp_column_on_pos_invoice'); ?></label>
-                                                   <div class="col-sm-4">
-                                                      <input type="checkbox" <?=$mrp_column_checkbox;?> class="form-control" id="mrp_column" name="mrp_column" >
-                                                      <span id="mrp_column_msg" style="display:none" class="text-danger"></span>
-                                                   </div>
-                                                </div>
-                                             </div>
+                                             <input type="hidden" name="mrp_column" value="<?= (int)$mrp_column; ?>">
 
                                              <div class="col-md-12">
                                                 <div class="form-group">
@@ -584,13 +553,25 @@
                                              </div>
                                              <div class="col-md-12">
                                              <div class="form-group">
-                                                   <label for="number_to_words" class="col-sm-3 control-label"><?= $this->lang->line('number_to_words_format'); ?><label class="text-danger">*</label> </label>
+                                                   <label for="number_to_words" class="col-sm-3 control-label">Number to Words Format for Sales<label class="text-danger">*</label> </label>
                                                    <div class="col-sm-4">
                                                       <select class="form-control select2" id="number_to_words" name="number_to_words"  style="width: 100%;">
-                                                         <option value="Default">Default</option>
-                                                         <option value="Indian">Indian</option>
+                                                         <option value="Yes">Yes</option>
+                                                         <option value="No">No</option>
                                                       </select>
                                                       <span id="number_to_words_msg" style="display:none" class="text-danger"></span>
+                                                   </div>
+                                                </div>
+                                              </div>
+                                              <div class="col-md-12">
+                                                <div class="form-group">
+                                                   <label for="number_to_words_pos" class="col-sm-3 control-label">Number to Words Format for POS<label class="text-danger">*</label> </label>
+                                                   <div class="col-sm-4">
+                                                      <select class="form-control select2" id="number_to_words_pos" name="number_to_words_pos" style="width: 100%;">
+                                                         <option value="Yes">Yes</option>
+                                                         <option value="No">No</option>
+                                                      </select>
+                                                      <span id="number_to_words_pos_msg" style="display:none" class="text-danger"></span>
                                                    </div>
                                                 </div>
                                               </div>
@@ -659,10 +640,28 @@
                                           <div class="row">
                                              <div class="col-md-6">
                                                 <div class="form-group">
+                                                   <label for="department_init" class="col-sm-4 control-label">Department<label class="text-danger">*</label></label>
+                                                   <div class="col-sm-8">
+                                                      <input type="text" class="form-control" id="department_init" name="department_init" placeholder="" value="<?php print $department_init; ?>" >
+                                                      <span id="department_init_msg" style="display:none" class="text-danger"></span>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div class="col-md-6">
+                                                <div class="form-group">
                                                    <label for="category_init" class="col-sm-4 control-label"><?= $this->lang->line('category'); ?><label class="text-danger">*</label></label>
                                                    <div class="col-sm-8">
                                                       <input type="text" class="form-control" id="category_init" name="category_init" placeholder="" value="<?php print $category_init; ?>" >
                                                       <span id="category_init_msg" style="display:none" class="text-danger"></span>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div class="col-md-6">
+                                                <div class="form-group">
+                                                   <label for="subcategory_init" class="col-sm-4 control-label">SubCategory<label class="text-danger">*</label></label>
+                                                   <div class="col-sm-8">
+                                                      <input type="text" class="form-control" id="subcategory_init" name="subcategory_init" placeholder="" value="<?php print $subcategory_init; ?>" >
+                                                      <span id="subcategory_init_msg" style="display:none" class="text-danger"></span>
                                                    </div>
                                                 </div>
                                              </div>
@@ -890,7 +889,7 @@
            }
          });
       </script>
-      <script src="<?php echo $theme_link; ?>js/store_profile.js"></script>
+      <script src="<?php echo $theme_link; ?>js/store_profile.js?v=<?= filemtime(FCPATH.'theme/js/store_profile.js'); ?>"></script>
       <script src="<?php echo $theme_link; ?>js/store/store.js"></script>
      
 
@@ -901,6 +900,7 @@
      
       <script type="text/javascript">
          $("#number_to_words").val('<?= $number_to_words;?>').select2();
+         $("#number_to_words_pos").val('<?= $number_to_words_pos;?>').select2();
 
         <?php if(!empty($currency_placement)) {?>
          $("#currency_placement").val('<?= $currency_placement;?>').select2();

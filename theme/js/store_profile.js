@@ -24,14 +24,21 @@ $('#update').on("click",function (e) {
 	check_field("store_name");if(flag==false){$("#tab_4_btn").trigger('click');}
 	check_field("mobile");	if(flag==false){$("#tab_4_btn").trigger('click');}
 	check_field("email");	if(flag==false){$("#tab_4_btn").trigger('click');}
+	check_field("bank_details");if(flag==false){$("#tab_4_btn").trigger('click');}
+	check_field("country");if(flag==false){$("#tab_4_btn").trigger('click');}
+	check_field("state");if(flag==false){$("#tab_4_btn").trigger('click');}
 	check_field("city");	if(flag==false){$("#tab_4_btn").trigger('click');}
 	check_field("address");	if(flag==false){$("#tab_4_btn").trigger('click');}
 	if(flag==false){
 		toastr["warning"]("You have Missed Something to Fillup!")
 		return;
     }
+	check_field("number_to_words");if(flag==false){$("#tab_2_btn").trigger('click');}
+	check_field("number_to_words_pos");if(flag==false){$("#tab_2_btn").trigger('click');}
 	//PREFIXES
+	check_field("department_init");if(flag==false){$("#tab_3_btn").trigger('click');}
 	check_field("category_init");if(flag==false){$("#tab_3_btn").trigger('click');}
+	check_field("subcategory_init");if(flag==false){$("#tab_3_btn").trigger('click');}
 	check_field("item_init");if(flag==false){$("#tab_3_btn").trigger('click');}
 	check_field("supplier_init");if(flag==false){$("#tab_3_btn").trigger('click');}
 	check_field("purchase_init");if(flag==false){$("#tab_3_btn").trigger('click');}

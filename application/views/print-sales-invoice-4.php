@@ -447,7 +447,7 @@ body { margin: 5px; }
    <?php  ?>
   <tr>
     <td colspan="14" class='text-right'><b><?= $this->lang->line('grand_total'); ?></b></td>
-    <td colspan="2" class='text-right' ><b><?= store_number_format($sales_rec->grand_total); ?></b></td>
+<td colspan="2" class='text-right' ><b><?= store_total_format($sales_rec->grand_total); ?></b></td>
   </tr>
 
   <?php if($store_rec->previous_balance_bit==1){ ?>
@@ -461,14 +461,16 @@ body { margin: 5px; }
   </tr>  
   <?php } ?>
 
+  <?php if(show_number_to_words_sales()){ ?>
   <tr>
     <td colspan="16">
       <span class='amt-in-word'>Amount in words: 
-        <i style='font-weight:bold;'><?=$this->session->userdata('currency_code')." ".no_to_words($sales_rec->grand_total)?>
+<i style='font-weight:bold;'><?=$this->session->userdata('currency_code')." ".no_to_words(round_off_amount($sales_rec->grand_total))?>
         </i>
     </span>  
     </td>
   </tr>
+  <?php } ?>
   <tr>
     <td colspan="16">
       <span class='amt-in-word'>
@@ -603,7 +605,7 @@ body { margin: 5px; }
                             <td colspan='2' class='text-center'><?= (!empty($sgst_per)) ? store_number_format($tot_sgst_amt) : '' ?></td>
                           <td colspan='2' class='text-center'></td>
                             <td colspan='2' class='text-center'><?= (!empty($igst_per)) ? store_number_format($tot_igst_amt) : '' ?></td>
-                          <td colspan='2' class='text-center'><?=store_number_format($sales_rec->grand_total)?></td>
+<td colspan='2' class='text-center'><?=store_total_format($sales_rec->grand_total)?></td>
                         </tr>
                       </tbody>
                     </table>

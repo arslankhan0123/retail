@@ -80,7 +80,7 @@ public function verify_and_save()
       'count_id'    => get_count_id('db_subcategory'), 
       'dptid'       => $dptid,
       'catid'       => $catid,
-      'scatCode'    => get_init_code('category'), 
+      'scatCode'    => get_init_code('subcategory'), 
       'scatName'    => $scatName,
       'scatDetails' => $scatDetails,
       'status'      => 1,

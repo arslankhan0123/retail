@@ -134,6 +134,7 @@
     $tot_discount_to_all_amt=$res3->tot_discount_to_all_amt;
     $round_off=$res3->round_off;
     $payment_status=$res3->payment_status;
+    $store_details=get_store_details($res3->store_id);
 
     // A POS sale can be paid using more than one payment type.
     $payment_types = array();
@@ -397,7 +398,7 @@
                             <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
                                 align="right"><?= $this->lang->line('total'); ?></td>
                             <td style=" padding-left: 2px; padding-right: 2px;" align="right">
-                                <?= store_number_format($grand_total); ?></td>
+<?= store_total_format($grand_total); ?></td>
                         </tr>
                         <tr>
                             <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
@@ -412,7 +413,7 @@
                             <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
                                 align="right"><?= $this->lang->line('paid_amount'); ?></td>
                             <td style=" padding-left: 2px; padding-right: 2px;" align="right">
-                                <?= store_number_format($paid_amount+$change_return_amount); ?></td>
+<?= store_total_format($paid_amount+$change_return_amount); ?></td>
                         </tr>
                         <tr>
                             <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
@@ -425,7 +426,7 @@
                             <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
                                 align="right"><?= $this->lang->line('paid_amount'); ?></td>
                             <td style=" padding-left: 2px; padding-right: 2px;" align="right">
-                                <?= store_number_format($paid_amount); ?></td>
+<?= store_total_format($paid_amount); ?></td>
                         </tr>
                         <?php } ?>
 
@@ -449,7 +450,8 @@
 
                         <tr>
                             <td colspan="<?=$mrp_column+5?>" align="center" style="padding-top: 6px; padding-bottom: 4px;">
-                                <span style="font-size: 22px; font-weight: bold;">Net Total&nbsp;:&nbsp;<?= store_number_format($grand_total); ?></span>
+<span style="font-size: 22px; font-weight: bold;">Net Total&nbsp;:&nbsp;<?= store_total_format($grand_total); ?></span>
+<?php if(show_number_to_words_pos()){ ?><br><span>Amount in Words: <?= no_to_words(round_off_amount($grand_total)); ?></span><?php } ?>
                             </td>
                         </tr>
 
@@ -490,7 +492,7 @@
 								$wa_message .= "```".PHP_EOL;
 								$wa_message .= str_pad("Bill Number", 11)." : ".$sales_code.PHP_EOL;
 								$wa_message .= str_pad("Date & Time", 11)." : ".$sales_date." ".$created_time.PHP_EOL;
-								$wa_message .= str_pad("Bill Amount", 11)." : ".store_number_format($grand_total).PHP_EOL;
+$wa_message .= str_pad("Bill Amount", 11)." : ".store_total_format($grand_total).PHP_EOL;
 								$wa_message .= str_pad("Tax Amount", 11)." : ".store_number_format($tax_amt).PHP_EOL;
 								$wa_message .= "```".PHP_EOL.PHP_EOL;
 								$wa_message .= "Thank you!";
@@ -517,10 +519,11 @@
             </td>
         </tr>
     </table>
-    <div style="text-align:center; margin-top:20px; font-weight:bold; font-size: 16px;">
-        Thank You!<br>
-        Visit Again!
+    <?php if(!empty($store_details->sales_invoice_footer_text)){ ?>
+    <div style="text-align:center; margin-top:20px; font-weight:bold; font-size:16px;">
+        <?= nl2br(html_entity_decode($store_details->sales_invoice_footer_text)); ?>
     </div>
+    <?php } ?>
     <center>
         <div class="row no-print">
             <div class="col-md-12">

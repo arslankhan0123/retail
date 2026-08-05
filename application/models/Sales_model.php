@@ -192,7 +192,22 @@ class Sales_model extends CI_Model {
 	    if($other_charges_amt=='' || $other_charges_amt==0){$other_charges_amt=null;}
 	    if($discount_to_all_input=='' || $discount_to_all_input==0){$discount_to_all_input=null;}
 	    if($tot_discount_to_all_amt=='' || $tot_discount_to_all_amt==0){$tot_discount_to_all_amt=null;}
-	    if($tot_round_off_amt=='' || $tot_round_off_amt==0){$tot_round_off_amt=null;}
+
+	    // Always enforce the store's round-off setting on the server. Do not
+	    // trust a possibly stale browser calculation for invoice totals.
+	    $raw_total = (float) string_to_number($tot_subtotal_amt)
+			+ (float) string_to_number($other_charges_amt)
+			- (float) string_to_number($tot_discount_to_all_amt)
+			- (float) string_to_number($coupon_discount_amt);
+	    if(is_enabled_round_off()){
+	    	$rounded_total = round($raw_total);
+	    	$tot_round_off_amt = number_format($rounded_total - $raw_total, decimals(), '.', '');
+	    	$tot_total_amt = number_format($rounded_total, decimals(), '.', '');
+	    }
+	    else{
+	    	$tot_round_off_amt = null;
+	    	$tot_total_amt = number_format($raw_total, decimals(), '.', '');
+	    }
 
 	    $prev_item_ids = array();
 	    

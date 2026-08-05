@@ -357,8 +357,11 @@
 
 					<tr>
 						<td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>" align="right"><?= $this->lang->line('total'); ?></td>
-						<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= store_number_format($grand_total); ?></td>
+<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= store_total_format($grand_total); ?></td>
 					</tr>
+					<?php if(show_number_to_words_pos()){ ?>
+					<tr><td colspan="<?=$mrp_column+5?>" align="center">Amount in Words: <?= no_to_words(round_off_amount($grand_total)); ?></td></tr>
+					<?php } ?>
 					<tr>
 						<td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>" align="right"><?= $this->lang->line('tot_discounted_amt'); ?></td>
 						<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= store_number_format($overall_discounted); ?></td>
@@ -369,7 +372,7 @@
 						$change_return_amount = get_change_return_amount($sales_id); ?>
 						<tr>
 							<td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>" align="right"><?= $this->lang->line('paid_amount'); ?></td>
-							<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= store_number_format($paid_amount+$change_return_amount); ?></td>
+<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= store_total_format($paid_amount+$change_return_amount); ?></td>
 						</tr>
 						<tr>
 							<td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>" align="right"><?= $this->lang->line('refund'); ?></td>
@@ -379,7 +382,7 @@
 					else{ ?>
 						<tr>
 						<td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>" align="right"><?= $this->lang->line('paid_amount'); ?></td>
-						<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= store_number_format($paid_amount); ?></td>
+<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= store_total_format($paid_amount); ?></td>
 					</tr>
 					
 					<?php } ?>

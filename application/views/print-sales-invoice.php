@@ -234,7 +234,7 @@ th, td {
                   echo "<td>".++$i."</td>";
                   echo "<td colspan='2'>".$res2->item_name."</td>";
                   echo "<td colspan='2'>".store_number_format($res2->price_per_unit)."</td>";
-                  echo "<td>".$res2->sales_qty."</td>";
+                  echo "<td>".format_qty($res2->sales_qty)."</td>";
                   /*echo "<td>".$res2->tax."%<br>".$res2->tax_name."</td>";
                   echo "<td style='text-align: right;'>".$res2->tax_amt."</td>";
                   echo "<td style='text-align: right;'>".$discount."</td>";
@@ -255,7 +255,7 @@ th, td {
 <tfoot>
   <tr>
     <td colspan="5" style="text-align: center;font-weight: bold;"><?= $this->lang->line('total'); ?></td>
-    <td colspan="1" style="font-weight: bold;"><?= number_format($tot_qty,2); ?></td>
+    <td colspan="1" style="font-weight: bold;"><?= format_qty($tot_qty); ?></td>
     <!-- <td colspan="1" style="">-</td>
     <td colspan="1" style="text-align: right;" ><b><?php echo number_format(($tot_tax_amt),2,'.',''); ?></b></td>
     <td colspan="1" style="">-</td>
@@ -277,11 +277,11 @@ th, td {
   </tr>
   <tr>
     <td colspan="8" style="text-align: right;"><b><?= $this->lang->line('grand_total'); ?></b></td>
-    <td colspan="2" style="text-align: right;" ><b><?php echo store_number_format($grand_total); ?></b></td>
+    <td colspan="2" style="text-align: right;" ><b><?php echo store_total_format($grand_total); ?></b></td>
   </tr>
   <tr>
     <td colspan="8" style="text-align: right;"><b><?= $this->lang->line('paid_amount'); ?></b></td>
-    <td colspan="2" style="text-align: right;" ><b><?php echo store_number_format($paid_amount); ?></b></td>
+    <td colspan="2" style="text-align: right;" ><b><?php echo store_total_format($paid_amount); ?></b></td>
   </tr>
   <tr>
     <td colspan="8" style="text-align: right;"><b><?= $this->lang->line('due_amount'); ?></b></td>

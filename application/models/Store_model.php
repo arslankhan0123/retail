@@ -103,7 +103,9 @@ class Store_model extends CI_Model {
         $store_id=$this->db->query('select max(id)+1 as store_id from db_store')->row()->store_id;
 		$data = array();
         $data['store_code'] = 'ST'.str_pad($store_id, 4, '0', STR_PAD_LEFT);
+        $data['department_init'] ="DP"."/".str_pad($store_id, 2, '0', STR_PAD_LEFT)."/";
         $data['category_init'] ="CT"."/".str_pad($store_id, 2, '0', STR_PAD_LEFT)."/";
+        $data['subcategory_init'] ="SC"."/".str_pad($store_id, 2, '0', STR_PAD_LEFT)."/";
         $data['item_init'] ="IT".str_pad($store_id, 2, '0', STR_PAD_LEFT);
         $data['supplier_init'] ="SU"."/".str_pad($store_id, 2, '0', STR_PAD_LEFT)."/";
         $data['purchase_init'] ="PU"."/".date("Y")."/".str_pad($store_id, 2, '0', STR_PAD_LEFT)."/";
@@ -134,7 +136,8 @@ class Store_model extends CI_Model {
         $data['t_and_c_status'] =1;
         $data['t_and_c_status_pos'] =1;
         $data['qty_decimals'] =2;
-        $data['number_to_words'] ='Default';
+        $data['number_to_words'] ='Yes';
+        $data['number_to_words_pos'] ='Yes';
         return $data;
 	}
 
@@ -252,7 +255,9 @@ Thank you Visit Again",
 		    				'address'					=> ' ',
 		    				'postcode'					=> '',
 		    				'bank_details'				=> '',
+		    				'department_init'			=> $department_init,
 		    				'category_init'				=> $category_init,
+		    				'subcategory_init'			=> $subcategory_init,
 		    				'item_init'					=> $item_init,
 		    				'supplier_init'				=> $supplier_init,
 		    				'purchase_init'				=> $purchase_init,
@@ -435,7 +440,9 @@ Thank you Visit Again",
 		    				'address'					=> $address,
 		    				'postcode'					=> $postcode,
 		    				'bank_details'				=> $bank_details,
+		    				'department_init'			=> $department_init,
 		    				'category_init'				=> $category_init,
+		    				'subcategory_init'			=> $subcategory_init,
 		    				'item_init'					=> $item_init,
 		    				'supplier_init'				=> $supplier_init,
 		    				'purchase_init'				=> $purchase_init,
@@ -474,6 +481,7 @@ Thank you Visit Again",
 		    				't_and_c_status'	=> $t_and_c_status,
 		    				't_and_c_status_pos'	=> $t_and_c_status_pos,
 		    				'number_to_words'	=> $number_to_words,
+		    				'number_to_words_pos'	=> $number_to_words_pos,
 		    			);
 
 		if(!empty($store_logo)){

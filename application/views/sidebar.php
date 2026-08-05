@@ -952,7 +952,7 @@ $CI = &get_instance();
           <ul class="treeview-menu">
             <?php if (!is_user()) { ?>
               <?php if ($CI->permissions('store_edit')) { ?>
-                <li class="store_profile-active-li"><a href="<?php echo $base_url; ?>store_profile/update/<?= $this->session->userdata('store_id'); ?>"><i class="fa fa-suitcase "></i> <span><?= $this->lang->line('store'); ?></span></a></li>
+                <li class="store_profile-active-li"><a href="<?php echo $base_url; ?>store_profile/update/<?= $this->session->userdata('store_id'); ?>"><i class="fa fa-suitcase "></i> <span>Branch</span></a></li>
               <?php } ?>
             <?php } ?><!-- is_user() -->
             <!-- Site Settings disabled

@@ -200,9 +200,17 @@ class Pos_model extends CI_Model {
 		//$points 			= (empty($points_use)) ? 'NULL' : $points_use;
 		$discount_input 	= (empty($discount_input)) ? 'NULL' : $discount_input;
 		$tot_disc 		= (empty($tot_disc) || $tot_disc==0) ? 'NULL' : $tot_disc;
-		$tot_grand 		= (empty($tot_grand)) ? 'NULL' : $tot_grand;
-		//$tot_grand		=round($tot_amt);
-		$round_off = number_format($tot_grand-$tot_amt,decimals(),'.','');
+		$raw_total = (float) string_to_number($tot_amt)
+			- (float) string_to_number($tot_disc)
+			- (float) string_to_number($coupon_discount_amt);
+		if(is_enabled_round_off()){
+			$tot_grand = number_format(round($raw_total), decimals(), '.', '');
+			$round_off = number_format((float)$tot_grand - $raw_total, decimals(), '.', '');
+		}
+		else{
+			$tot_grand = number_format($raw_total, decimals(), '.', '');
+			$round_off = null;
+		}
 		
 
 		//FIND CUSTOMER INFORMATION BY ITS ID
@@ -734,7 +742,7 @@ class Pos_model extends CI_Model {
 				$tax_value = $q6->tax;
 
 		  		$quantity        ='<div class="input-group input-group-sm"><span class="input-group-btn"><button onclick="decrement_qty('.$res3->item_id.','.$i.')" type="button" class="btn btn-default btn-flat"><i class="fa fa-minus text-danger"></i></button></span>';
-		  		$quantity       .='<input typ="text" value="'.number_format($res3->sales_qty,0,'.','').'" class="form-control no-padding text-center min_width" style="font-size:16px;font-weight:bold;" onkeyup="item_qty_input('.$res3->item_id.','.$i.')" id="item_qty_'.$i.'" name="item_qty_'.$i.'">';
+		  		$quantity       .='<input typ="text" value="'.format_qty($res3->sales_qty).'" class="form-control no-padding text-center min_width" style="font-size:16px;font-weight:bold;" onkeyup="item_qty_input('.$res3->item_id.','.$i.')" id="item_qty_'.$i.'" name="item_qty_'.$i.'">';
 			    $quantity       .='<span class="input-group-btn"><button onclick="increment_qty('.$res3->item_id.','.$i.')" type="button" class="btn btn-default btn-flat"><i class="fa fa-plus text-success"></i></button></span></div>';
 			    $sub_total       =$res3->total_cost;
 			    $remove_btn      ='<img src="'.base_url('uploads/icon02.png').'" class="pos-remove-icon" onclick="removerow('.$i.')" title="Delete Item?" alt="Remove">';
@@ -742,7 +750,7 @@ class Pos_model extends CI_Model {
 		  		echo '<tr id="row_'.$i.'" data-row="0" data-item-id="'.$res3->item_id.'" >'; /*item id */
 		  		echo '<td id="td_'.$i.'_barcode">'.$q5->row()->custom_barcode.'</td>';
 		  		echo '<td id="td_'.$i.'_0"><span id="td_data_'.$i.'_0">'.$q5->row()->item_name.'</span></td>';  /*td_0_0 item name*/
-		  		echo '<td id="td_'.$i.'_1" class="text-center">'.number_format($stock,0,'.','').'</td>';  /*td_0_1 item available qty*/
+		  		echo '<td id="td_'.$i.'_1" class="text-center">'.format_qty($stock).'</td>';  /*td_0_1 item available qty*/
 		  		echo '<td id="td_'.$i.'_2">'.$quantity.'</td>';    /*td_0_2 item available qty */
 
 		  		$info = '<input id="sales_price_'.$i.'" onblur="set_to_original('.$i.','.$q5->row()->purchase_price.')" onkeyup="update_price('.$i.','.$q5->row()->purchase_price.')" name="sales_price_'.$i.'" type="text" class="form-control min_width text-center" value="'.$per_item_price_inc_tax.'">';
@@ -877,7 +885,7 @@ class Pos_model extends CI_Model {
 				$tax_value = $q6->tax;
 
 		  		$quantity        ='<div class="input-group input-group-sm"><span class="input-group-btn"><button onclick="decrement_qty('.$res3->item_id.','.$i.')" type="button" class="btn btn-default btn-flat"><i class="fa fa-minus text-danger"></i></button></span>';
-			    $quantity       .='<input typ="text" value="'.$res3->sales_qty.'" class="form-control min_width" onkeyup="item_qty_input('.$res3->item_id.','.$i.')" id="item_qty_'.$i.'" name="item_qty_'.$i.'">';
+			    $quantity       .='<input typ="text" value="'.format_qty($res3->sales_qty).'" class="form-control min_width" onkeyup="item_qty_input('.$res3->item_id.','.$i.')" id="item_qty_'.$i.'" name="item_qty_'.$i.'">';
 			    $quantity       .='<span class="input-group-btn"><button onclick="increment_qty('.$res3->item_id.','.$i.')" type="button" class="btn btn-default btn-flat"><i class="fa fa-plus text-success"></i></button></span></div>';
 			    $sub_total       =$res3->total_cost;
 			    $remove_btn      ='<img src="'.base_url('uploads/icon02.png').'" class="pos-remove-icon" onclick="removerow('.$i.')" title="Delete Item?" alt="Remove">';
@@ -887,7 +895,7 @@ class Pos_model extends CI_Model {
 		  		echo '<td id="td_'.$i.'_0">
 		  		<a data-toggle="tooltip" title="Click to Change Tax" class="pointer" id="td_data_'.$i.'_0" onclick="show_sales_item_modal('.$i.')">'.$q5->row()->item_name.'</a>
 		  		</td>';  /*td_0_0 item name*/
-		  		echo '<td id="td_'.$i.'_1">'.$stock.'</td>';  /*td_0_1 item available qty*/
+		  		echo '<td id="td_'.$i.'_1">'.format_qty($stock).'</td>';  /*td_0_1 item available qty*/
 		  		echo '<td id="td_'.$i.'_2">'.$quantity.'</td>';    /*td_0_2 item available qty */
 
 		  		$info = '<input id="sales_price_'.$i.'" onblur="set_to_original('.$i.','.$q5->row()->purchase_price.')" onkeyup="update_price('.$i.','.$q5->row()->purchase_price.')" name="sales_price_'.$i.'" type="text" class="form-control min_width" value="'.$per_item_price_inc_tax.'">';
@@ -940,9 +948,17 @@ class Pos_model extends CI_Model {
 		//$points 			= (empty($points_use)) ? 'NULL' : $points_use;
 		$discount_input 	= (empty($discount_input)) ? 'NULL' : $discount_input;
 		$tot_disc 		= (empty($tot_disc) || $tot_disc==0) ? 'NULL' : $tot_disc;
-		$tot_grand 		= (empty($tot_grand)) ? 'NULL' : $tot_grand;
-		//$tot_grand		=round($tot_amt);
-		$round_off = number_format($tot_grand-$tot_amt,decimals(),'.','');
+		$raw_total = (float) string_to_number($tot_amt)
+			- (float) string_to_number($tot_disc)
+			- (float) string_to_number($coupon_discount_amt);
+		if(is_enabled_round_off()){
+			$tot_grand = number_format(round($raw_total), decimals(), '.', '');
+			$round_off = number_format((float)$tot_grand - $raw_total, decimals(), '.', '');
+		}
+		else{
+			$tot_grand = number_format($raw_total, decimals(), '.', '');
+			$round_off = null;
+		}
 		
 
 		$prev_item_ids = array();

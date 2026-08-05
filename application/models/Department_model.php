@@ -86,7 +86,7 @@ public function verify_and_save()
     {
     $info = array(
       'count_id'   => get_count_id('db_department'), 
-      'dptCode'    => get_init_code('category'), 
+      'dptCode'    => get_init_code('department'), 
       'dptName'    => $dptName,
       'dptDetails' => $dptDetails,
       'status'     => 1,

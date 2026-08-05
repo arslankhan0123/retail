@@ -185,15 +185,15 @@ $(document).ready(function () { setTimeout(function() {$( ".alert-dismissable" )
 </script>
 
 <script type="text/javascript">
-  var decimals = <?=decimals()?>;
+  var amount_decimals = <?=decimals()?>;
   function to_Fixed(res=0){
-        return (isNaN(parseFloat(res))) ? parseFloat(0).toFixed(decimals) : parseFloat(res).toFixed(decimals); 
+        return (isNaN(parseFloat(res))) ? parseFloat(0).toFixed(amount_decimals) : parseFloat(res).toFixed(amount_decimals);
       }
 </script>
 <script type="text/javascript">
-  var decimals = <?=qty_decimal()?>;
+  var quantity_decimals = <?=qty_decimal()?>;
   function format_qty(res=0){
-        return (isNaN(parseFloat(res))) ? parseFloat(0).toFixed(decimals) : parseFloat(res).toFixed(decimals); 
+        return (isNaN(parseFloat(res))) ? parseFloat(0).toFixed(quantity_decimals) : parseFloat(res).toFixed(quantity_decimals);
       }
 </script>
 

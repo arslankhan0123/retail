@@ -113,8 +113,8 @@ class Sales extends MY_Controller {
 			$row[] = $sales->reference_no;
 			$row[] = $sales->customer_name;
 			
-			$row[] = store_number_format($sales->grand_total);
-			$row[] = store_number_format($sales->paid_amount);
+			$row[] = store_total_format($sales->grand_total);
+			$row[] = store_total_format($sales->paid_amount);
 					$str='';
 					if($sales->payment_status=='Unpaid')
 			          $str= "<span class='label label-danger' style='cursor:pointer'>Unpaid </span>";

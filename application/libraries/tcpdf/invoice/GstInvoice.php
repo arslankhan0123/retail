@@ -479,9 +479,9 @@ class GstInvoice extends MyPDF{
 
 		$mCount = count($q2->result());
 
-		// Use one tall spacer row so only column lines appear in the blank area.
-		if ($mCount < 25) {
-			$blank_lines = str_repeat('<br/>', 25 - $mCount);
+		// Keep a compact item area so totals, signatures and footer fit on page one.
+		if ($mCount < 20) {
+			$blank_lines = str_repeat('<br/>', 18 - $mCount);
 			$tbl .= '<tr nobr="true">';
 			$tbl .= '<td style="width: ' . $colW['sl_no'] . ';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">' . $blank_lines . '</td>';
 			$tbl .= '<td style="width: ' . $colW['description'] . ';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
@@ -505,7 +505,7 @@ class GstInvoice extends MyPDF{
 		$invoice_discount_amt = (isset($sales->pos) && (int) $sales->pos === 1)
 			? (float) $sales->tot_discount_to_all_amt
 			: $tot_discount_amt + (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0);
-		$invoice_net_total = (float) $sales->grand_total;
+		$invoice_net_total = round_off_amount($sales->grand_total);
 		$change_return_amount = (float) get_change_return_amount($sales->id);
 
 
@@ -564,11 +564,13 @@ class GstInvoice extends MyPDF{
 
 		// Final row: Amount in Words + Net Total
 		$tbl .= '<tr>';
-		$tbl .= '<td colspan="3" style="width:'.$col_left.'%;border-top:none;"><div style="font-size:12px;"><b>' . $this->CI->lang->line("amount_in_words") . ':</b> ';
-		$tbl .= no_to_words($invoice_net_total);
-		$tot_expl = explode('.', store_number_format($invoice_net_total));
-		if (!empty($tot_expl[1])) {
-			$tbl .= " and " . no_to_words($tot_expl[1]) . " Fills";
+		$tbl .= '<td colspan="3" style="width:'.$col_left.'%;border-top:none;"><div style="font-size:12px;">';
+		if(show_number_to_words_sales()){
+			$tbl .= '<b>' . $this->CI->lang->line("amount_in_words") . ':</b> ' . no_to_words($invoice_net_total);
+			$tot_expl = explode('.', store_number_format($invoice_net_total));
+			if (!empty($tot_expl[1])) {
+				$tbl .= " and " . no_to_words($tot_expl[1]) . " Fills";
+			}
 		}
 		$tbl .= '</div>';
 		$tbl .= '</td>';
@@ -619,7 +621,7 @@ class GstInvoice extends MyPDF{
 	    $tbl .='</tbody>
 	        </table>';
 
-	    $tbl .='<br/><br/>
+	    $tbl .='<br/>
 	        <table border="0" nobr="true" style="border:none; width:100%;">
 	            <tbody>
 	                <tr nobr="true">
@@ -627,6 +629,9 @@ class GstInvoice extends MyPDF{
 	                </tr>
 	                <tr nobr="true">
 	                    <td style="border:none; text-align:center; font-size:10px;">For Exchange/return of goods, the invoice is required and the goods should be in good condition.</td>
+	                </tr>
+	                <tr nobr="true">
+	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px;"><br/>'.nl2br(html_entity_decode($store->sales_invoice_footer_text)).'</td>
 	                </tr>
 	            </tbody>
 	        </table>';
@@ -869,9 +874,9 @@ class GstInvoice extends MyPDF{
               
               $mCount = count($q2->result());
               
-            // Use one tall spacer row so only column lines appear in the blank area.
-            if($mCount < 25){
-				$blank_lines = str_repeat('<br/>', 25 - $mCount);
+            // Keep a compact item area so totals, signatures and footer fit on page one.
+            if($mCount < 20){
+				$blank_lines = str_repeat('<br/>', 18 - $mCount);
 				$tbl .='<tr nobr="true">';
 				$tbl .='<td style="width: '.$colW['sl_no'].';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">'.$blank_lines.'</td>';
 				$tbl .='<td style="width: '.$colW['description'].';border-left:0.5px solid #000000;border-right:0.5px solid #000000;border-top:none;border-bottom:0.5px solid #000000;">&nbsp;</td>';
@@ -895,7 +900,7 @@ class GstInvoice extends MyPDF{
 		$invoice_discount_amt = (isset($sales->pos) && (int) $sales->pos === 1)
 			? (float) $sales->tot_discount_to_all_amt
 			: $tot_discount_amt + (isset($sales->tot_discount_to_all_amt) ? (float) $sales->tot_discount_to_all_amt : 0);
-		$invoice_net_total = (float) $sales->grand_total;
+		$invoice_net_total = round_off_amount($sales->grand_total);
 		$change_return_amount = (float) get_change_return_amount($sales->id);
 		
 		
@@ -952,11 +957,13 @@ class GstInvoice extends MyPDF{
 
 		// Final row: Amount in Words + Net Total
 		$tbl .= '<tr>';
-		$tbl .= '<td colspan="3" style="width:'.$col_left.'%;border-top:none;"><div style="font-size:12px;"><b>'.$this->CI->lang->line("amount_in_words").':</b> ';
-		$tbl .=no_to_words($invoice_net_total);
-		$tot_expl = explode('.', store_number_format($invoice_net_total));
-		if(!empty($tot_expl[1])){
-			$tbl .= " and ". no_to_words($tot_expl[1]). " Fills";
+		$tbl .= '<td colspan="3" style="width:'.$col_left.'%;border-top:none;"><div style="font-size:12px;">';
+		if(show_number_to_words_sales()){
+			$tbl .= '<b>'.$this->CI->lang->line("amount_in_words").':</b> '.no_to_words($invoice_net_total);
+			$tot_expl = explode('.', store_number_format($invoice_net_total));
+			if(!empty($tot_expl[1])){
+				$tbl .= " and ". no_to_words($tot_expl[1]). " Fills";
+			}
 		}
 		$tbl .='</div>';
 		$tbl .= '</td>';
@@ -1007,7 +1014,7 @@ class GstInvoice extends MyPDF{
 	    $tbl .='</tbody>
 	        </table>';
 
-	    $tbl .='<br/><br/>
+	    $tbl .='<br/>
 	        <table border="0" nobr="true" style="border:none; width:100%;">
 	            <tbody>
 	                <tr nobr="true">
@@ -1015,6 +1022,9 @@ class GstInvoice extends MyPDF{
 	                </tr>
 	                <tr nobr="true">
 	                    <td style="border:none; text-align:center; font-size:10px;">For Exchange/return of goods, the invoice is required and the goods should be in good condition.</td>
+	                </tr>
+	                <tr nobr="true">
+	                    <td style="border:none; text-align:center; font-weight:bold; font-size:11px;"><br/>'.nl2br(html_entity_decode($store->sales_invoice_footer_text)).'</td>
 	                </tr>
 	            </tbody>
 	        </table>';

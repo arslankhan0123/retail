@@ -70,6 +70,24 @@
     return ($comma) ? number_format($value,decimals()) : number_format($value,decimals(),".","");
   }
 
+  function round_off_amount($value=0){
+    return is_enabled_round_off() ? round((float)$value) : (float)$value;
+  }
+
+  function store_total_format($value=0,$comma=true){
+    return store_number_format(round_off_amount($value),$comma);
+  }
+
+  function show_number_to_words_sales(){
+    $store = get_store_details();
+    return !isset($store->number_to_words) || $store->number_to_words === 'Yes';
+  }
+
+  function show_number_to_words_pos(){
+    $store = get_store_details();
+    return !isset($store->number_to_words_pos) || $store->number_to_words_pos === 'Yes';
+  }
+
   function qty_decimal(){
     $CI =& get_instance();
     return $CI->session->userdata('qty_decimals');
@@ -296,7 +314,7 @@
   /******************************************/
 
   function no_to_words($no){ 
-    $number_to_words_format = get_store_details()->number_to_words;
+    $number_to_words_format = 'Default';
     
     if($number_to_words_format=='Indian'){
       return indianCurrency($no);
@@ -436,8 +454,12 @@
     $store_id = (!empty($store_id)) ? $store_id : get_current_store_id();
 
     $CI =& get_instance();
+    if($value=='department')
+      $CI->db->select("department_init");
     if($value=='category')
       $CI->db->select("category_init");
+    if($value=='subcategory')
+      $CI->db->select("subcategory_init");
     if($value=='item')
       $CI->db->select("item_init");
     if($value=='supplier')
@@ -476,9 +498,17 @@
       $CI->db->select("cust_advance_init");
 
     $query = $CI->db->where('id',$store_id)->get('db_store')->row();
+    if($value=='department'){
+      $maxid=get_count_id('db_department');
+      return $query->department_init.str_pad($maxid, 4, '0', STR_PAD_LEFT);
+    }
     if($value=='category'){
       $maxid=get_count_id('db_category');
       return $query->category_init.str_pad($maxid, 4, '0', STR_PAD_LEFT);
+    }
+    if($value=='subcategory'){
+      $maxid=get_count_id('db_subcategory');
+      return $query->subcategory_init.str_pad($maxid, 4, '0', STR_PAD_LEFT);
     }
 
     if($value=='item'){

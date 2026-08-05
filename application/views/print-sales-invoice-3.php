@@ -518,12 +518,12 @@ body { margin: 5px; }
   
   <tr>
     <td colspan="14" class='text-right'><b><?= $this->lang->line('grand_total'); ?></b></td>
-    <td colspan="2" class='text-right' ><b><?php echo store_number_format($grand_total); ?></b></td>
+<td colspan="2" class='text-right' ><b><?php echo store_total_format($grand_total); ?></b></td>
   </tr>
 
   <tr>
     <td colspan="14" class='text-right'><b><?= $this->lang->line('paid_amount'); ?></b></td>
-    <td colspan="2" class='text-right' ><b><?php echo store_number_format($paid_amount); ?></b></td>
+<td colspan="2" class='text-right' ><b><?php echo store_total_format($paid_amount); ?></b></td>
   </tr>
 
   <?php if($previous_balance_bit==1){ ?>
@@ -561,7 +561,7 @@ body { margin: 5px; }
     <td colspan="16">
 <?php
      
-      echo "<span class='amt-in-word'>".$this->lang->line('amount_in_words').": <i style='font-weight:bold;'>".$this->session->userdata('currency_code')." ".no_to_words($grand_total)."</i></span>";
+if(show_number_to_words_sales()) echo "<span class='amt-in-word'>".$this->lang->line('amount_in_words').": <i style='font-weight:bold;'>".$this->session->userdata('currency_code')." ".no_to_words(round_off_amount($grand_total))."</i></span>";
 
       ?>
   

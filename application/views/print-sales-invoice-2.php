@@ -240,7 +240,7 @@ th, td {
                   $discount = (empty($res2->discount_input)||$res2->discount_input==0)? '0':$res2->discount_input."%";
                   $discount_amt = (empty($res2->discount_amt)||$res2->discount_input==0)? '0':$res2->discount_amt."";
 
-                  $unit_price_with_tax= number_format($res2->price_per_unit+$res2->tax_amt,2,'.','');
+                  $unit_price_with_tax= store_number_format($res2->price_per_unit+$res2->tax_amt,false);
                   echo "<tr>";  
                   echo "<td style='border-right: 1px solid;border-top: 1px solid;'>".++$i."</td>";
                  
@@ -250,7 +250,7 @@ th, td {
                   echo "</td>";
                   
                   echo "<td style='border-right: 1px solid;border-top: 1px solid;'>".$res2->hsn."</td>";
-                  echo "<td style='border-right: 1px solid;border-top: 1px solid;'>".$res2->sales_qty."</td>";
+                  echo "<td style='border-right: 1px solid;border-top: 1px solid;'>".format_qty($res2->sales_qty)."</td>";
                   
                   echo "<td style='text-align: right;border-right: 1px solid;border-top: 1px solid;'>".store_number_format($unit_price_with_tax)."</td>";
                   
@@ -289,14 +289,14 @@ th, td {
   
   <tr>
     <td colspan="6" rowspan="2">
-      <?php echo "<span class='amt-in-word'>".$this->lang->line('in_words').": <i style='font-weight:bold;'>".no_to_words(round($grand_total))." ".$this->lang->line('only')."</i></span>"; ?>
+<?php if(show_number_to_words_sales()) echo "<span class='amt-in-word'>".$this->lang->line('in_words').": <i style='font-weight:bold;'>".no_to_words(round_off_amount($grand_total))." ".$this->lang->line('only')."</i></span>"; ?>
     </td>
     <td colspan="4" style="text-align: right;"><b><?= $this->lang->line('grand_total'); ?></b></td>
-    <td colspan="1" style="text-align: right;" ><b><?php echo store_number_format($grand_total); ?></b></td>
+<td colspan="1" style="text-align: right;" ><b><?php echo store_total_format($grand_total); ?></b></td>
   </tr>
   <tr>
     <td colspan="4" style="text-align: right;"><b><?= $this->lang->line('paid_amount'); ?></b></td>
-    <td colspan="1" style="text-align: right;" ><b><?php echo store_number_format($paid_amount); ?></b></td>
+<td colspan="1" style="text-align: right;" ><b><?php echo store_total_format($paid_amount); ?></b></td>
   </tr>
   <tr>
     <td colspan="10" style="text-align: right;"><b><?= $this->lang->line('previous_due'); ?></b></td>

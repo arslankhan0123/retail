@@ -239,8 +239,8 @@
 			              foreach ($q2->result() as $res2) {
 			                  echo "<tr>";  
 			                  echo "<td style='padding-left: 2px; padding-right: 2px;'>".$res2->item_name."</td>";
-			                  echo "<td style='text-align: center;padding-left: 2px; padding-right: 2px;'>".$res2->sales_qty."</td>";
-			                  echo "<td style='text-align: right;padding-left: 2px; padding-right: 2px;' >".number_format(($res2->total_cost),2,'.','')."</td>";
+			                  echo "<td style='text-align: center;padding-left: 2px; padding-right: 2px;'>".format_qty($res2->sales_qty)."</td>";
+			                  echo "<td style='text-align: right;padding-left: 2px; padding-right: 2px;' >".store_number_format($res2->total_cost)."</td>";
 			                  echo "</tr>";  
 			                  //$tot_qty+=$res2->sales_qty;
 			                  $subtotal+=($res2->total_cost);
@@ -258,11 +258,11 @@
 					</tr>
 					<tr>
 						<td style=" padding-left: 2px; padding-right: 2px;" colspan="2" align="right"><?= $this->lang->line('total'); ?></td>
-						<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= $grand_total; ?></td>
+<td style=" padding-left: 2px; padding-right: 2px;" align="right"><?= store_total_format($grand_total); ?></td>
 					</tr>
 					<tr>
 						<td colspan="3">
-							<span >Amount in words: <i style='font-weight:bold;'><?= no_to_words(round($grand_total)); ?> Only</i></span>
+<?php if(show_number_to_words_pos()){ ?><span>Amount in words: <i style='font-weight:bold;'><?= no_to_words(round_off_amount($grand_total)); ?> Only</i></span><?php } ?>
 						</td>
 					</tr>
 					

@@ -350,7 +350,7 @@
               <tr>
                 <td colspan="2" class="text-center">Total</td>
                 <td><?= store_number_format($tot_price_per_unit);?></td>
-                <td class="text-left"><?=$tot_qty;?></td>
+                <td class="text-left"><?=format_qty($tot_qty);?></td>
                 <td><?= store_number_format($sum_of_tot_price);?></td>
                 <td>-</td>
                 <td><?= store_number_format($tot_tax_amt);?></td>
@@ -509,7 +509,7 @@
                        <tr>
                           <th class="text-right" style="font-size: 17px;"><?= $this->lang->line('grand_total'); ?></th>
                           <th class="text-right" style="padding-left:10%;font-size: 17px;">
-                             <h4><b id="total_amt" name="total_amt"><?=store_number_format($grand_total);?></b></h4>
+                              <h4><b id="total_amt" name="total_amt"><?=store_total_format($grand_total);?></b></h4>
                           </th>
                        </tr>
                     </table>

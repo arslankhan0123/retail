@@ -476,13 +476,15 @@ class Sales extends MyPDF{
 		                //Grand Total
 		                $tbl .='<tr nobr="true">
 		                	<td colspan="'.((!$show_tax)?4:6).'" style="width:'.($sumOfWidth-$colWidthSize['amount']-$colWidthSize['disc']-$colWidthSize['tax_amt']-(($show_tax)?0:$colWidthSize['qty'])).'%">';
-		                	$tbl .="<b>".$this->CI->lang->line("amount_in_words")."</b>: ".no_to_words($sales->grand_total);
+		                	if(show_number_to_words_sales()){
+		                		$tbl .="<b>".$this->CI->lang->line("amount_in_words")."</b>: ".no_to_words(round_off_amount($sales->grand_total));
+		                	}
 		                	$tbl .='</td>
 		                	<td colspan="2" class="text-right" style="width:'.($colWidthSize['disc']+$colWidthSize['tax_amt']-(($show_tax)?0:$colWidthSize['qty'])).'%">';
 		                	$tbl .="<b>Net Total</b>";
 		                	$tbl .='</td>
 		                	<td colspan="1" class="text-right" style="width:'.($colWidthSize['amount']).'%">';
-		                	$tbl .="<b>".store_number_format($sales->grand_total)."</b>";
+		                	$tbl .="<b>".store_total_format($sales->grand_total)."</b>";
 		                	$tbl .='</td>';
 		                $tbl .='</tr>';
 

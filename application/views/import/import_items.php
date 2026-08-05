@@ -103,6 +103,11 @@
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
 
+              <style>
+                #report-data .label-success { background-color: #dd4b39 !important; color: #fff !important; }
+                #report-data .label-default { background-color: #00a65a !important; color: #fff !important; }
+                #report-data thead th { background-color: #28ace2 !important; color: #fff !important; }
+              </style>
               <table class="table table-bordered table-hover " id="report-data" >
                 <thead>
                 <tr>
@@ -146,12 +151,6 @@
                   </tr>
                   <tr>
                     <td><?=$i++;?></td>
-                    <td><?= $this->lang->line('hsn'); ?></td>
-                    <td style="font-style: italic;"><span class="label label-default"><?= $this->lang->line('optional'); ?></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td><?=$i++;?></td>
                     <td><?= $this->lang->line('unit_name'); ?></td>
                     <td style="color:green;"><span class="label label-success"><?= $this->lang->line('required'); ?></span></td>
                     <td></td>
@@ -166,12 +165,6 @@
                   <tr>
                     <td><?=$i++;?></td>
                     <td><?= $this->lang->line('brand_name'); ?></td>
-                    <td style="font-style: italic;"><span class="label label-default"><?= $this->lang->line('optional'); ?></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td><?=$i++;?></td>
-                    <td><?= $this->lang->line('lot_number'); ?></td>
                     <td style="font-style: italic;"><span class="label label-default"><?= $this->lang->line('optional'); ?></td>
                     <td></td>
                   </tr>
@@ -221,12 +214,6 @@
                   <tr>
                     <td><?=$i++;?></td>
                     <td><?= $this->lang->line('barcode'); ?></td>
-                    <td style="font-style: italic;"><span class="label label-default"><?= $this->lang->line('optional'); ?></td>
-                      <td></td>
-                  </tr>
-                  <tr>
-                    <td><?=$i++;?></td>
-                    <td><?= $this->lang->line('seller_points'); ?></td>
                     <td style="font-style: italic;"><span class="label label-default"><?= $this->lang->line('optional'); ?></td>
                       <td></td>
                   </tr>

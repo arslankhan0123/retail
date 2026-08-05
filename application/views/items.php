@@ -499,7 +499,7 @@
       <script src="<?php echo $theme_link; ?>js/items.js?v=<?= filemtime(FCPATH.'theme/js/items.js'); ?>"></script>
       <script src="<?php echo $theme_link; ?>js/modals.js"></script>
       <script type="text/javascript">
-         $("#discount_type").val('<?=$discount_type; ?>');
+         $("#discount_type").val(<?= json_encode(in_array($discount_type, array('Percentage', 'Fixed'), true) ? $discount_type : 'Percentage'); ?>);
         <?php if(isset($q_id)){ ?>
           $("#store_id").attr('readonly',true);
         <?php }?>

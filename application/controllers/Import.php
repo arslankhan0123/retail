@@ -319,7 +319,17 @@ class Import extends MY_Controller {
                 $this->load->model('pos_model');      
                 $this->load->model('items_model');      
 
-                $store_id=get_current_store_id();   
+                $store_id=get_current_store_id();
+
+                    // Older databases limit item names to 100 characters, which
+                    // causes the complete CSV transaction to fail for long names.
+                    $item_name_column = $this->db->query("SHOW COLUMNS FROM `db_items` LIKE 'item_name'")->row();
+                    if ($item_name_column && preg_match('/^varchar\((\d+)\)/i', $item_name_column->Type, $matches) && (int) $matches[1] < 500) {
+                        if (!$this->db->query("ALTER TABLE `db_items` MODIFY `item_name` VARCHAR(500) NULL")) {
+                            echo 'Unable to increase the item name limit. Please update db_items.item_name to VARCHAR(500).';
+                            return;
+                        }
+                    }
                 
                 if($_FILES['import_file']['size'] > 0)
                 {   
@@ -347,6 +357,15 @@ class Import extends MY_Controller {
                     $this->db->trans_begin();
                     $i=1;
                     while(($importdata = fgetcsv($file, NULL, ",")) !== FALSE){
+                        // Excel may save CSV text as Windows-1252. Normalize it so
+                        // characters such as the degree sign can be stored in utf8mb4.
+                        foreach ($importdata as &$csv_value) {
+                            if (is_string($csv_value) && !preg_match('//u', $csv_value)) {
+                                $csv_value = iconv('Windows-1252', 'UTF-8//IGNORE', $csv_value);
+                            }
+                        }
+                        unset($csv_value);
+
                         if($i++==1){
                             $required_headers = array('ITEM NAME','DEPARTMENT NAME','CATEGORY NAME','SUB CATEGORY NAME');
                             $actual_headers = array_map('strtoupper', array_map('trim', array_slice($importdata,0,4)));
@@ -420,7 +439,7 @@ class Import extends MY_Controller {
                             'custom_barcode'    =>  !empty($this->xss_html_filter($importdata[17]))?$this->xss_html_filter($importdata[17]):0,//ok
                             'seller_points'    =>  !empty($this->xss_html_filter($importdata[18]))?$this->xss_html_filter($importdata[18]):0,//ok
                             'description'    =>  !empty($this->xss_html_filter($importdata[19]))?$this->xss_html_filter($importdata[19]):0,//ok
-                            'discount_type'    =>  !empty($this->xss_html_filter($importdata[20]))?$this->xss_html_filter($importdata[20]):0,//ok
+                            'discount_type'    =>  !empty($this->xss_html_filter($importdata[20]))?$this->xss_html_filter($importdata[20]):'Percentage',//ok
                             'discount'    =>  !empty($this->xss_html_filter($importdata[21]))?$this->xss_html_filter(string_to_number($importdata[21])):0,//ok
                             'item_group'        =>  'Single',//10 //ok
                             /*System Info*/
@@ -434,7 +453,10 @@ class Import extends MY_Controller {
 
                         //If any record failed to save flag will be set false,then all records rolled back
                         if(!$this->db->insert('db_items',$row)){
-                            $flag=false;
+                            $this->db->trans_rollback();
+                            fclose($file);
+                            echo 'Unable to import CSV row '.($i - 1).'. Please check the item data and try again.';
+                            return;
                         }
                         
                         //Compulsary records

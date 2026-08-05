@@ -165,6 +165,10 @@ class Items_model extends CI_Model {
 	public function save_record($modal_post=array()){
 		//Filtering XSS and html escape from user inputs 
 		extract($this->security->xss_clean(html_escape(array_merge($this->data,$_POST,$_GET,$modal_post))));
+		$discount_type = isset($discount_type) && in_array($discount_type, array('Percentage', 'Fixed'), true)
+			? $discount_type
+			: 'Percentage';
+		$discount = isset($discount) && is_numeric($discount) ? $discount : 0;
 		
 		//varify max sales usage of the package subscription
 		validate_package_offers('max_items','db_items');

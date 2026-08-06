@@ -19,6 +19,10 @@ $(".add_item").click(function(e){
 	}
     //Validate Input box or selection box should not be blank or empty
 	check_field("m_item_name");
+	if ($("#m_item_name").val().trim().length > 40) {
+		$("#m_item_name_msg").fadeIn(200).show().html("Item Name must not exceed 40 characters.").addClass("required");
+		flag = false;
+	}
 	check_field("m_category_id");
 	check_field("m_unit_id");
 	check_field("m_price");
@@ -26,10 +30,6 @@ $(".add_item").click(function(e){
 	check_field("m_purchase_price");
 	check_field("m_tax_type");
 	check_field("m_sales_price");
-	var barcode_type = $("#barcode_type").val();
-	if (typeof barcode_type !== 'undefined' && barcode_type === 'Manual') {
-		check_field("m_custom_barcode");
-	}
 	
 	
     if(flag==false)

@@ -350,6 +350,54 @@ class Import extends MY_Controller {
                   
 
                     $file = fopen('uploads/csv/items/'.$file_name,"r");
+
+                    // Validate the complete CSV before starting the transaction or
+                    // inserting any item. This gives the user all over-limit rows at
+                    // once and guarantees an all-or-nothing import.
+                    $required_headers = array(
+                        'DEPARTMENT NAME', 'CATEGORY NAME', 'SUBCATEGORY NAME', 'ITEM NAME',
+                        'SKU', 'UNIT NAME', 'ALERT QTY', 'BRAND NAME',
+                        'PRICE BEFORE TAX', 'PRICE AFTER TAX', 'TAX NAME', 'TAX VALUE',
+                        'TAX TYPE', 'SALES PRICE', 'OPENING STOCK', 'CUSTOM BARCODE',
+                        'ITEM DESCIPTION', 'DISCOUNT TYPE', 'DISCOUNT'
+                    );
+                    $csv_row_number = 0;
+                    $long_item_rows = array();
+                    while(($validation_row = fgetcsv($file, NULL, ",")) !== FALSE){
+                        $csv_row_number++;
+                        foreach($validation_row as &$validation_value){
+                            if(is_string($validation_value) && !preg_match('//u', $validation_value)){
+                                $validation_value = iconv('Windows-1252', 'UTF-8//IGNORE', $validation_value);
+                            }
+                        }
+                        unset($validation_value);
+
+                        if($csv_row_number === 1){
+                            $actual_headers = array_map('strtoupper', array_map('trim', $validation_row));
+                            if($actual_headers !== $required_headers){
+                                fclose($file);
+                                echo 'Invalid CSV format. Please download and use the latest example file.';
+                                return;
+                            }
+                            continue;
+                        }
+
+                        $validation_item_name = trim($validation_row[3] ?? '');
+                        $item_name_length = function_exists('mb_strlen')
+                            ? mb_strlen($validation_item_name, 'UTF-8')
+                            : strlen($validation_item_name);
+                        if($item_name_length > 40){
+                            $long_item_rows[] = $csv_row_number.' ('.$item_name_length.' characters)';
+                        }
+                    }
+
+                    if(!empty($long_item_rows)){
+                        fclose($file);
+                        echo 'Item Name must not exceed 40 characters. Please correct CSV row(s): '.implode(', ', $long_item_rows).'. No items were imported.';
+                        return;
+                    }
+
+                    rewind($file);
                     
                     //Save flag
                     $flag=true;
@@ -368,13 +416,6 @@ class Import extends MY_Controller {
 
                         if($i++==1){
                             // Validate every column because the import below uses fixed positions.
-                            $required_headers = array(
-                                'ITEM NAME', 'DEPARTMENT NAME', 'CATEGORY NAME', 'SUB CATEGORY NAME',
-                                'SKU', 'UNIT NAME', 'ALERT QTY', 'BRAND NAME',
-                                'PRICE BEFORE TAX', 'PRICE AFTER TAX', 'TAX NAME', 'TAX VALUE',
-                                'TAX TYPE', 'SALES PRICE', 'OPENING STOCK', 'CUSTOM BARCODE',
-                                'ITEM DESCIPTION', 'DISCOUNT TYPE', 'DISCOUNT'
-                            );
                             $actual_headers = array_map('strtoupper', array_map('trim', $importdata));
                             if($actual_headers !== $required_headers){
                                 $this->db->trans_rollback();
@@ -385,16 +426,16 @@ class Import extends MY_Controller {
                             continue;
                         }
 
-                        //Item name should not be empty
-                        if(empty($importdata[0])){
+                        // Item name should not be empty.
+                        if(empty($importdata[3])){
                           continue;
                         }
-                        $item_name = $this->xss_html_filter($importdata[0]);
+                        $item_name = $this->xss_html_filter($importdata[3]);
                        
                     
-                        $department_name = trim($this->xss_html_filter($importdata[1] ?? ''));
-                        $category_name = trim($this->xss_html_filter($importdata[2] ?? ''));
-                        $subcategory_name = trim($this->xss_html_filter($importdata[3] ?? ''));
+                        $department_name = trim($this->xss_html_filter($importdata[0] ?? ''));
+                        $category_name = trim($this->xss_html_filter($importdata[1] ?? ''));
+                        $subcategory_name = trim($this->xss_html_filter($importdata[2] ?? ''));
                         if(empty($department_name) || empty($category_name) || empty($subcategory_name)){
                             $flag=false;
                             break;
@@ -424,7 +465,7 @@ class Import extends MY_Controller {
                             'store_id'          =>  $store_id,
                             'count_id'          =>  get_count_id('db_items'), 
                             'item_code'         =>  get_init_code('item'), 
-                            'item_name'         =>  $item_name,//0
+                            'item_name'         =>  $item_name,//3
                             'dptid'             =>  $department_id,
                             'category_id'       =>  $category_id,
                             'scatid'            =>  $subcategory_id,
@@ -467,7 +508,7 @@ class Import extends MY_Controller {
                         }
                         
                         //Compulsary records
-                        if(empty($this->xss_html_filter($importdata[0]))){
+                        if(empty($this->xss_html_filter($importdata[3]))){
                           $flag=false;   
                         }
                         $item_id = $this->db->insert_id();

@@ -20,11 +20,12 @@ $('#save,#update').on("click",function (e) {
         }
     }
 
-    var item_group = $("#item_group").val();
-    //Validate Input box or selection box should not be blank or empty
+	var item_group = $("#item_group").val();
+	//Validate Input box or selection box should not be blank or empty
 	check_field("item_name");
-	if (typeof barcode_type !== 'undefined' && barcode_type === 'Manual') {
-		check_field("custom_barcode");
+	if ($("#item_name").val().trim().length > 40) {
+		$("#item_name_msg").fadeIn(200).show().html("Item Name must not exceed 40 characters.").addClass("required");
+		flag = false;
 	}
 	check_field("category_id");
 	check_field("unit_id");//units of measurments

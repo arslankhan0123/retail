@@ -20,7 +20,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                               <div class="form-group">
                                 <label for="m_item_name"><?= $this->lang->line('item_name'); ?><span class="text-danger">*</span></label>
                                 <span id="m_item_name_msg" class="text-danger text-right pull-right"></span>
-                                <input type="text" class="form-control" id="m_item_name" name="m_item_name" placeholder="" >
+                                <input type="text" class="form-control" id="m_item_name" name="m_item_name" placeholder="">
                               </div>
                             </div>
                           </div>
@@ -140,7 +140,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                             </div>
                           </div>
 
-                          <div class="col-md-4">
+                          <div class="col-md-4" style="display:none;">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="m_hsn"><?= $this->lang->line('hsn'); ?></label>
@@ -198,7 +198,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                             </div>
                           </div>
                         
-                          <div class="col-md-4">
+                          <div class="col-md-4" style="display:none;">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="m_seller_points"><?= $this->lang->line('seller_points'); ?></label>
@@ -211,9 +211,9 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                           <div class="col-md-4 <?= ($barcode_type=='Automatic')?'hide':''; ?>">
                             <div class="box-body">
                               <div class="form-group">
-                                <label for="m_custom_barcode"><?= $this->lang->line('barcode'); ?><span class="text-danger">*</span></label>
+                                <label for="m_custom_barcode"><?= $this->lang->line('barcode'); ?></label>
                                 <span id="m_custom_barcode_msg" class="text-danger text-right pull-right"></span>
-                                <input type="text" class="form-control maxlength  " id="m_custom_barcode" name="m_custom_barcode" placeholder="" <?= ($barcode_type=='Automatic')?'':'required'; ?> >
+                                <input type="text" class="form-control maxlength" id="m_custom_barcode" name="m_custom_barcode" placeholder="Optional">
                               </div>
                             </div>
                           </div>
@@ -317,7 +317,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
 
                           
 
-                          <div class="col-md-4">
+                          <div class="col-md-4" style="display:none;">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="m_profit_margin"><?= $this->lang->line('profit_margin'); ?>(%)<i class="hover-q " data-container="body" data-toggle="popover" data-placement="top" data-content="<?= $this->lang->line('based_on_purchase_price'); ?>" data-html="true" data-trigger="hover" data-original-title="">

@@ -631,7 +631,7 @@ $CI = &get_instance();
                 <li class="category-view-active-li"><a href="<?php echo $base_url; ?>category/view"><i class="fa fa-list "></i> <span><?= $this->lang->line('categories_list'); ?></span></a></li>
               <?php } ?>
 
-              <li class="subcategory-view-active-li"><a href="<?php echo $base_url; ?>Subcategory/view"><i class="fa fa-list "></i> <span>Sub-Category List</span></a></li>
+              <li class="subcategory-view-active-li"><a href="<?php echo $base_url; ?>Subcategory/view"><i class="fa fa-list "></i> <span>Sub Category</span></a></li>
 
               <li class="subcategory-view-active-li"><a href="<?php echo $base_url; ?>Clcategory/view"><i class="fa fa-list "></i> <span>Colors List</span></a></li>
 

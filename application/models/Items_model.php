@@ -88,9 +88,9 @@ class Items_model extends CI_Model {
 			$this->db->where("a.store_id",get_current_store_id());
 		//}
 		
-		//$this->db->where("a.child_bit=0");
-		//$this->db->where("a.item_group!='Variants'");
-			$this->db->where("(a.item_group is NULL || a.item_group = 'Single')");
+		// Show standalone items and variant masters in Item Master. Child
+		// variants remain available for stock/sales, but are edited via master.
+		$this->db->where('a.child_bit', 0);
 		//	echo $this->db->get_compiled_select();exit();
 		$i = 0;
 	
@@ -145,6 +145,7 @@ class Items_model extends CI_Model {
 	public function count_all()
 	{
 		$this->db->where("store_id",get_current_store_id());
+		$this->db->where('child_bit', 0);
 		$this->db->from($this->table);
 		return $this->db->count_all_results();
 	}
@@ -169,6 +170,9 @@ class Items_model extends CI_Model {
 			? $discount_type
 			: 'Percentage';
 		$discount = isset($discount) && is_numeric($discount) ? $discount : 0;
+		$custom_barcode = isset($custom_barcode) && trim($custom_barcode) !== ''
+			? trim($custom_barcode)
+			: null;
 		
 		//varify max sales usage of the package subscription
 		validate_package_offers('max_items','db_items');
@@ -346,6 +350,59 @@ class Items_model extends CI_Model {
 
 		//Insert Variants in db_items table
 		if( $item_group =='Variants'){
+			// Persist a master row for the group. Variant rows are linked to this
+			// record so the same group and rows can be restored in edit mode.
+			$group_info = array(
+							'item_name'       => $item_name,
+							'brand_id'        => $brand_id,
+							'category_id'     => $category_id,
+							'dptid'           => $dptid,
+							'scatid'          => $scatid,
+							'clid'            => $clid,
+							'szid'            => $szid,
+							'rkid'            => $rkid,
+							'bnid'            => $bnid,
+							'bsid'            => $bsid,
+							'unit_id'         => $unit_id,
+							'alert_qty'       => $alert_qty,
+							'maximum_qty'     => $maximum_qty,
+							'minimum_qty'     => $minimum_qty,
+							'reorder_qty'     => $reorder_qty,
+							'tax_id'          => $tax_id,
+							'tax_type'        => $tax_type,
+							'seller_points'   => $seller_points,
+							'description'     => $description,
+							'discount_type'   => $discount_type,
+							'discount'        => $discount,
+							'item_group'      => 'Variants',
+							'child_bit'       => 0,
+						);
+			if(!empty($file_name)){
+				$group_info['item_image'] = 'uploads/items/'.$file_name;
+			}
+
+			if($command == 'save'){
+				$group_code = get_init_code('item');
+				$group_initial = array(
+							'store_id' => $store_id,
+							'count_id' => get_count_id('db_items'),
+							'item_code' => $group_code,
+							'status' => 1,
+						);
+				$group_initial = array_merge($group_initial, $this->log_details());
+				$query1 = $this->db->insert('db_items', array_merge($group_info, $group_initial));
+				$item_id = $this->db->insert_id();
+			}
+			else{
+				$item_id = $q_id;
+				$query1 = $this->db->where('id', $item_id)->update('db_items', $group_info);
+			}
+
+			if(!$query1){
+				$this->db->trans_rollback();
+				return "failed";
+			}
+
 			if($existing_row_count>0){
 				for($i=1;$i<=$existing_row_count;$i++){
 					if(isset($_REQUEST['tr_variant_id_'.$i]) && !empty($_REQUEST['tr_variant_id_'.$i])){
@@ -382,10 +439,16 @@ class Items_model extends CI_Model {
 						else{
 							$count_id 			=$this->xss_html_filter(trim($_REQUEST['count_id_'.$i]));
 							$item_code_val 			=$this->xss_html_filter(trim($_REQUEST['item_code_'.$i]));
+							if(empty($count_id) || empty($item_code_val)){
+								$count_id = get_count_id('db_items');
+								$item_code_val = get_init_code('item');
+							}
 							$initial = array(
-											'count_id' 					=> $count_id, 
-						    				'item_code' 				=> $item_code_val,
-						    			);
+											'store_id' 					=> $store_id,
+											'count_id' 					=> $count_id,
+											'item_code' 				=> $item_code_val,
+											'status' 					=> 1,
+										);
 							if ($barcode_type == 'Automatic') {
 								$custom_barcode = $item_code_val;
 							}
@@ -422,13 +485,13 @@ class Items_model extends CI_Model {
 			    				'seller_points'				=> $seller_points,
 			    				'custom_barcode'			=> $custom_barcode,
 			    				'description'				=> $description,
-			    				'item_group'				=> 'Single',
-			    				//'parent_id'					=> $item_id,
+								'item_group'				=> 'Single',
+								'parent_id'					=> $item_id,
 			    				'child_bit'					=> 1,
 			    				'variant_id'				=> $variant_id,
 			    				'discount_type'				=> $discount_type,
 			    				'discount'					=> $discount,
-			    				'opening_stock'				=> $adjustment_qty,
+								'opening_stock'				=> $opening_stock,
 			    			
 			    			);
 							
@@ -820,7 +883,7 @@ class Items_model extends CI_Model {
 							'count_id'				 	=> $res1->count_id,
 							'item_code'				 	=> $res1->item_code,
 							'item_mrp'				 	=> store_number_format($res1->mrp,0),
-							'opening_stock'				=> 0,
+							'opening_stock'				=> $res1->opening_stock,
 						);
 			
 			$result = $this->return_variant_data_in_html_row($rowcount++,$info);
@@ -842,7 +905,7 @@ class Items_model extends CI_Model {
                <td id="td_<?=$rowcount;?>_2"><input type="text" name="td_data_<?=$rowcount;?>_2" id="td_data_<?=$rowcount;?>_2" class="form-control text-center no-padding" value="<?=$variant_item_sku;?>" placeholder='Optional'></td>
 
                <!-- HSN-->
-               <td id="td_<?=$rowcount;?>_9"><input type="text" name="td_data_<?=$rowcount;?>_9" id="td_data_<?=$rowcount;?>_9" class="form-control text-center no-padding" value="<?=$variant_item_hsn;?>" placeholder='Optional'></td>
+               <td id="td_<?=$rowcount;?>_9" style="display:none;"><input type="text" name="td_data_<?=$rowcount;?>_9" id="td_data_<?=$rowcount;?>_9" class="form-control text-center no-padding" value="<?=$variant_item_hsn;?>" placeholder='Optional'></td>
 
                <!-- Barcode-->
                <td id="td_<?=$rowcount;?>_8"><input type="text" name="td_data_<?=$rowcount;?>_8" id="td_data_<?=$rowcount;?>_8" class="form-control text-center no-padding" value="<?=$barcode;?>" placeholder='Optional'></td>
@@ -854,7 +917,7 @@ class Items_model extends CI_Model {
                <td id="td_<?=$rowcount;?>_4"><input type="text" name="td_data_<?=$rowcount;?>_4" id="td_data_<?=$rowcount;?>_4" class="form-control text-right no-padding only_currency text-center" placeholder='Required' style="border-color: #f39c12;" value="" readonly></td>
 
                <!-- Profit Margin-->
-               <td id="td_<?=$rowcount;?>_5"><input type="text" name="td_data_<?=$rowcount;?>_5" id="td_data_<?=$rowcount;?>_5" class="form-control text-right no-padding only_currency text-center" placeholder='Required' onchange='calculate_sales_price_of_all_row()' style="border-color: #f39c12;" value="<?=$variant_profit_margin;?>"></td>
+               <td id="td_<?=$rowcount;?>_5" style="display:none;"><input type="text" name="td_data_<?=$rowcount;?>_5" id="td_data_<?=$rowcount;?>_5" class="form-control text-right no-padding only_currency text-center" placeholder='Required' onchange='calculate_sales_price_of_all_row()' value="<?=$variant_profit_margin;?>"></td>
 
                <!-- Sales Price -->
                <td id="td_<?=$rowcount;?>_6"><input type="text" name="td_data_<?=$rowcount;?>_6" id="td_data_<?=$rowcount;?>_6" class="form-control text-right no-padding only_currency text-center" placeholder='Required' onchange='calculate_profit_margin_of_all_row()' style="border-color: #f39c12;" value="<?=$item_sales_price;?>"></td>

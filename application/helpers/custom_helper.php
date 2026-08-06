@@ -429,7 +429,13 @@
   function get_last_count_id($table,$store_id=''){
     $CI =& get_instance();
     $store_id = (!empty($store_id)) ? $store_id : get_current_store_id();
-    $CI->db->select('(coalesce(max(count_id),0)+1) as count_id')->where('store_id',$store_id)->order_by('id','desc')->limit(1)->from($table);
+    // Sales and POS share db_sales, so keep one sequence for both entry points.
+    // New/legacy stores whose sequence is below 1001 must start at 1001.
+    $next_count_expression = ($table === 'db_sales')
+      ? 'GREATEST(coalesce(max(count_id),0)+1, 1001) as count_id'
+      : '(coalesce(max(count_id),0)+1) as count_id';
+
+    $CI->db->select($next_count_expression, false)->where('store_id',$store_id)->order_by('id','desc')->limit(1)->from($table);
     //echo $CI->db->get_compiled_select();exit;
 
     return $CI->db->get()->row()->count_id;

@@ -121,12 +121,6 @@
                   <?php $i=1; ?>
                   <tr>
                     <td><?=$i++;?></td>
-                    <td><?= $this->lang->line('item_name'); ?></td>
-                    <td style="color:green;"><span class="label label-success"><?= $this->lang->line('required'); ?></span></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td><?=$i++;?></td>
                     <td>Department Name</td>
                     <td style="color:green;"><span class="label label-success"><?= $this->lang->line('required'); ?></span></td>
                     <td></td>
@@ -139,7 +133,13 @@
                   </tr>
                   <tr>
                     <td><?=$i++;?></td>
-                    <td>Sub Category Name</td>
+                    <td>Subcategory Name</td>
+                    <td style="color:green;"><span class="label label-success"><?= $this->lang->line('required'); ?></span></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><?=$i++;?></td>
+                    <td><?= $this->lang->line('item_name'); ?></td>
                     <td style="color:green;"><span class="label label-success"><?= $this->lang->line('required'); ?></span></td>
                     <td></td>
                   </tr>

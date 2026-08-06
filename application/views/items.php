@@ -88,7 +88,7 @@
                            <div class="row">
                               <div class="form-group col-md-4">
                                  <label for="item_name"><?= $this->lang->line('item_name'); ?><span class="text-danger">*</span></label>
-                                 <input type="text" autofocus="" class="form-control" id="item_name" name="item_name" placeholder="" value="<?php print $item_name; ?>" >
+                                 <input type="text" autofocus="" class="form-control" id="item_name" name="item_name" placeholder="" value="<?php print $item_name; ?>">
                                  <span id="item_name_msg" style="display:none" class="text-danger"></span>
                               </div>
                               <?php $supplier = $this->db->select("*")->FROM('db_suppliers')->get()->result(); ?>
@@ -238,10 +238,13 @@
                               
                               <div class="form-group col-md-4">
                                  <label for="item_group"><?= $this->lang->line('item_group'); ?><span class="text-danger">*</span></label>
-                                 <select class="form-control select2" id="item_group" name="item_group"  style="width: 100%;" >
+                                 <select class="form-control select2" id="item_group" name="item_group" style="width: 100%;" <?= isset($q_id) ? 'disabled' : ''; ?>>
                                     <option  value="Single">Single</option>
                                     <option  value="Variants">Variants</option>
                                  </select>
+                                 <?php if(isset($q_id)){ ?>
+                                    <input type="hidden" name="item_group" value="<?= html_escape($item_group); ?>">
+                                 <?php } ?>
                                  <span id="item_group_msg" style="display:none" class="text-danger"></span>
                               </div>
                               
@@ -250,7 +253,7 @@
                                  <input type="text" class="form-control" id="sku" name="sku" placeholder="" value="<?php print $sku; ?>" >
                                  <span id="sku_msg" style="display:none" class="text-danger"></span>
                               </div>
-                              <div class="form-group col-md-4">
+                              <div class="form-group col-md-4" style="display:none;">
                                  <label for="hsn"><?= $this->lang->line('hsn'); ?></label>
                                  <input type="text" class="form-control" id="hsn" name="hsn" placeholder="" value="<?php print $hsn; ?>" >
                                  <span id="hsn_msg" style="display:none" class="text-danger"></span>
@@ -278,14 +281,14 @@
                                  <span id="reorder_qty_msg" style="display:none" class="text-danger"></span>
                               </div>
                               
-                              <div class="form-group col-md-4">
+                              <div class="form-group col-md-4" style="display:none;">
                                  <label for="seller_points" ><?= $this->lang->line('seller_points'); ?></label>
                                  <input type="text" class="form-control only_currency" id="seller_points" name="seller_points" placeholder=""  value="<?php print $seller_points; ?>" >
                                  <span id="seller_points_msg" style="display:none" class="text-danger"></span>
                               </div>
                               <div class="form-group col-md-4 <?= ($barcode_type=='Automatic')?'hide':''; ?>">
-                                 <label for="custom_barcode" ><?= $this->lang->line('barcode'); ?><span class="text-danger">*</span></label>
-                                 <input type="text" class="form-control " id="custom_barcode" name="custom_barcode" placeholder=""  value="<?php print $custom_barcode; ?>" <?= ($barcode_type=='Automatic')?'':'required'; ?> >
+                                 <label for="custom_barcode" ><?= $this->lang->line('barcode'); ?></label>
+                                 <input type="text" class="form-control " id="custom_barcode" name="custom_barcode" placeholder="Optional" value="<?php print $custom_barcode; ?>">
                                  <span id="custom_barcode_msg" style="display:none" class="text-danger"></span>
                               </div>
                               <div class="form-group col-md-4">
@@ -360,7 +363,7 @@
                                  <span id="tax_type_msg" style="display:none" class="text-danger"></span>
                                  
                               </div>
-                              <div class="form-group col-md-4">
+                              <div class="form-group col-md-4" style="display:none;">
                                  <label for="profit_margin"><?= $this->lang->line('profit_margin'); ?>(%) <i class="hover-q " data-container="body" data-toggle="popover" data-placement="top" data-content="<?= $this->lang->line('based_on_purchase_price'); ?>" data-html="true" data-trigger="hover" data-original-title="">
                                   <i class="fa fa-info-circle text-maroon text-black hover-q"></i>
                                 </i></label>
@@ -419,11 +422,11 @@
                                                 <tr class="bg-primary" >
                                                    <th rowspan='2' style="width:15%"><?= $this->lang->line('variant_name'); ?></th>
                                                    <th rowspan='2' style="width:10%"><?= $this->lang->line('sku'); ?></th> 
-                                                   <th rowspan='2' style="width:10%"><?= $this->lang->line('hsn'); ?></th> 
+                                                   <th rowspan='2' style="width:10%; display:none;"><?= $this->lang->line('hsn'); ?></th>
                                                    <th rowspan='2' style="width:10%"><?= $this->lang->line('barcode'); ?></th> 
                                                    <th rowspan='2' style="width:10%"><?= $this->lang->line('price'); ?>(<?= $CI->currency() ?>)</th>
                                                    <th rowspan='2' style="width:10%"><?= $this->lang->line('purchase_price'); ?>(<?= $CI->currency() ?>)</th>
-                                                   <th rowspan='2' style="width:10%"><?= $this->lang->line('profit_margin'); ?></th>
+                                                   <th rowspan='2' style="width:10%; display:none;"><?= $this->lang->line('profit_margin'); ?></th>
                                                    <th rowspan='2' style="width:10%"><?= $this->lang->line('sales_price'); ?>(<?= $CI->currency() ?>)</th>
                                                    <th rowspan='2' style="width:10%"><?= $this->lang->line('mrp'); ?>(<?= $CI->currency() ?>)</th>
                                                    <th rowspan='2' style="width:10%"><?= $this->lang->line('opening_stock'); ?></th>
@@ -509,10 +512,6 @@
           $("#hidden_rowcount").val($("#variant_table  tr").length)+1;
             calculate_purchase_price_of_all_row();
             calculate_sales_price_of_all_row();
-        <?php } ?>
-
-        <?php if($child_bit==1 || !empty($item_name)){ ?>
-          $("#item_group").parent().addClass('hide');
         <?php } ?>
 
       </script>

@@ -81,7 +81,7 @@ public function view()
   {
   //$this->permission_check('items_category_view');
   $data = $this->data;
-  $data['page_title'] = $this->lang->line('categories_list');
+  $data['page_title'] = 'Sub Category';
   $this->load->view('subcategory_list', $data);
 }
 

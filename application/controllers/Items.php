@@ -26,7 +26,7 @@ class Items extends MY_Controller {
 	}
 
 	public function newitems(){
-		$this->form_validation->set_rules('item_name', 'Item Name', 'trim|required');
+		$this->form_validation->set_rules('item_name', 'Item Name', 'trim|required|max_length[40]');
 		$this->form_validation->set_rules('category_id', 'Category Name', 'trim|required');
 		$this->form_validation->set_rules('unit_id', 'Unit', 'trim|required');
 		$this->form_validation->set_rules('tax_id', 'Tax', 'trim|required');
@@ -45,7 +45,7 @@ class Items extends MY_Controller {
 			$result=$this->items->save_record(array('command' =>'save'));
 			echo $result;
 		} else {
-			echo "Please Fill Compulsory(* marked) Fields.";
+			echo trim(strip_tags(validation_errors('', ' ')));
 		}
 	}
 
@@ -80,7 +80,7 @@ public function get_sub_bin_data()
 	//PopUP Modal
 	public function addItemFromModal(){
 
-		$this->form_validation->set_rules('m_item_name', 'Item Name', 'trim|required');
+		$this->form_validation->set_rules('m_item_name', 'Item Name', 'trim|required|max_length[40]');
 		$this->form_validation->set_rules('m_category_id', 'Category Name', 'trim|required');
 		$this->form_validation->set_rules('m_unit_id', 'Unit', 'trim|required');
 		$this->form_validation->set_rules('m_tax_id', 'Tax', 'trim|required');
@@ -127,29 +127,30 @@ public function get_sub_bin_data()
 			$result=$this->items->save_record($modal_post);
 			echo $result;
 		} else {
-			echo "Please Fill Compulsory(* marked) Fields.";
+			echo trim(strip_tags(validation_errors('', ' ')));
 		}
 	}
 
 	public function update($id){
 		$this->belong_to('db_items',$id);
 		$this->permission_check('items_edit');
-		//Check is direct Access of the variant by id in item ?
-		/*$parent_id = $this->db->select("parent_id")->where("store_id",get_current_store_id())->where("id",$id)->get("db_items")->row()->parent_id;
+		// A child variant is edited through its master so Item Group and all
+		// sibling variant rows are restored together.
+		$parent_id = $this->db->select("parent_id")->where("store_id",get_current_store_id())->where("id",$id)->get("db_items")->row()->parent_id;
 		if(!empty($parent_id)){
-			show_error("You can't access variant Item!!", 403, $heading = "Invalid Access!!");
-		}*/
+			redirect(base_url('items/update/'.$parent_id));
+			return;
+		}
 
 		$data=$this->data;
 		$this->load->model('items_model');
 		$result=$this->items_model->get_details($id,$data);
 		$data=array_merge($data,$result);
 		$data['page_title']=$this->lang->line('items');
-		//$data['variant_tbody']=$this->items_model->get_variants_list_in_row($id);
 		$this->load->view('items', $data);
 	}
 	public function update_items(){
-		$this->form_validation->set_rules('item_name', 'Item Name', 'trim|required');
+		$this->form_validation->set_rules('item_name', 'Item Name', 'trim|required|max_length[40]');
 		$this->form_validation->set_rules('category_id', 'Category Name', 'trim|required');
 		$this->form_validation->set_rules('unit_id', 'Unit', 'trim|required');
 		$this->form_validation->set_rules('tax_id', 'Tax', 'trim|required');
@@ -170,7 +171,7 @@ public function get_sub_bin_data()
 			$result=$this->items->save_record(array('command'=>'update'));
 			echo $result;
 		} else {
-			echo "Please Fill Compulsory(* marked) Fields.";
+			echo trim(strip_tags(validation_errors('', ' ')));
 		}
 
 	}

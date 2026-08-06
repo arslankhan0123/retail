@@ -19,7 +19,7 @@
     <section class="content-header">
       <h1>
         <?=$page_title;?>
-        <small>View/Search Items Category</small>
+        <small>View/Search Sub Category</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="<?php echo $base_url; ?>dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -42,7 +42,7 @@
               <?php if($CI->permissions('items_category_add')) { ?>
               <div class="box-tools">
                 <a class="btn btn-block btn-info" href="<?php echo $base_url; ?>Subcategory/add">
-                <i class="fa fa-plus"></i> <?= $this->lang->line('add_category'); ?></a>
+                <i class="fa fa-plus"></i> Add Sub Category</a>
               </div>
               <?php } ?>
             </div>

@@ -392,10 +392,16 @@
                                  </select>
                                  <span id="warehouse_id_msg" style="display:none" class="text-danger"></span>
                               </div>
+                              <?php if(isset($q_id)){ ?>
+                                 <div class="form-group col-md-4">
+                                    <label for="previous_opening_stock">Previous Opening Stock</label>
+                                    <input type="text" class="form-control" id="previous_opening_stock" value="<?php print $opening_stock; ?>" readonly>
+                                 </div>
+                              <?php } ?>
                               <div class="form-group col-md-4">
-                                 <label for="adjustment_qty"><?= $this->lang->line('opening_stock'); ?></label>
-                                 <input type="text" class="form-control only_currency" id="adjustment_qty" name="adjustment_qty" value="<?php print isset($q_id) ? '0' : $opening_stock; ?>" >
-                                 <input type="hidden" class="form-control" name="opening_stock" value="<?php print $opening_stock; ?>" >
+                                 <label for="adjustment_qty"><?= isset($q_id) ? 'Add Opening Stock' : $this->lang->line('opening_stock'); ?></label>
+                                 <input type="text" class="form-control only_currency" id="adjustment_qty" name="adjustment_qty" value="<?php print isset($q_id) ? '0' : $opening_stock; ?>">
+                                 <input type="hidden" class="form-control" name="opening_stock" value="<?php print $opening_stock; ?>">
                                  <span id="adjustment_qty_msg" style="display:none" class="text-danger"></span>
                               </div>
                               

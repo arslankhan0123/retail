@@ -64,7 +64,7 @@ class Brands extends MY_Controller {
 			$no++;
 			$row = array();
 			$row[] = '<input type="checkbox" name="checkbox[]" value=' . $brand->id . ' class="checkbox column_checkbox" >';
-			$row[] = $brand->id;
+			$row[] = $no;
 			$row[] = $brand->brand_name;
 			$row[] = $brand->description;
 

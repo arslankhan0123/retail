@@ -81,7 +81,9 @@ public function ajax_list()
     $no++;
     $row = array();
     $row[] = '<input type="checkbox" name="checkbox[]" value='.$category->dptid.' class="checkbox column_checkbox" >';
-    $row[] = $category->dptid;
+    // Display a simple list serial in the Code column. Keep dptid only for
+    // edit, delete, status, and checkbox operations.
+    $row[] = $no;
     $row[] = $category->dptName;
     $row[] = $category->dptDetails;
 

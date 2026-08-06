@@ -602,11 +602,11 @@ function calculate_profit_margin_new(purchase_price,sales_price){
 $("#item_group").on("change",function(event) {
 	var item_group = $("#item_group").val();
 	if(item_group=='Variants'){
-		$("#price,#purchase_price,#profit_margin,#sales_price,#mrp,#hsn,#sku,#custom_barcode,#adjustment_qty").parent().addClass('hide');	
+		$("#price,#purchase_price,#profit_margin,#sales_price,#mrp,#hsn,#sku,#custom_barcode,#adjustment_qty,#previous_opening_stock").parent().addClass('hide');
 		$(".variant_div").show();
 	}
 	else{
-		$("#price,#purchase_price,#profit_margin,#sales_price,#mrp,#hsn,#sku,#adjustment_qty").parent().removeClass('hide');
+		$("#price,#purchase_price,#profit_margin,#sales_price,#mrp,#hsn,#sku,#adjustment_qty,#previous_opening_stock").parent().removeClass('hide');
 		if (typeof barcode_type !== 'undefined' && barcode_type === 'Manual') {
 			$("#custom_barcode").parent().removeClass('hide');
 		} else {

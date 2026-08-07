@@ -60,6 +60,16 @@
                                  </div>
 
                               </div>
+                              <div class="form-group">
+                                 <label for="salesman_id" class="col-sm-2 control-label"><?= $this->lang->line('salesman'); ?></label>
+                                 <div class="col-sm-3">
+                                    <select class="form-control select2" id="salesman_id" name="salesman_id" style="width: 100%;">
+                                       <option value="">-All-</option>
+                                       <?= get_salesmans_select_list(null, get_current_store_id()); ?>
+                                    </select>
+                                    <span id="salesman_id_msg" style="display:none" class="text-danger"></span>
+                                 </div>
+                              </div>
                               
                               <div class="form-group">
                                  <label for="from_date" class="col-sm-2 control-label"><?= $this->lang->line('from_date'); ?></label>
@@ -149,6 +159,10 @@
                                     <?php if(warehouse_module() && warehouse_count()>0){ ?>
                                       <th style=""><?= $this->lang->line('warehouse_name'); ?></th>
                                     <?php } ?>
+                                    <th style=""><?= $this->lang->line('department'); ?></th>
+                                    <th style=""><?= $this->lang->line('category'); ?></th>
+                                    <th style=""><?= $this->lang->line('subcategory'); ?></th>
+                                    <th style=""><?= $this->lang->line('brand'); ?></th>
                                     <th style=""><?= $this->lang->line('invoice_no'); ?></th>
                                     <th style=""><?= $this->lang->line('sales_date'); ?></th>
                                     <th style=""><?= $this->lang->line('customer_id'); ?></th>
@@ -197,6 +211,10 @@
           $.post(base_url+"sales/get_warehouse_select_list",{store_id:store_id},function(result){
               result='<option value="">All</option>'+result;
               $("#warehouse_id").html('').append(result).select2();
+          });
+          $.post(base_url+"sales/get_salesmans_select_list",{store_id:store_id},function(result){
+              result='<option value="">All</option>'+result;
+              $("#salesman_id").html('').append(result).select2();
           });
 
           load_users();

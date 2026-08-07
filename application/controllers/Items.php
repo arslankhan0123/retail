@@ -54,7 +54,7 @@ public function get_category_data()
       
   $section = $this->db->select("*")->FROM('db_category');
   
-  if($_POST['id'] != 3){
+  if(!empty($_POST['id']) && $_POST['id'] != 3){
      $section = $section->where('dptid',$_POST['id']);
   }
   
@@ -65,7 +65,11 @@ public function get_category_data()
 
 public function get_sub_category_data()
   {
-  $section = $this->db->select("*")->FROM('db_subcategory')->where('catid',$_POST['id'])->get()->result();
+  $section = $this->db->select("*")->FROM('db_subcategory');
+  if(!empty($_POST['id'])){
+     $section = $section->where('catid',$_POST['id']);
+  }
+  $section = $section->get()->result();
   $someJSON = json_encode($section);
   echo $someJSON;
 }
@@ -195,6 +199,7 @@ public function get_sub_bin_data()
 			$no++;
 			$row = array();
 			$row[] = '<input type="checkbox" name="checkbox[]" value='.$items->id.' class="checkbox column_checkbox" >';
+			$row[] = $no;
 						
 
 			$row[] = (!empty($items->item_image)) ? "
@@ -202,29 +207,25 @@ public function get_sub_bin_data()
 						<image style='border:1px #72afd2 solid;' src='".base_url(return_item_image_thumb($items->item_image))."' width='75%' height='50%'> </a>" : "
 						<image style='border:1px #72afd2 solid;' src='".base_url()."theme/images/no_image.png' title='No Image!' width='75%' height='50%' >";
 			
+			$row[] = $items->custom_barcode;
 			$row[] = $items->item_code;
-			$row[] = "<label class='text-blue'>".$items->item_name."</label><br><b>HSN</b>:".$items->hsn."<br><b>SKU</b>:".$items->sku;
-			$row[] = $items->brand_name;
+			$row[] = "<label class='text-blue'>".$items->item_name."</label>";
+			$row[] = $items->department_name;
 			$service_or_item_name = ($items->service_bit) ? 'SERVICE' : "ITEM";
-
 			$row[] = $items->category_name."<br>[<label class='text-orange'>".$service_or_item_name."</label>]";
+			$row[] = $items->subcategory_name;
+			$row[] = $items->brand_name;
 
 			$item_group = '';// (!empty($items->item_group)) ? "<br>[<label class='text-green'>".$items->item_group."</label>]" : '';
 			$row[] = $items->unit_name.$item_group;
 
-					 $str='';
-					 if(warehouse_module() && warehouse_count()>0 && $items->stock>0){ 
-			 			$str= "<i class='fa fa-building-o pointer bg-blue text-dark' title='Click to view Warehouse Wise Stock' data-toggle='tooltip' onclick='view_warehouse_wise_stock_item(".$items->id.")'> </i>";
-			 		 }
 			$warehouse_ids  = (!empty($warehouse_id)) ? $warehouse_id : get_privileged_warehouses_ids();
-
-			
-			$row[] = format_qty(total_available_qty_items_of_warehouse($warehouse_ids,null,$items->id))." $str";
+			$row[] = format_qty(total_available_qty_items_of_warehouse($warehouse_ids,null,$items->id));
 			$row[] = format_qty($items->opening_stock);
 
 			$row[] = $items->alert_qty;
 			$row[] = store_number_format($items->sales_price);
-			$row[] = $items->tax_name."<br>(".store_number_format($items->tax)."%)";
+			$row[] = "VAT ".store_number_format($items->tax)."%";
 
 			 		if($items->status==1){ 
 			 			$str= "<span onclick='update_status(".$items->id.",0)' id='span_".$items->id."'  class='label label-success' style='cursor:pointer'>Active </span>";}

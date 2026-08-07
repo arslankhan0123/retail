@@ -24,3 +24,4 @@ ERROR - 2026-08-06 14:01:49 --> Severity: Warning --> mysqli::real_connect(): (H
 ERROR - 2026-08-06 14:01:49 --> Unable to connect to the database
 ERROR - 2026-08-06 14:06:28 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-08-06 18:59:07 --> Severity: Notice --> Undefined variable: tax_id F:\Projects\retail\application\views\items.php 339
+ERROR - 2026-08-06 23:23:28 --> 404 Page Not Found: Faviconico/index

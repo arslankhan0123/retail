@@ -404,6 +404,10 @@ class Sales extends MY_Controller {
 		echo get_users_select_list($this->session->userdata("role_id"),$_POST['store_id']);
 	}
 
+	public function get_salesmans_select_list(){
+		echo get_salesmans_select_list(null,$_POST['store_id']);
+	}
+
 	public function return_quotation_list($quotation_id){
 		echo $this->sales->return_quotation_list($quotation_id);
 	}

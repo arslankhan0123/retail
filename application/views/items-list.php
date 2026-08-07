@@ -57,21 +57,36 @@
           
           <div class="box box-primary">
             <div class="box-header with-border">
-              <!-- <h3 class="box-title"><?=$page_title;?></h3> -->
+              <h3 class="box-title"><?=$page_title;?></h3>
               
-
+              <?php if($CI->permissions('items_add') || $CI->permissions('services_add')) { ?>
+              <div class="box-tools">      
+                <?php if(service_module() && $CI->permissions('services_add')){ ?>
+                <a class="btn btn-success margin" href="<?php echo $base_url; ?>services/add">
+                <i class="fa fa-plus " ></i> <?= $this->lang->line('new_service'); ?></a>
+                <?php } ?>
+                <?php if($CI->permissions('items_add')){ ?>          
+                <a class="btn btn-info margin" href="<?php echo $base_url; ?>items/add">
+                <i class="fa fa-plus " ></i> <?= $this->lang->line('new_item'); ?></a>
+                <?php } ?>
+              </div>
+             <?php } ?>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              
                 <div class="row">
                     <div class="col-md-12">                                  
                       <!-- Warehouse Code -->
                       <?php if(warehouse_module()){ ?>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                     <?php $this->load->view('warehouse/warehouse_code',array('show_warehouse_select_box'=>true,'div_length'=>'',
                       'label_length'=>'','show_all'=>'true','show_all_option'=>true,'remove_star'=>true)); ?>
                     <!-- Warehouse Code end -->
                     </div>
                     <?php } ?>
                     <?php if(service_module() && $CI->permissions('services_view')){ ?>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label for="item_type" class=" control-label">Item Type</label>
                           <select class="form-control select2" id="item_type" name="item_type"  style="width: 100%;">
                             <?php if($CI->permissions('items_view') && $CI->permissions('services_view')){?>
@@ -89,43 +104,83 @@
                     <input type="hidden" id="item_type" value="Items">
                     <?php } ?>
                     
+                    <!-- Department -->
+                    <div class="col-md-2">
+                      <label for="dptid" class="control-label">Department</label>
+                      <select class="form-control select2" id="dptid" name="dptid" style="width: 100%;">
+                        <option value="">All</option>
+                        <?php 
+                          $dept_q = $this->db->select('*')->from('db_department')->get();
+                          foreach($dept_q->result() as $dept){
+                            echo "<option value='".$dept->dptid."'>".$dept->dptName."</option>";
+                          }
+                        ?>
+                      </select>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="col-md-2">
+                      <label for="category_id" class="control-label">Category</label>
+                      <select class="form-control select2" id="category_id" name="category_id" style="width: 100%;">
+                        <option value="">All</option>
+                        <?php 
+                          $cat_q = $this->db->select('*')->from('db_category')->get();
+                          foreach($cat_q->result() as $cat){
+                            echo "<option value='".$cat->id."'>".$cat->category_name."</option>";
+                          }
+                        ?>
+                      </select>
+                    </div>
+
+                    <!-- Sub Category -->
+                    <div class="col-md-2">
+                      <label for="scatid" class="control-label">Sub Category</label>
+                      <select class="form-control select2" id="scatid" name="scatid" style="width: 100%;">
+                        <option value="">All</option>
+                        <?php 
+                          $subcat_q = $this->db->select('*')->from('db_subcategory')->get();
+                          foreach($subcat_q->result() as $subcat){
+                            echo "<option value='".$subcat->scatid."'>".$subcat->scatName."</option>";
+                          }
+                        ?>
+                      </select>
+                    </div>
+
+                    <!-- Brand -->
+                    <div class="col-md-2">
+                      <label for="brand_id" class="control-label">Brand</label>
+                      <select class="form-control select2" id="brand_id" name="brand_id" style="width: 100%;">
+                        <option value="">All</option>
+                        <?= get_brands_select_list(''); ?>
+                      </select>
+                    </div>
+
                   </div>
                 </div>
-
-              <?php if($CI->permissions('items_add') || $CI->permissions('services_add')) { ?>
-              <div class="box-tools">      
-                <?php if($CI->permissions('items_add')){ ?>          
-                <a class="btn btn-info margin" href="<?php echo $base_url; ?>items/add">
-                <i class="fa fa-plus " ></i> <?= $this->lang->line('new_item'); ?></a>
-                <?php } ?>
-                <?php if(service_module() && $CI->permissions('services_add')){ ?>
-                <a class="btn btn-success margin" href="<?php echo $base_url; ?>services/add">
-                <i class="fa fa-plus " ></i> <?= $this->lang->line('new_service'); ?></a>
-              <?php } ?>
-              </div>
-             <?php } ?>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+                <br>
               <table id="example2" class="table table-bordered custom_hover" width="100%">
                 <thead class="bg-gray ">
                 <tr>
                   <th class="text-center">
                     <input type="checkbox" class="group_check checkbox" >
                   </th>
+                  <th>Code</th>
                   <th><?= $this->lang->line('image'); ?></th>
+                  <th>Barcode</th>
                   <!-- <th><?= $this->lang->line('store_name'); ?></th> -->
                   <th><?= $this->lang->line('item_code'); ?></th>
                   <th><?= $this->lang->line('item_name'); ?></th>
+                  <th>Department</th>
+                  <th><?= $this->lang->line('category'); ?></th>
+                  <th>Sub Category</th>
                   <th><?= $this->lang->line('brand'); ?></th>
-                  <th><?= $this->lang->line('category'); ?>/<br><?= $this->lang->line('item_type'); ?></th>
                   <th><?= $this->lang->line('unit'); ?></th>
                   <th><?= $this->lang->line('stock'); ?></th>
                   <th>Opening Stock</th>
                   <th><?= $this->lang->line('alert_quantity'); ?></th>
                   <th><?= $this->lang->line('sales_price'); ?></th>
-                  <th><?= $this->lang->line('tax'); ?></th>
-	         	  	  <th><?= $this->lang->line('status'); ?></th>
+                  <th>VAT</th>
+ 	         	  	  <th><?= $this->lang->line('status'); ?></th>
                   <th><?= $this->lang->line('action'); ?></th>
                 </tr>
                 </thead>
@@ -153,7 +208,7 @@
   <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-
+ 
 <!-- SOUND CODE -->
 <?php include"comman/code_js_sound.php"; ?>
 <!-- TABLES CODE -->
@@ -185,11 +240,11 @@
                     multi_delete();
                 }
             },
-            { extend: 'copy', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [2,3,4,5,6,7,8,9,10,11,12]} },
-            { extend: 'excel', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [2,3,4,5,6,7,8,9,10,11,12]} },
-            { extend: 'pdf', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [2,3,4,5,6,7,8,9,10,11,12]} },
-            { extend: 'print', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [2,3,4,5,6,7,8,9,10,11,12]} },
-            { extend: 'csv', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [2,3,4,5,6,7,8,9,10,11,12]} },
+            { extend: 'copy', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,3,4,5,6,7,8,9,10,11,12,13,14,15,16]} },
+            { extend: 'excel', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,3,4,5,6,7,8,9,10,11,12,13,14,15,16]} },
+            { extend: 'pdf', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,3,4,5,6,7,8,9,10,11,12,13,14,15,16]} },
+            { extend: 'print', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,3,4,5,6,7,8,9,10,11,12,13,14,15,16]} },
+            { extend: 'csv', className: 'btn bg-teal color-palette btn-flat',exportOptions: { columns: [1,3,4,5,6,7,8,9,10,11,12,13,14,15,16]} },
             { extend: 'colvis', className: 'btn bg-teal color-palette btn-flat',text:'Columns' },  
 
             ]
@@ -210,6 +265,10 @@
             "data": {
                       warehouse_id: $("#warehouse_id").val(),
                       item_type: $("#item_type").val(),
+                      dptid: $("#dptid").val(),
+                      category_id: $("#category_id").val(),
+                      scatid: $("#scatid").val(),
+                      brand_id: $("#brand_id").val(),
                     },
             complete: function (data) {
              $('.column_checkbox').iCheck({
@@ -227,7 +286,7 @@
         //Set column definition initialisation properties.
         "columnDefs": [
         { 
-            "targets": [ 0,13 ], //first column / numbering column
+            "targets": [ 0, 2, 17 ], //first column / image / action
             "orderable": false, //set not orderable
         },
         {
@@ -242,8 +301,45 @@
 $(document).ready(function() {
     //datatables
    load_datatable();
+
+   // Cascading dropdowns
+   $('#dptid').change(function(){
+      var url = "<?php echo base_url(); ?>Items/get_category_data";
+      var id = $('#dptid').val();
+      $.ajax({
+        method: "POST",
+        url     : url,
+        dataType: 'json',
+        data    : {'id':id},
+        success:function(data){ 
+          var HTML = '<option value="">All</option>';
+          for (var key in data) {
+            HTML +='<option value="'+data[key]['id']+'">'+data[key]['category_name']+'</option>';
+          }
+          $("#category_id").html(HTML).trigger('change');
+        }
+      });
+   });
+
+   $('#category_id').change(function(){
+      var url = "<?php echo base_url(); ?>Items/get_sub_category_data";
+      var id = $('#category_id').val();
+      $.ajax({
+        method: "POST",
+        url     : url,
+        dataType: 'json',
+        data    : {'id':id},
+        success:function(data){ 
+          var HTML = '<option value="">All</option>';
+          for (var key in data) {
+            HTML +='<option value="'+data[key]['scatid']+'">'+data[key]['scatName']+'</option>';
+          }
+          $("#scatid").html(HTML).trigger('change');
+        }
+      });
+   });
 });
-$("#warehouse_id,#item_type").on("change",function(){
+$("#warehouse_id,#item_type,#dptid,#category_id,#scatid,#brand_id").on("change",function(){
     $('#example2').DataTable().destroy();
     load_datatable();
 });

@@ -56,6 +56,17 @@
                                 </div>
 
                               <div class="form-group">
+                                 <label for="salesman_id" class="col-sm-2 control-label"><?= $this->lang->line('salesman'); ?></label>
+                                 <div class="col-sm-3">
+                                    <select class="form-control select2" id="salesman_id" name="salesman_id" style="width: 100%;">
+                                       <option value="">-All-</option>
+                                       <?= get_salesmans_select_list(null, get_current_store_id()); ?>
+                                    </select>
+                                    <span id="salesman_id_msg" style="display:none" class="text-danger"></span>
+                                 </div>
+                              </div>
+
+                              <div class="form-group">
                                  <label for="brand_id" class="col-sm-2 control-label"><?= $this->lang->line('brand'); ?></label>
                                  <div class="col-sm-3">
                                     <select class="form-control select2 " id="brand_id" name="brand_id"  style="width: 100%;">
@@ -162,8 +173,10 @@
                                               <?php } ?>
                                               <th style=""><?= $this->lang->line('item_code'); ?></th>
                                               <th style=""><?= $this->lang->line('item_name'); ?></th>
+                                              <th style=""><?= $this->lang->line('department'); ?></th>
                                               <th style=""><?= $this->lang->line('brand'); ?></th>
                                               <th style=""><?= $this->lang->line('category'); ?></th>
+                                              <th style=""><?= $this->lang->line('subcategory'); ?></th>
                                               <th style=""><?= $this->lang->line('unit_price'); ?></th>
                                               <th style=""><?= $this->lang->line('sales_price'); ?></th>
                                               <th style=""><?= $this->lang->line('opening_stock'); ?></th>
@@ -260,8 +273,9 @@
    var brand_id=$("#brand_id").val();
    var category_id=$("#category_id").val();
    var warehouse_id=$("#warehouse_id").val();
+   var salesman_id=$("#salesman_id").val();
    $(".box").append('<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>');
-        $.post(base_url+"reports/get_stock_report",{warehouse_id:warehouse_id,store_id:store_id,brand_id:brand_id,category_id:category_id},function(result){
+        $.post(base_url+"reports/get_stock_report",{warehouse_id:warehouse_id,store_id:store_id,brand_id:brand_id,category_id:category_id,salesman_id:salesman_id},function(result){
             result = $.parseJSON(result);
 
               $.each( result, function( key, val ) {
@@ -294,7 +308,7 @@
                 }
               });
               $(".overlay").remove();
-           });
+            });
 
     }
 </script>
@@ -302,7 +316,7 @@
     $("#view").on("click",function(){
       load_reports();
     });
-    $("#store_id,#warehouse_id").on("change",function(){
+    $("#store_id,#warehouse_id,#salesman_id").on("change",function(){
       load_reports();
     });
 </script>
@@ -321,6 +335,10 @@
 
               load_brands_list();
               load_category_list();
+          });
+          $.post(base_url+"sales/get_salesmans_select_list",{store_id:store_id},function(result){
+              result='<option value="">All</option>'+result;
+              $("#salesman_id").html('').append(result).select2();
           });
         });
 

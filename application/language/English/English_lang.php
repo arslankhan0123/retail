@@ -81,7 +81,7 @@ $lang['website'						]	=		'Website';
 $lang['city'						]	=		'City';
 $lang['postcode'					]	=		'Postcode';
 $lang['address'						]	=		'Address';
-$lang['warehouse'						]	=		'Warehouse';
+$lang['warehouse'						]	=		'Store';
 $lang['units_list'						]	=		'Units List';
 /* 21-05-2019*/
 $lang['current_password'			]	=		'Current Password';
@@ -1065,3 +1065,5 @@ $lang['salesman_id'] = 'Salesman ID';
 $lang['salesman'] = 'Salesman';
 $lang['salesman_list'] = 'Salesman List';
 $lang['new_salesman'] = 'New Salesman';
+$lang['department'] = 'Department';
+$lang['subcategory'] = 'Subcategory';

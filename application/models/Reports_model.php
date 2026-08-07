@@ -101,6 +101,9 @@ class Reports_model extends CI_Model {
 			
 			$this->db->where("a.customer_id=$customer_id");
 		}
+		if(!empty($salesman_id)){
+			$this->db->where("a.salesman_id",$salesman_id);
+		}
 		if($view_all=="no"){
 			$this->db->where("(a.sales_date>='$from_date' and a.sales_date<='$to_date')");
 		}
@@ -130,6 +133,30 @@ class Reports_model extends CI_Model {
 			$tot_paid_amount=0;
 			$tot_due_amount=0;
 			foreach ($q1->result() as $res1) {
+				$this->db->select("d.dptName, c.category_name, s.scatName, b.brand_name");
+				$this->db->from("db_salesitems si");
+				$this->db->join("db_items i", "i.id=si.item_id", "left");
+				$this->db->join("db_department d", "d.dptid=i.dptid", "left");
+				$this->db->join("db_category c", "c.id=i.category_id", "left");
+				$this->db->join("db_subcategory s", "s.scatid=i.scatid", "left");
+				$this->db->join("db_brands b", "b.id=i.brand_id", "left");
+				$this->db->where("si.sales_id", $res1->id);
+				$item_q = $this->db->get();
+				$departments = array();
+				$categories = array();
+				$subcategories = array();
+				$brands = array();
+				foreach($item_q->result() as $item_row) {
+					if(!empty($item_row->dptName)) $departments[] = $item_row->dptName;
+					if(!empty($item_row->category_name)) $categories[] = $item_row->category_name;
+					if(!empty($item_row->scatName)) $subcategories[] = $item_row->scatName;
+					if(!empty($item_row->brand_name)) $brands[] = $item_row->brand_name;
+				}
+				$departments = implode(", ", array_unique($departments));
+				$categories = implode(", ", array_unique($categories));
+				$subcategories = implode(", ", array_unique($subcategories));
+				$brands = implode(", ", array_unique($brands));
+
 				echo "<tr>";
 				echo "<td>".++$i."</td>";
 				if(store_module() && is_admin()){
@@ -138,6 +165,10 @@ class Reports_model extends CI_Model {
 				if(warehouse_module() && warehouse_count()>0){
 					echo "<td>".get_warehouse_name($res1->warehouse_id)."</td>";	
 				}
+				echo "<td>".$departments."</td>";
+				echo "<td>".$categories."</td>";
+				echo "<td>".$subcategories."</td>";
+				echo "<td>".$brands."</td>";
 				if($store_id==get_current_store_id()){
 				echo "<td><a title='View Invoice' href='".base_url("sales/invoice/$res1->id")."'>".$res1->sales_code."</a></td>";
 				}
@@ -158,7 +189,7 @@ class Reports_model extends CI_Model {
 
 			}
 
-			$total_columns_count=5;
+			$total_columns_count=9;
 			if(store_module() && is_admin()){
 				$total_columns_count ++;
 			}
@@ -174,7 +205,7 @@ class Reports_model extends CI_Model {
 				  </tr>";
 		}
 		else{
-			$total_columns_count=9;
+			$total_columns_count=13;
 			if(store_module() && is_admin()){
 				$total_columns_count ++;
 			}
@@ -569,6 +600,21 @@ class Reports_model extends CI_Model {
 	public function show_stock_report(){
 		extract($_POST);
 		
+		$item_ids = array();
+		if(!empty($salesman_id)){
+			$this->db->select("distinct(item_id)");
+			$this->db->from("db_salesitems si");
+			$this->db->join("db_sales s", "s.id=si.sales_id");
+			$this->db->where("s.salesman_id", $salesman_id);
+			$this->db->where("s.sales_status", "Final");
+			$item_ids_query = $this->db->get();
+			foreach($item_ids_query->result() as $row) {
+				$item_ids[] = $row->item_id;
+			}
+			if(empty($item_ids)){
+				$item_ids = array(0);
+			}
+		}
 
 		if(!empty($store_id)){
 			$this->db->where("a.store_id",$store_id);
@@ -576,9 +622,14 @@ class Reports_model extends CI_Model {
 		if(!is_admin()){
 			$this->db->where("a.store_id",get_current_store_id());
 		}
+		if(!empty($salesman_id)){
+			$this->db->where_in("a.id", $item_ids);
+		}
 		$this->db->select("a.sales_price,a.item_code,a.purchase_price,a.item_name,a.tax_type,a.store_id,a.id as item_id,a.item_group,a.opening_stock,
 			d.category_name,
 			c.brand_name,
+			dept.dptName as department_name,
+			sub.scatName as subcategory_name,
 			");
 		$this->db->select("b.tax_name");
 		$this->db->from("db_items as a");
@@ -588,6 +639,8 @@ class Reports_model extends CI_Model {
 		$this->db->where("a.service_bit=0");
 		$this->db->join("db_brands as c","c.id=a.brand_id","left");
 		$this->db->join("db_category as d","d.id=a.category_id","left");
+		$this->db->join("db_department as dept","dept.dptid=a.dptid","left");
+		$this->db->join("db_subcategory as sub","sub.scatid=a.scatid","left");
 
 		if(!empty($brand_id)){
 			$this->db->where("a.brand_id",$brand_id);
@@ -624,8 +677,10 @@ class Reports_model extends CI_Model {
 						}
 						$str .= "<td>".$res1->item_code."</td>";
 						$str .= "<td>".$res1->item_name."</td>";
+						$str .= "<td>".$res1->department_name."</td>";
 						$str .= "<td>".$res1->brand_name."</td>";
 						$str .= "<td>".$res1->category_name."</td>";
+						$str .= "<td>".$res1->subcategory_name."</td>";
 						$str .= "<td class='text-right'>".store_number_format($res1->purchase_price)."</td>";
 						$str .= "<td class='text-right'>".store_number_format($res1->sales_price)."</td>";
 						$str .= "<td>".store_number_format($res1->opening_stock)."</td>";
@@ -638,7 +693,7 @@ class Reports_model extends CI_Model {
 					/*}*/
 
 			}
-			$total_columns_count=8;
+			$total_columns_count=10;
 			if(store_module() && is_admin()){
 				$total_columns_count ++;
 			}
@@ -649,7 +704,7 @@ class Reports_model extends CI_Model {
 				  </tr>";
 		}
 		else{
-			$total_columns_count=10;
+			$total_columns_count=12;
 			if(store_module() && is_admin()){
 				$total_columns_count ++;
 			}

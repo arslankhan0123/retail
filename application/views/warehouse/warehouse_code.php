@@ -49,7 +49,7 @@
 		             		echo "<option value=''>-Select-</option>";
 		             	}
 		             	if(isset($show_all_option)){
-		             		echo "<option value=''>-All Warehouses-</option>";
+		             		echo "<option value=''>-All Store-</option>";
 		             	}
 		             	
 		              foreach($q2->result() as $res1)
@@ -114,7 +114,7 @@
 		            if($q2->num_rows()>0)
 		             {
 		             	if(isset($show_all_option)){
-		             		echo "<option value=''>-All Warehouses-</option>";
+		             		echo "<option value=''>-All Store-</option>";
 		             	}
 		             	else{
 		             		echo "<option value=''>-Select-</option>";	
@@ -161,7 +161,7 @@
 				            if($q2->num_rows()>0)
 				             {
 				             	if(isset($show_all_option)){
-				             		echo "<option value=''>-All Warehouses-</option>";
+				             		echo "<option value=''>-All Store-</option>";
 				             	}
 				              foreach($q2->result() as $res1)
 				               {

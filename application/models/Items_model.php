@@ -8,10 +8,13 @@ class Items_model extends CI_Model {
 	var $column_order = array( 
 								'a.id',
 								'a.item_image',
+								'a.custom_barcode',
 								'a.item_code',
 								'a.item_name',
-								'e.brand_name',
+								'f.dptName',
 								'b.category_name',
+								'g.scatName',
+								'e.brand_name',
 								'c.unit_name',
 								'a.stock',
 								'a.opening_stock',
@@ -29,10 +32,13 @@ class Items_model extends CI_Model {
 	var $column_search = array( 
 								'a.id',
 								'a.item_image',
+								'a.custom_barcode',
 								'a.item_code',
 								'a.item_name',
-								'e.brand_name',
+								'f.dptName',
 								'b.category_name',
+								'g.scatName',
+								'e.brand_name',
 								'c.unit_name',
 								'a.stock',
 								'a.opening_stock',
@@ -65,11 +71,19 @@ class Items_model extends CI_Model {
 		$this->db->join('db_tax as d',"d.id=a.tax_id","left");
 		$this->db->select("CASE WHEN e.brand_name IS NULL THEN '' ELSE e.brand_name END AS brand_name");
 		$this->db->join('db_brands as e','e.id=a.brand_id','left');
+		$this->db->select("CASE WHEN f.dptName IS NULL THEN '' ELSE f.dptName END AS department_name");
+		$this->db->join('db_department as f','f.dptid=a.dptid','left');
+		$this->db->select("CASE WHEN g.scatName IS NULL THEN '' ELSE g.scatName END AS subcategory_name");
+		$this->db->join('db_subcategory as g','g.scatid=a.scatid','left');
 		
 
 		/*If warehouse selected*/
 		$warehouse_id = $this->input->post('warehouse_id');
 		$item_type = $this->input->post('item_type');
+		$dptid = $this->input->post('dptid');
+		$category_id = $this->input->post('category_id');
+		$scatid = $this->input->post('scatid');
+		$brand_id = $this->input->post('brand_id');
 
 		if(!empty($warehouse_id)){
 			/*$this->db->from('db_warehouseitems as w');
@@ -81,6 +95,18 @@ class Items_model extends CI_Model {
 		}
 		if($item_type=='Services'){
 			$this->db->where('a.service_bit=1');
+		}
+		if(!empty($dptid)){
+			$this->db->where('a.dptid', $dptid);
+		}
+		if(!empty($category_id)){
+			$this->db->where('a.category_id', $category_id);
+		}
+		if(!empty($scatid)){
+			$this->db->where('a.scatid', $scatid);
+		}
+		if(!empty($brand_id)){
+			$this->db->where('a.brand_id', $brand_id);
 		}
 
 		//if not admin

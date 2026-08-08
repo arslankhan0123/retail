@@ -161,11 +161,11 @@
               <table id="example2" class="table table-bordered custom_hover" width="100%">
                 <thead class="bg-gray ">
                 <tr>
-                  <th class="text-center">
-                    <input type="checkbox" class="group_check checkbox" >
-                  </th>
-                  <th>Code</th>
-                  <th><?= $this->lang->line('image'); ?></th>
+                   <th class="text-center">
+                     <input type="checkbox" class="group_check checkbox" >
+                   </th>
+                   <th>ID</th>
+                   <th><?= $this->lang->line('image'); ?></th>
                   <th>Barcode</th>
                   <!-- <th><?= $this->lang->line('store_name'); ?></th> -->
                   <th><?= $this->lang->line('item_code'); ?></th>

@@ -408,6 +408,14 @@ class Sales extends MY_Controller {
 		echo get_salesmans_select_list(null,$_POST['store_id']);
 	}
 
+	public function get_departments_select_list(){
+		echo get_departments_select_list(null,$_POST['store_id']);
+	}
+
+	public function get_subcategories_select_list(){
+		echo get_subcategories_select_list(null,$_POST['store_id']);
+	}
+
 	public function return_quotation_list($quotation_id){
 		echo $this->sales->return_quotation_list($quotation_id);
 	}

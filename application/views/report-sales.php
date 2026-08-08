@@ -70,6 +70,46 @@
                                     <span id="salesman_id_msg" style="display:none" class="text-danger"></span>
                                  </div>
                               </div>
+
+                              <div class="form-group">
+                                 <label for="dptid" class="col-sm-2 control-label"><?= $this->lang->line('department'); ?></label>
+                                 <div class="col-sm-3">
+                                    <select class="form-control select2" id="dptid" name="dptid" style="width: 100%;">
+                                       <option value="">-All-</option>
+                                       <?= get_departments_select_list(null, get_current_store_id()); ?>
+                                    </select>
+                                    <span id="dptid_msg" style="display:none" class="text-danger"></span>
+                                 </div>
+
+                                 <label for="category_id" class="col-sm-2 control-label"><?= $this->lang->line('category'); ?></label>
+                                 <div class="col-sm-3">
+                                    <select class="form-control select2" id="category_id" name="category_id" style="width: 100%;">
+                                       <option value="">-All-</option>
+                                       <?= get_categories_select_list(null, get_current_store_id()); ?>
+                                    </select>
+                                    <span id="category_id_msg" style="display:none" class="text-danger"></span>
+                                 </div>
+                              </div>
+
+                              <div class="form-group">
+                                 <label for="scatid" class="col-sm-2 control-label"><?= $this->lang->line('subcategory'); ?></label>
+                                 <div class="col-sm-3">
+                                    <select class="form-control select2" id="scatid" name="scatid" style="width: 100%;">
+                                       <option value="">-All-</option>
+                                       <?= get_subcategories_select_list(null, get_current_store_id()); ?>
+                                    </select>
+                                    <span id="scatid_msg" style="display:none" class="text-danger"></span>
+                                 </div>
+
+                                 <label for="brand_id" class="col-sm-2 control-label"><?= $this->lang->line('brand'); ?></label>
+                                 <div class="col-sm-3">
+                                    <select class="form-control select2" id="brand_id" name="brand_id" style="width: 100%;">
+                                       <option value="">-All-</option>
+                                       <?= get_brands_select_list(null, get_current_store_id()); ?>
+                                    </select>
+                                    <span id="brand_id_msg" style="display:none" class="text-danger"></span>
+                                 </div>
+                              </div>
                               
                               <div class="form-group">
                                  <label for="from_date" class="col-sm-2 control-label"><?= $this->lang->line('from_date'); ?></label>
@@ -215,6 +255,22 @@
           $.post(base_url+"sales/get_salesmans_select_list",{store_id:store_id},function(result){
               result='<option value="">All</option>'+result;
               $("#salesman_id").html('').append(result).select2();
+          });
+          $.post(base_url+"sales/get_departments_select_list",{store_id:store_id},function(result){
+              result='<option value="">All</option>'+result;
+              $("#dptid").html('').append(result).select2();
+          });
+          $.post(base_url+"sales/get_categories_select_list",{store_id:store_id},function(result){
+              result='<option value="">All</option>'+result;
+              $("#category_id").html('').append(result).select2();
+          });
+          $.post(base_url+"sales/get_subcategories_select_list",{store_id:store_id},function(result){
+              result='<option value="">All</option>'+result;
+              $("#scatid").html('').append(result).select2();
+          });
+          $.post(base_url+"sales/get_brands_select_list",{store_id:store_id},function(result){
+              result='<option value="">All</option>'+result;
+              $("#brand_id").html('').append(result).select2();
           });
 
           load_users();

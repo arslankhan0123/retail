@@ -91,6 +91,32 @@ class Reports_model extends CI_Model {
 		$to_date = system_fromatted_date($to_date);
 
 
+		$sales_ids = array();
+		if(!empty($dptid) || !empty($category_id) || !empty($scatid) || !empty($brand_id)){
+			$this->db->select("distinct(si.sales_id)");
+			$this->db->from("db_salesitems si");
+			$this->db->join("db_items i", "i.id=si.item_id");
+			if(!empty($dptid)){
+				$this->db->where("i.dptid", $dptid);
+			}
+			if(!empty($category_id)){
+				$this->db->where("i.category_id", $category_id);
+			}
+			if(!empty($scatid)){
+				$this->db->where("i.scatid", $scatid);
+			}
+			if(!empty($brand_id)){
+				$this->db->where("i.brand_id", $brand_id);
+			}
+			$sales_ids_q = $this->db->get();
+			foreach($sales_ids_q->result() as $row){
+				$sales_ids[] = $row->sales_id;
+			}
+			if(empty($sales_ids)){
+				$sales_ids = array(0);
+			}
+		}
+
 		if(warehouse_module() && warehouse_count()>0 && !empty($warehouse_id)){
 				$this->db->where("a.warehouse_id",$warehouse_id);
 		}
@@ -100,6 +126,9 @@ class Reports_model extends CI_Model {
 		if($customer_id!=''){
 			
 			$this->db->where("a.customer_id=$customer_id");
+		}
+		if(!empty($dptid) || !empty($category_id) || !empty($scatid) || !empty($brand_id)){
+			$this->db->where_in("a.id", $sales_ids);
 		}
 		if(!empty($salesman_id)){
 			$this->db->where("a.salesman_id",$salesman_id);
@@ -599,31 +628,12 @@ class Reports_model extends CI_Model {
 	}
 	public function show_stock_report(){
 		extract($_POST);
-		
-		$item_ids = array();
-		if(!empty($salesman_id)){
-			$this->db->select("distinct(item_id)");
-			$this->db->from("db_salesitems si");
-			$this->db->join("db_sales s", "s.id=si.sales_id");
-			$this->db->where("s.salesman_id", $salesman_id);
-			$this->db->where("s.sales_status", "Final");
-			$item_ids_query = $this->db->get();
-			foreach($item_ids_query->result() as $row) {
-				$item_ids[] = $row->item_id;
-			}
-			if(empty($item_ids)){
-				$item_ids = array(0);
-			}
-		}
 
 		if(!empty($store_id)){
 			$this->db->where("a.store_id",$store_id);
 		}
 		if(!is_admin()){
 			$this->db->where("a.store_id",get_current_store_id());
-		}
-		if(!empty($salesman_id)){
-			$this->db->where_in("a.id", $item_ids);
 		}
 		$this->db->select("a.sales_price,a.item_code,a.purchase_price,a.item_name,a.tax_type,a.store_id,a.id as item_id,a.item_group,a.opening_stock,
 			d.category_name,
@@ -647,6 +657,12 @@ class Reports_model extends CI_Model {
 		}
 		if(!empty($category_id)){
 			$this->db->where("a.category_id",$category_id);
+		}
+		if(!empty($dptid)){
+			$this->db->where("a.dptid",$dptid);
+		}
+		if(!empty($scatid)){
+			$this->db->where("a.scatid",$scatid);
 		}
 
 		//echo $this->db->get_compiled_select();exit;

@@ -542,3 +542,48 @@ function get_salesmans_select_list($select_id='',$store_id=''){
         }
         return $str;
  }
+
+function get_departments_select_list($select_id='',$store_id=''){
+      $CI =& get_instance();
+      if(!empty($store_id)){
+        $CI->db->where('store_id',$store_id);
+      }
+      $q1=$CI->db->select('*')->where('status=1')->from('db_department')->get();
+      $str='';
+       if($q1->num_rows($q1)>0)
+        {  
+            $str='';
+            foreach($q1->result() as $res1)
+          { 
+            $selected = ($select_id==$res1->dptid)? 'selected' : '';
+            $str.="<option $selected value='".$res1->dptid."'>".$res1->dptName."</option>";
+          }
+        }
+        else
+        {
+            $str.='<option value="">No Records Found</option>'; 
+        }
+        return $str;
+ }
+function get_subcategories_select_list($select_id='',$store_id=''){
+      $CI =& get_instance();
+      if(!empty($store_id)){
+        $CI->db->where('store_id',$store_id);
+      }
+      $q1=$CI->db->select('*')->where('status=1')->from('db_subcategory')->get();
+      $str='';
+       if($q1->num_rows($q1)>0)
+        {  
+            $str='';
+            foreach($q1->result() as $res1)
+          { 
+            $selected = ($select_id==$res1->scatid)? 'selected' : '';
+            $str.="<option $selected value='".$res1->scatid."'>".$res1->scatName."</option>";
+          }
+        }
+        else
+        {
+            $str.='<option value="">No Records Found</option>'; 
+        }
+        return $str;
+ }

@@ -56,35 +56,43 @@
                                 </div>
 
                               <div class="form-group">
-                                 <label for="salesman_id" class="col-sm-2 control-label"><?= $this->lang->line('salesman'); ?></label>
+                                 <label for="dptid" class="col-sm-2 control-label"><?= $this->lang->line('department'); ?></label>
                                  <div class="col-sm-3">
-                                    <select class="form-control select2" id="salesman_id" name="salesman_id" style="width: 100%;">
+                                    <select class="form-control select2" id="dptid" name="dptid" style="width: 100%;">
                                        <option value="">-All-</option>
-                                       <?= get_salesmans_select_list(null, get_current_store_id()); ?>
+                                       <?= get_departments_select_list(null, get_current_store_id()); ?>
                                     </select>
-                                    <span id="salesman_id_msg" style="display:none" class="text-danger"></span>
-                                 </div>
-                              </div>
-
-                              <div class="form-group">
-                                 <label for="brand_id" class="col-sm-2 control-label"><?= $this->lang->line('brand'); ?></label>
-                                 <div class="col-sm-3">
-                                    <select class="form-control select2 " id="brand_id" name="brand_id"  style="width: 100%;">
-                                       <option value="">-Select-</option>
-                                       <?= get_brands_select_list();  ?>
-                                    </select>
-                                    <span id="brand_id_msg" style="display:none" class="text-danger"></span>
+                                    <span id="dptid_msg" style="display:none" class="text-danger"></span>
                                  </div>
 
                                  <label for="category_id" class="col-sm-2 control-label"><?= $this->lang->line('category'); ?></label>
                                  <div class="col-sm-3">
-                                    <select class="form-control select2 " id="category_id" name="category_id"  style="width: 100%;">
-                                       <option value="">-Select-</option>
-                                      <?= get_categories_select_list();  ?>
+                                    <select class="form-control select2" id="category_id" name="category_id" style="width: 100%;">
+                                       <option value="">-All-</option>
+                                       <?= get_categories_select_list(null, get_current_store_id()); ?>
                                     </select>
                                     <span id="category_id_msg" style="display:none" class="text-danger"></span>
                                  </div>
-                                 
+                              </div>
+
+                              <div class="form-group">
+                                 <label for="scatid" class="col-sm-2 control-label"><?= $this->lang->line('subcategory'); ?></label>
+                                 <div class="col-sm-3">
+                                    <select class="form-control select2" id="scatid" name="scatid" style="width: 100%;">
+                                       <option value="">-All-</option>
+                                       <?= get_subcategories_select_list(null, get_current_store_id()); ?>
+                                    </select>
+                                    <span id="scatid_msg" style="display:none" class="text-danger"></span>
+                                 </div>
+
+                                 <label for="brand_id" class="col-sm-2 control-label"><?= $this->lang->line('brand'); ?></label>
+                                 <div class="col-sm-3">
+                                    <select class="form-control select2" id="brand_id" name="brand_id" style="width: 100%;">
+                                       <option value="">-All-</option>
+                                       <?= get_brands_select_list(null, get_current_store_id()); ?>
+                                    </select>
+                                    <span id="brand_id_msg" style="display:none" class="text-danger"></span>
+                                 </div>
                               </div>
                            </div>
                            <!-- /.box-body -->
@@ -148,8 +156,10 @@
                                           <span class="info-box-text" style="font-weight: 600; text-transform: uppercase; font-size: 11px; margin-bottom: 2px;">Active Filters</span>
                                           <div style="font-size: 11px; line-height: 1.3;" id="card-filters">
                                              <div><strong>Wh:</strong> <span id="filt-wh">-</span></div>
+                                             <div><strong>Dept:</strong> <span id="filt-dept">-</span></div>
                                              <div><strong>Brand:</strong> <span id="filt-brand">-</span></div>
                                              <div><strong>Cat:</strong> <span id="filt-cat">-</span></div>
+                                             <div><strong>Subcat:</strong> <span id="filt-subcat">-</span></div>
                                           </div>
                                        </div>
                                     </div>
@@ -273,9 +283,10 @@
    var brand_id=$("#brand_id").val();
    var category_id=$("#category_id").val();
    var warehouse_id=$("#warehouse_id").val();
-   var salesman_id=$("#salesman_id").val();
+   var dptid=$("#dptid").val();
+   var scatid=$("#scatid").val();
    $(".box").append('<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>');
-        $.post(base_url+"reports/get_stock_report",{warehouse_id:warehouse_id,store_id:store_id,brand_id:brand_id,category_id:category_id,salesman_id:salesman_id},function(result){
+        $.post(base_url+"reports/get_stock_report",{warehouse_id:warehouse_id,store_id:store_id,brand_id:brand_id,category_id:category_id,dptid:dptid,scatid:scatid},function(result){
             result = $.parseJSON(result);
 
               $.each( result, function( key, val ) {
@@ -296,10 +307,14 @@
                     var whVal = $("#warehouse_id").val();
                     var brandVal = $("#brand_id").val();
                     var catVal = $("#category_id").val();
+                    var deptVal = $("#dptid").val();
+                    var scatVal = $("#scatid").val();
                     
                     $("#filt-wh").text(whVal ? $("#warehouse_id option:selected").text() : "");
                     $("#filt-brand").text(brandVal ? $("#brand_id option:selected").text() : "");
                     $("#filt-cat").text(catVal ? $("#category_id option:selected").text() : "");
+                    $("#filt-dept").text(deptVal ? $("#dptid option:selected").text() : "");
+                    $("#filt-subcat").text(scatVal ? $("#scatid option:selected").text() : "");
                     
                     $("#summary-cards").fadeIn();
                 }
@@ -316,7 +331,7 @@
     $("#view").on("click",function(){
       load_reports();
     });
-    $("#store_id,#warehouse_id,#salesman_id").on("change",function(){
+    $("#store_id,#warehouse_id,#dptid,#category_id,#scatid,#brand_id").on("change",function(){
       load_reports();
     });
 </script>
@@ -336,9 +351,13 @@
               load_brands_list();
               load_category_list();
           });
-          $.post(base_url+"sales/get_salesmans_select_list",{store_id:store_id},function(result){
+          $.post(base_url+"sales/get_departments_select_list",{store_id:store_id},function(result){
               result='<option value="">All</option>'+result;
-              $("#salesman_id").html('').append(result).select2();
+              $("#dptid").html('').append(result).select2();
+          });
+          $.post(base_url+"sales/get_subcategories_select_list",{store_id:store_id},function(result){
+              result='<option value="">All</option>'+result;
+              $("#scatid").html('').append(result).select2();
           });
         });
 

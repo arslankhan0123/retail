@@ -193,13 +193,15 @@ public function get_sub_bin_data()
 		$list = $this->items->get_datatables();
 		
 		$data = array();
-		$no = $_POST['start'];
+		$total_records = $this->items->count_filtered();
+		$start = isset($_POST['start']) ? $_POST['start'] : 0;
+		$no = $total_records - $start;
 		foreach ($list as $items) {
 			
-			$no++;
 			$row = array();
 			$row[] = '<input type="checkbox" name="checkbox[]" value='.$items->id.' class="checkbox column_checkbox" >';
 			$row[] = $no;
+			$no--;
 						
 
 			$row[] = (!empty($items->item_image)) ? "

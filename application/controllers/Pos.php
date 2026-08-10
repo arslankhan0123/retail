@@ -171,4 +171,14 @@ class Pos extends MY_Controller {
 		echo $this->pos_model->get_item_details($this->input->post('item_id'));
 	}
 
+	public function save_void_log(){
+		if(!$this->permissions('sales_add') && !$this->permissions('sales_edit')){
+			return $this->output->set_status_header(403)->set_output(json_encode(array('status'=>'error','message'=>'Access denied.')));
+		}
+		$response = $this->pos_model->save_void_log();
+		return $this->output->set_content_type('application/json')
+			->set_status_header($response['status']==='success' ? 200 : 422)
+			->set_output(json_encode($response));
+	}
+
 }

@@ -39,7 +39,7 @@
             <li class=""><a href="<?php echo $base_url; ?>items/" title="View Items List"><i class="fa  fa-cubes text-yellow " ></i> <span><?= $this->lang->line('items_list'); ?></span></a></li>
             <?php } ?>
             <?php if($CI->permissions('sales_add')) { ?>
-            <li class=""><a href="<?php echo $base_url; ?>pos" title="Create New POS Invoice"><i class="fa fa-calculator text-yellow " ></i> <span><?= $this->lang->line('new_invoice'); ?></span></a></li>
+            <li class=""><a id="new_pos_invoice" href="<?php echo $base_url; ?>pos" title="Create New POS Invoice"><i class="fa fa-calculator text-yellow " ></i> <span><?= $this->lang->line('new_invoice'); ?></span></a></li>
             <?php } ?>
           </ul>
         </div>
@@ -660,6 +660,11 @@
 
 //LEFT SIDE: ON CLICK ITEM ADD TO INVOICE LIST
 function addrow(id='',item_obj=''){
+    if(!$("#salesman_id").val()){
+        toastr["warning"]("Please Select Salesman first!!");
+        $("#salesman_id").select2("open");
+        return false;
+    }
 
     var item_id = (item_obj=='') ? $('#div_'+id).attr('data-item-id') : item_obj.item_id; 
 
@@ -836,11 +841,32 @@ function item_qty_input(item_id,rowcount){
   make_subtotal(item_id,rowcount);
 }
 //LEFT SIDE: REMOVE ROW 
-function removerow(id){//id=Rowid  
-    $("#row_"+id).remove();
-    failed.currentTime = 0;
-    failed.play();
-    final_total();
+function get_void_item(id){
+  return {
+    item_id: $("#tr_item_id_"+id).val(), qty: $("#item_qty_"+id).val(),
+    price: $("#sales_price_"+id).val(), disc: $("#item_discount_"+id).val(),
+    tax: $("#td_data_"+id+"_11").val(), subtotal: $("#td_data_"+id+"_4").val()
+  };
+}
+function save_void_items(items, delete_type, done){
+  $.ajax({
+    url: $("#base_url").val()+"pos/save_void_log", method: "POST", dataType: "json",
+    data: {items: JSON.stringify(items), delete_type: delete_type,
+      salesman_id: $("#salesman_id").val(), store_id: $("#store_id").val(),
+      warehouse_id: $("#warehouse_id").val(), invoice_no: $("#init_code").val()+$("#count_id").val()},
+    success: function(response){ done(response); },
+    error: function(xhr){
+      var response = xhr.responseJSON || {message:"Void log could not be saved."};
+      toastr["error"](response.message);
+    }
+  });
+}
+function removerow(id){//id=Rowid
+    if(!$("#row_"+id).length){ return; }
+    save_void_items([get_void_item(id)], "Single", function(){
+      $("#row_"+id).remove();
+      failed.currentTime = 0; failed.play(); final_total();
+    });
 }
 
 //MAKE SUBTOTAL

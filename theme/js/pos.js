@@ -647,6 +647,12 @@ $("#item_search").bind("paste", function(e){
 $("#item_search").autocomplete({
 	minLength: 0,
     source: function(data, cb){
+        if(!$("#salesman_id").val()){
+            toastr["warning"]("Please Select Salesman first!!");
+            $("#salesman_id").select2("open");
+            cb([]);
+            return;
+        }
         $.ajax({
         	autoFocus:true,
             url: $("#base_url").val()+'items/get_json_items_details',
@@ -756,6 +762,16 @@ $("#item_search").autocomplete({
             
         },   
         //loader end
+});
+
+$(document).on("click", "#new_pos_invoice", function(event){
+    var rows = $("#pos-form-tbody tr");
+    if(!rows.length){ return true; }
+    event.preventDefault();
+    var target = this.href;
+    var items = [];
+    rows.each(function(){ items.push(get_void_item(String(this.id).replace("row_", ""))); });
+    save_void_items(items, "Bulk", function(){ window.location.href = target; });
 });
 
 

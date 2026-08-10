@@ -3,6 +3,62 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Pos_model extends CI_Model {
 
+	private function ensure_void_log_tables(){
+		$this->db->query("CREATE TABLE IF NOT EXISTS db_voidlogs (
+			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, store_id INT NULL, warehouse_id INT NULL,
+			user_id INT NOT NULL, salesman_id INT NOT NULL, invoice_date DATE NOT NULL, invoice_time TIME NOT NULL,
+			invoice_no VARCHAR(100) NOT NULL, invoice_type ENUM('POS','Sale') NOT NULL DEFAULT 'POS',
+			delete_type ENUM('Single','Bulk') NOT NULL, created_at DATETIME NOT NULL,
+			PRIMARY KEY (id), KEY idx_void_invoice (invoice_no), KEY idx_void_salesman (salesman_id)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+		$this->db->query("CREATE TABLE IF NOT EXISTS db_voidlogitems (
+			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, void_log_id BIGINT UNSIGNED NOT NULL,
+			item_id INT NULL, barcode VARCHAR(100) NULL, item_code VARCHAR(100) NULL,
+			item_name VARCHAR(255) NOT NULL, qty DECIMAL(20,4) NOT NULL DEFAULT 0,
+			price DECIMAL(20,4) NOT NULL DEFAULT 0, disc DECIMAL(20,4) NOT NULL DEFAULT 0,
+			tax DECIMAL(20,4) NOT NULL DEFAULT 0, subtotal DECIMAL(20,4) NOT NULL DEFAULT 0,
+			PRIMARY KEY (id), KEY idx_voidlog_parent (void_log_id),
+			CONSTRAINT fk_voidlogitems_parent FOREIGN KEY (void_log_id) REFERENCES db_voidlogs (id) ON DELETE CASCADE
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+	}
+
+	public function save_void_log(){
+		$items = json_decode($this->input->post('items'), true);
+		$delete_type = $this->input->post('delete_type') === 'Bulk' ? 'Bulk' : 'Single';
+		$salesman_id = (int)$this->input->post('salesman_id');
+		if(!$salesman_id) return array('status'=>'error','message'=>'Please Select Salesman!!');
+		if(!is_array($items) || count($items)<1) return array('status'=>'error','message'=>'No item was supplied for void logging.');
+
+		$this->ensure_void_log_tables();
+		$this->db->trans_begin();
+		$this->db->insert('db_voidlogs', array(
+			'store_id'=>(int)$this->input->post('store_id'), 'warehouse_id'=>(int)$this->input->post('warehouse_id') ?: null,
+			'user_id'=>(int)$this->session->userdata('inv_userid'), 'salesman_id'=>$salesman_id,
+			'invoice_date'=>date('Y-m-d'), 'invoice_time'=>date('H:i:s'),
+			'invoice_no'=>$this->xss_html_filter($this->input->post('invoice_no')),
+			'invoice_type'=>'POS', 'delete_type'=>$delete_type, 'created_at'=>date('Y-m-d H:i:s')
+		));
+		$void_log_id = $this->db->insert_id();
+		foreach($items as $item){
+			$item_id = isset($item['item_id']) ? (int)$item['item_id'] : 0;
+			$master = $item_id ? $this->db->select('item_code,item_name,custom_barcode')->where('id',$item_id)->get('db_items')->row() : null;
+			$this->db->insert('db_voidlogitems', array(
+				'void_log_id'=>$void_log_id, 'item_id'=>$item_id ?: null,
+				'barcode'=>$master ? $master->custom_barcode : '', 'item_code'=>$master ? $master->item_code : '',
+				'item_name'=>$master ? $master->item_name : 'Unknown item',
+				'qty'=>(float)($item['qty'] ?? 0), 'price'=>(float)($item['price'] ?? 0),
+				'disc'=>(float)($item['disc'] ?? 0), 'tax'=>(float)($item['tax'] ?? 0),
+				'subtotal'=>(float)($item['subtotal'] ?? 0)
+			));
+		}
+		if($this->db->trans_status() === FALSE){
+			$this->db->trans_rollback();
+			return array('status'=>'error','message'=>'Void log could not be saved. Item(s) were not removed.');
+		}
+		$this->db->trans_commit();
+		return array('status'=>'success','message'=>'Void log saved.','void_log_id'=>$void_log_id);
+	}
+
 	public function inclusive($price='',$tax_per){
 		return ($tax_per!=0) ? $price/(($tax_per/100)+1)/10 : $tax_per;
 	}

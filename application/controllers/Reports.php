@@ -9,6 +9,36 @@ class Reports extends MY_Controller {
 		$this->load_global();
 		$this->load->model('reports_model','reports');
 	}
+
+	public function void_logs(){
+		$this->permission_check('sales_report');
+		$data=$this->data;
+		$data['page_title']='Void Logs Report';
+		$data['logs']=$this->db
+			->select('v.*, s.salesman_name, u.username, COUNT(i.id) AS item_count')
+			->from('db_voidlogs v')
+			->join('db_voidlogitems i','i.void_log_id=v.id','left')
+			->join('db_salesman s','s.id=v.salesman_id','left')
+			->join('db_users u','u.id=v.user_id','left')
+			->where('v.store_id',get_current_store_id())
+			->group_by('v.id')->order_by('v.id','DESC')->get()->result();
+		$this->load->view('report-void-logs',$data);
+	}
+
+	public function void_log_items($id){
+		$this->permission_check('sales_report');
+		$data=$this->data;
+		$data['page_title']='Void Log Items';
+		$data['log']=$this->db
+			->select('v.*, s.salesman_name, u.username')
+			->from('db_voidlogs v')
+			->join('db_salesman s','s.id=v.salesman_id','left')
+			->join('db_users u','u.id=v.user_id','left')
+			->where('v.id',(int)$id)->where('v.store_id',get_current_store_id())->get()->row();
+		if(!$data['log']) show_404();
+		$data['items']=$this->db->where('void_log_id',(int)$id)->order_by('id','ASC')->get('db_voidlogitems')->result();
+		$this->load->view('report-void-log-items',$data);
+	}
 	
 	
 	//Supplier Items Report 

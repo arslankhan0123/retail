@@ -1,544 +1,184 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Default Invoice Format</title>
-    <!-- TABLES CSS CODE -->
-    <?php include"comman/code_css.php"; ?>
-    <style type="text/css">
-    body {
-        font-family: arial;
-        font-size: 9px;
-        font-weight: normal;
-        padding-top: 15px;
+  <meta charset="utf-8">
+  <title>POS Tax Invoice</title>
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:#fff;color:#000}
+    body{font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:1.22}
+    .receipt{width:80mm;max-width:80mm;margin:0 auto;padding:4mm 5mm 5mm}
+    .center{text-align:center}.right{text-align:right}.bold{font-weight:700}
+    .store-logo{display:block;max-width:34mm;max-height:20mm;width:auto;height:auto;margin:0 auto 2px}
+    .store-name{font-size:11px;font-weight:700;text-transform:uppercase}
+    .rule{border:0;border-top:1px dashed #000;margin:5px 0}
+    .solid-rule{border:0;border-top:1px solid #000;margin:5px 0}
+    .invoice-meta{width:100%;border-collapse:collapse;font-size:9px}
+    .invoice-meta td{padding:0;white-space:nowrap}
+    .barcode{display:block;width:43mm;max-height:11mm;margin:3px auto 0;object-fit:fill}
+    .invoice-number{font-weight:700;margin-top:1px}
+    .items{width:100%;border-collapse:collapse;table-layout:fixed}
+    .items th{font-size:9px;text-align:left;border-top:1px dashed #000;border-bottom:1px dashed #000;padding:3px 1px}
+    .items td{vertical-align:top;padding:2px 1px}
+    .items .sl{width:7%}.items .description{width:47%}.items .qty{width:12%;text-align:center}
+    .items .price,.items .amount{width:17%;text-align:right}
+    .item-barcode{display:block;font-size:8px;margin-top:1px}
+    .summary,.details{width:100%;border-collapse:collapse}
+    .summary td{padding:1px 0}.summary .label{width:23%}.summary .value{width:27%;text-align:right;padding-right:5px}
+    .net-amount{text-align:center;font-size:18px;font-weight:700;padding:7px 0 4px}
+    .details td{width:50%;vertical-align:top;padding:0 3px 0 0}
+    .section-title{font-size:12px;font-weight:700;margin-bottom:3px}
+    .detail-row{display:grid;grid-template-columns:20mm minmax(0,1fr);align-items:baseline;font-size:8px;line-height:1.35;white-space:nowrap}
+    .detail-row span,.detail-row b{display:block;white-space:nowrap}
+    .policy-title{font-size:11px;font-weight:700;margin:12px 0 7px}
+    .policy{font-size:8px;white-space:pre-line}
+    .thank-you{font-size:9px;font-weight:700;margin:10px 0 5px}
+    .receipt-marks{display:flex;align-items:center;justify-content:center;gap:3mm;margin-top:7px}
+    .receipt-marks img{display:block;width:auto;height:auto;object-fit:contain}
+    .qr{max-width:18mm;max-height:18mm}
+    .paid-logo{max-width:25mm;max-height:20mm}
+    .print-button{display:block;width:55mm;margin:12px auto 0;padding:5px;border:0;background:#00a65a;color:#fff;cursor:pointer}
+    @media print{
+      @page{size:80mm auto;margin:0}
+      html,body,.receipt{width:80mm;max-width:80mm}
+      .receipt{margin:0;padding:3mm 4mm}
+      .no-print{display:none!important}
     }
-
-    hr {
-        margin-top: 3px;
-        margin-bottom: 3px;
-        border: none;
-        border-top: 1px solid #000;
-        color: #000;
-        background-color: #000;
-        height: 1px;
-    }
-
-    /* QR code size */
-    .qr-box img {
-        width: 150px;
-        height: auto;
-    }
-
-    @media print {
-
-        .qr-box img {
-            width: 130px;
-        }
-
-
-        @page {
-            margin: 0;
-        }
-
-        html,
-        body {
-            width: 80mm;
-            padding: 5mm 3mm;
-            box-sizing: border-box;
-        }
-
-        .no-print {
-            display: none !important;
-        }
-    }
-    </style>
+  </style>
 </head>
-
 <body onload="window.print();">
-    <!--  -->
-    <?php
-	$CI =& get_instance();
-	
-    
-  	$q3=$this->db->query("SELECT b.coupon_id,b.coupon_amt, b.created_by, b.customer_previous_due,b.customer_total_due,b.store_id,a.customer_name,a.mobile,a.phone,a.gstin,a.tax_number,a.email,a.delete_bit,b.invoice_terms,
-                           a.opening_balance,a.country_id,a.state_id,
-                           a.postcode,a.address,b.sales_date,b.created_time,b.reference_no,
-                           b.sales_code,b.sales_note,a.sales_due,
-                           coalesce(b.grand_total,0) as grand_total,
-                           coalesce(b.subtotal,0) as subtotal,
-                           coalesce(b.paid_amount,0) as paid_amount,
-                           coalesce(b.other_charges_input,0) as other_charges_input,
-                           other_charges_tax_id,
-                           coalesce(b.other_charges_amt,0) as other_charges_amt,
-                           discount_to_all_input,
-                           b.discount_to_all_type,
-                           coalesce(b.tot_discount_to_all_amt,0) as tot_discount_to_all_amt,
-                           coalesce(b.round_off,0) as round_off,
-                           b.payment_status
+<?php
+$sale = $this->db
+  ->select('s.*, c.customer_name')
+  ->from('db_sales s')
+  ->join('db_customers c','c.id=s.customer_id','left')
+  ->where('s.id',(int)$sales_id)->get()->row();
+$store = $this->db->where('id',$sale->store_id)->get('db_store')->row();
+$items = $this->db
+  ->select('si.*, i.item_name, i.item_code, i.custom_barcode, t.tax')
+  ->from('db_salesitems si')
+  ->join('db_items i','i.id=si.item_id','left')
+  ->join('db_tax t','t.id=si.tax_id','left')
+  ->where('si.sales_id',(int)$sales_id)->order_by('si.id','ASC')->get()->result();
+$payments = $this->db->where('sales_id',(int)$sales_id)->order_by('id','ASC')->get('db_salespayments')->result();
 
-                           FROM db_customers a,
-                           db_sales b 
-                           WHERE 
-                           a.`id`=b.`customer_id` AND 
-                           b.`id`='$sales_id' 
-                           ");
-                        
-    
-    $res3=$q3->row();
-    $customer_name=$res3->customer_name;
-    $customer_mobile=$res3->mobile;
-    $customer_phone=$res3->phone;
-    $customer_email=$res3->email;
-    $customer_country=$res3->country_id;
-    $customer_state=$res3->state_id;
-    $customer_address=$res3->address;
-    $customer_postcode=$res3->postcode;
-    $customer_gst_no=$res3->gstin;
-    $customer_tax_number=$res3->tax_number;
-    $customer_opening_balance=$res3->opening_balance;
-    $sales_date=show_date($res3->sales_date);
-    $reference_no=$res3->reference_no;
-    $created_time=show_time($res3->created_time);
-    $sales_code=$res3->sales_code;
-    $sales_note=$res3->sales_note;
-    $customer_delete_bit=$res3->delete_bit;
-   // $invoice_terms=nl2br($res3->invoice_terms);
+$store_logo = !empty($store->store_logo) ? $store->store_logo : store_demo_logo();
+$invoice_date = show_date($sale->sales_date);
+$invoice_time = show_time($sale->created_time);
+$item_subtotal = 0; $item_discount = 0; $tax_total = 0;
+foreach($items as $item){
+  $item_subtotal += (float)$item->price_per_unit * (float)$item->sales_qty;
+  $item_discount += (float)$item->discount_amt;
+  $tax_total += (float)$item->tax_amt;
+}
+$total_discount = $item_discount + (float)$sale->tot_discount_to_all_amt + (float)$sale->coupon_amt;
+$change_return = (float)get_change_return_amount($sales_id);
+$net_before_rounding = (float)$sale->grand_total - (float)$sale->round_off;
+$taxable_amount = max(0,$net_before_rounding-$tax_total);
+$tax_rates = array();
+foreach($items as $item){
+  $rate = (float)$item->tax;
+  if($rate>0) $tax_rates[(string)$rate] = $rate;
+}
+$tax_rate_text = count($tax_rates)===1 ? rtrim(rtrim(number_format(reset($tax_rates),2,'.',''),'0'),'.').'%' : (count($tax_rates)>1 ? 'Multiple' : '0%');
+$payment_names = array();
+foreach($payments as $payment){ if(!in_array($payment->payment_type,$payment_names,true)) $payment_names[]=$payment->payment_type; }
+$payment_text = $payment_names ? implode(', ',$payment_names) : '-';
+$received_amount = 0;
+foreach($payments as $payment) $received_amount += (float)$payment->payment;
+$received_amount += $change_return;
+$policy = !empty(trim($sale->invoice_terms)) ? html_entity_decode($sale->invoice_terms) : '';
+$footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($store->sales_invoice_footer_text) : 'THANK YOU FOR YOUR BUSINESS!';
+?>
+<main class="receipt">
+  <header class="center">
+    <?php if(!empty($store_logo)): ?><img class="store-logo" src="<?= base_url($store_logo); ?>" alt="Logo"><?php endif; ?>
+    <div class="store-name"><?= html_escape($store->store_name); ?></div>
+    <?php if(!empty($store->address)): ?><div><?= html_escape($store->address); ?></div><?php endif; ?>
+    <?php if(!empty($store->city)): ?><div><?= html_escape($store->city.(!empty($store->postcode) ? ', '.$store->postcode : '')); ?></div><?php endif; ?>
+    <?php if(!empty($store->mobile) || !empty($store->phone)): ?>
+      <div>Mobile: <?= html_escape(implode(', ',array_filter(array($store->mobile,$store->phone)))); ?></div>
+    <?php endif; ?>
+    <?php if(!empty($store->vat_no)): ?><div class="bold">TRN : <?= html_escape($store->vat_no); ?></div><?php endif; ?>
+  </header>
 
-    $previous_due=$res3->sales_due-($res3->grand_total-$res3->paid_amount);//$res3->customer_previous_due;
-    $previous_due = ($previous_due>0) ? $previous_due : 0;
-    $total_due=$res3->sales_due;//$res3->customer_total_due;
+  <hr class="rule">
+  <table class="invoice-meta">
+    <tr>
+      <td>Date : <?= html_escape($invoice_date); ?></td>
+      <td class="center bold">TAX INVOICE</td>
+      <td class="right">Time : <?= html_escape($invoice_time); ?></td>
+    </tr>
+  </table>
+  <img class="barcode" src="<?= base_url('barcode/index/'.rawurlencode($sale->sales_code)); ?>" alt="<?= html_escape($sale->sales_code); ?>">
+  <div class="invoice-number center"><?= html_escape($sale->sales_code); ?></div>
+  <hr class="rule">
 
-    $coupon_id=$res3->coupon_id;
-    $coupon_amt=$res3->coupon_amt;
+  <table class="items">
+    <thead><tr><th class="sl">SL</th><th class="description">Description</th><th class="qty">Qty</th><th class="price">Price</th><th class="amount">Amount</th></tr></thead>
+    <tbody>
+    <?php foreach($items as $index=>$item): ?>
+      <tr>
+        <td class="sl"><?= $index+1; ?></td>
+        <td class="description"><?= html_escape($item->item_name); ?>
+          <?php if(!empty($item->custom_barcode) || !empty($item->item_code)): ?>
+            <span class="item-barcode"><?= html_escape($item->custom_barcode ?: $item->item_code); ?></span>
+          <?php endif; ?>
+        </td>
+        <td class="qty"><?= format_qty($item->sales_qty); ?></td>
+        <td class="price"><?= store_number_format($item->price_per_unit); ?></td>
+        <td class="amount"><?= store_number_format($item->total_cost); ?></td>
+      </tr>
+    <?php endforeach; ?>
+    </tbody>
+  </table>
 
-    $coupon_code = '';
-    $coupon_type = '';
-    $coupon_value=0;
-    if(!empty($coupon_id)){
-    	$coupon_details =get_customer_coupon_details($coupon_id);
-    	$coupon_code =$coupon_details->code;
-    	$coupon_value =$coupon_details->value;
-    	$coupon_type =$coupon_details->type;
-    } 
+  <hr class="rule">
+  <table class="summary">
+    <tr>
+      <td class="label">Subtotal</td><td class="value"><?= store_number_format($item_subtotal); ?></td>
+      <td class="label">Discount</td><td class="value"><?= store_number_format($total_discount); ?></td>
+    </tr>
+    <tr>
+      <td class="label">Net Total</td><td class="value"><?= store_number_format($net_before_rounding); ?></td>
+      <td class="label">Rounding</td><td class="value"><?= store_number_format($sale->round_off); ?></td>
+    </tr>
+  </table>
+  <div class="net-amount">NET AMOUNT : <?= store_total_format($sale->grand_total); ?></div>
+  <hr class="solid-rule">
 
-    
-    $subtotal=$res3->subtotal;
-    $grand_total=$res3->grand_total;
-    $other_charges_input=$res3->other_charges_input;
-    $other_charges_tax_id=$res3->other_charges_tax_id;
-    $other_charges_amt=$res3->other_charges_amt;
-    $paid_amount=$res3->paid_amount;
-    $discount_to_all_input=$res3->discount_to_all_input;
-    $discount_to_all_type=$res3->discount_to_all_type;
-    //$discount_to_all_type = ($discount_to_all_type=='in_percentage') ? '%' : 'Fixed';
-    $tot_discount_to_all_amt=$res3->tot_discount_to_all_amt;
-    $round_off=$res3->round_off;
-    $payment_status=$res3->payment_status;
-    $store_details=get_store_details($res3->store_id);
+  <table class="details">
+    <tr>
+      <td>
+        <div class="section-title">Tender Details</div>
+        <div class="detail-row"><span>Payment Type</span><b>: <?= html_escape($payment_text); ?></b></div>
+        <div class="detail-row"><span>Received Amount</span><b>: <?= store_number_format($received_amount); ?></b></div>
+        <div class="detail-row"><span>Balance Amount</span><b>: <?= store_number_format($change_return); ?></b></div>
+      </td>
+      <td>
+        <div class="section-title">VAT Details</div>
+        <div class="detail-row"><span>Taxable Amount</span><b>: <?= store_number_format($taxable_amount); ?></b></div>
+        <div class="detail-row"><span>VAT Rate(s)</span><b>: <?= html_escape($tax_rate_text); ?></b></div>
+        <div class="detail-row"><span>VAT Amount</span><b>: <?= store_number_format($tax_total); ?></b></div>
+      </td>
+    </tr>
+  </table>
+  <hr class="rule">
 
-    // A POS sale can be paid using more than one payment type.
-    $payment_types = array();
-    $payments_query = $this->db
-        ->select('payment_type')
-        ->where('sales_id', $sales_id)
-        ->order_by('id', 'asc')
-        ->get('db_salespayments');
-    foreach($payments_query->result() as $payment){
-        $payment_type = trim($payment->payment_type);
-        if($payment_type !== '' && !in_array($payment_type, $payment_types, true)){
-            $payment_types[] = $payment_type;
-        }
-    }
-    $payment_types_text = !empty($payment_types) ? implode(', ', $payment_types) : '-';
-    $change_return_amount = (float) get_change_return_amount($sales_id);
-    
-    if($discount_to_all_input>0){
-    	$str="($discount_to_all_input%)";
-    }else{
-    	$str="(Fixed)";
-    }
+  <?php if($policy!==''): ?>
+    <div class="policy-title">RETURN &amp; EXCHANGE POLICY</div>
+    <div class="policy"><?= nl2br(html_escape($policy)); ?></div>
+    <hr class="rule">
+  <?php endif; ?>
 
+  <div class="thank-you center"><?= nl2br(html_escape($footer)); ?></div>
+  <div class="receipt-marks">
+    <div><?php if(!empty($store->qr_image)): ?><img class="qr" src="<?= base_url($store->qr_image); ?>" alt="QR Code"><?php endif; ?></div>
+    <div><img class="paid-logo" src="<?= base_url('uploads/paid2.png'); ?>" alt="Paid"></div>
+  </div>
 
-    if(!empty($customer_state)){
-      $q6 = $this->db->query("select state from db_states where id='$customer_state'");
-      if($q6->num_rows()>0){
-      	$customer_state = $q6->row()->state;
-      }
-    }
-
-    $overall_discounted = $tot_discount_to_all_amt + $coupon_amt;
-    // Keep the POS print totals consistent with the GST PDF invoice. For POS
-    // sales this column already contains the complete saved discount.
-    $invoice_discount_amt = (float) $tot_discount_to_all_amt;
-
-    $q1=$this->db->query("select * from db_store where id=".$res3->store_id." ");
-    $res1=$q1->row();
-    $store_name		=$res1->store_name;
-    $company_mobile		=$res1->mobile;
-    $company_phone		=$res1->phone;
-    $company_email		=$res1->email;
-    $company_country	=$res1->country;
-    $company_state		=$res1->state;
-    $company_city		=$res1->city;
-    $company_address	=$res1->address;
-    $company_postcode	=$res1->postcode;
-    $company_gst_no		=$res1->gst_no;//Goods and Service Tax Number (issued by govt.)
-    $company_vat_number		=$res1->vat_no;//Goods and Service Tax Number (issued by govt.)
-    $store_logo=(!empty($res1->store_logo)) ? $res1->store_logo : store_demo_logo();
-    $store_website		=$res1->store_website;
-    $mrp_column		=$res1->mrp_column;
-    $previous_balance_bit	=$res1->previous_balance_bit;
-    $pos_invoice_format_id	=$res1->pos_invoice_format_id;
-    $t_and_c_status_pos	=$res1->t_and_c_status_pos;
-
-
-    ?>
-    <table width="95%" align="center">
-        <tr>
-            <td align="center" width="100%">
-                <span>
-
-                    <!-- Dynamic header from DB - disabled, replaced with static AL KASIR info below
-
-                    <strong>TAX INVOICE</strong><br>
-                    <strong><?= $store_name; ?></strong><br>
-                    <?php echo (!empty(trim($company_address))) ? $this->lang->line('company_address')."".$company_address."<br>" : '';?>
-                    <?php echo (!empty(trim($company_gst_no)) && gst_number()) ? $this->lang->line('gst_number').": ".$company_gst_no."<br>" : '';?>
-                    <?php if(!empty(trim($company_mobile)))
-		            		{
-		            			echo 'Mob. No.'.": ".$company_mobile;
-		            			if(!empty($company_phone)){
-		            				echo ",".$company_phone;
-		            			}
-		            			echo "<br>";
-		            		}
-		            ?>
-                    <?php echo (!empty(trim($company_vat_number)) && vat_number()) ? $this->lang->line('vat_number').": ".$company_vat_number."<br>" : '';?>
-
-                    -->
-
-                    <!-- Dynamic Header -->
-                    <?php 
-                        $dynamic_store_name = strtoupper($store_name);
-                        $dynamic_store_name = str_replace('&AMP;', '&amp;', $dynamic_store_name);
-                        $dynamic_address = $company_address;
-                        if (!empty($company_city)) {
-                            $dynamic_address .= ', ' . $company_city;
-                        }
-                        $dynamic_phones = [];
-                        if(!empty($company_mobile)) $dynamic_phones[] = $company_mobile;
-                        if(!empty($company_phone)) $dynamic_phones[] = $company_phone;
-                        $dynamic_phone_str = implode(", ", $dynamic_phones);
-                    ?>
-                    <strong style="font-size: 22px;"><?= $dynamic_store_name ?></strong><br>
-                    <?php if(!empty($company_email)): ?>
-                        <strong style="font-size: 11px;">Email: <?= $company_email ?></strong><br>
-                    <?php endif; ?>
-                    <span style="font-weight: normal;"><?= $dynamic_address ?></span><br>
-                    <span style="font-weight: normal;">Mob.: <?= $dynamic_phone_str ?></span><br>
-                    <span style="font-weight: normal;">TRN: <?= $company_vat_number ?></span><br>
-                    <hr>
-                    <strong style="display: inline-block; margin-bottom: 6px;">TAX INVOICE</strong>
-
-                </span>
-            </td>
-        </tr>
-        <!-- empty spacer row disabled to minimize gap above bill details
-        <tr>
-            <td align="center">
-
-            </td>
-        </tr>
-        -->
-
-        <tr>
-            <td style="padding-top:0;padding-bottom:0;">
-                <table width="100%" cellpadding="0" cellspacing="0">
-                    <!-- Original bill info layout - disabled, replaced with screenshot layout below
-                    <tr>
-                        <td>Bill No.&nbsp; &nbsp; &nbsp;:<?= $sales_code; ?>
-                        </td>
-                        <td>Counter # &nbsp; : 1</td>
-                    </tr>
-                    <tr>
-                        <td>Bill Date&nbsp;&nbsp;:&nbsp;<?=$sales_date ?></td>
-                        <td>Bill Time&nbsp; &nbsp;:<?=$created_time ?></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->lang->line('name'); ?> &nbsp; &nbsp; &nbsp; &nbsp; :
-                            <?= $customer_name; ?></td>
-                        <td><?= $this->lang->line('seller'); ?> &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; :
-                            <?= ucfirst($res3->created_by) ?>
-                        </td>
-                    </tr>
-                    -->
-
-                    <!-- New bill info layout matching screenshot -->
-                    <tr>
-                        <td>Bill No.&nbsp;:&nbsp;<strong><?= $sales_code; ?></strong></td>
-                        <td align="right">Bill Date&nbsp;:&nbsp;<strong><?= $sales_date ?> <?= $created_time ?></strong></td>
-                    </tr>
-                    <tr>
-                        <td>Payment Types&nbsp;:&nbsp;<strong><?= html_escape($payment_types_text); ?></strong></td>
-                        <td align="right">Customer&nbsp;:&nbsp;<strong><?= $customer_name; ?></strong></td>
-                    </tr>
-                </table>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <table width="100%" cellpadding="0" cellspacing="0">
-                    <thead>
-                        <!-- Original header (lang-based) - disabled, replaced with screenshot labels below
-                        <tr style="border-top-style: dashed;border-bottom-style: dashed;border-width: 0.1px;">
-                            <th style="font-size: 11px; text-align: left;padding-left: 2px; padding-right: 2px;">#</th>
-                            <th style="font-size: 11px; text-align: left;padding-left: 2px; padding-right: 2px;">
-                                <?= $this->lang->line('description'); ?></th>
-
-                            <th style="font-size: 11px; text-align: center;padding-left: 2px; padding-right: 2px;">
-                                <?= $this->lang->line('quantity'); ?></th>
-                            <?php if($mrp_column){ ?>
-                            <th style="font-size: 11px; text-align: right;padding-left: 2px; padding-right: 2px;">
-                                <?= $this->lang->line('mrp'); ?></th>
-                            <?php  } ?>
-                            <th style="font-size: 11px; text-align: right;padding-left: 2px; padding-right: 2px;">
-                                <?= $this->lang->line('rate'); ?></th>
-                            <th style="font-size: 11px; text-align: right;padding-left: 2px; padding-right: 2px;">
-                                <?= $this->lang->line('total'); ?></th>
-                        </tr>
-                        -->
-
-                        <!-- Screenshot header labels: #, Item, Qty, Rate, Amt -->
-                        <tr style="border-top-style: dashed;border-bottom-style: dashed;border-width: 0.1px;">
-                            <th style="font-size: 11px; text-align: left;padding-left: 2px; padding-right: 2px;">#</th>
-                            <th style="font-size: 11px; text-align: left;padding-left: 2px; padding-right: 2px;">Item</th>
-                            <th style="font-size: 11px; text-align: center;padding-left: 2px; padding-right: 2px;">Qty</th>
-                            <?php if($mrp_column){ ?>
-                            <th style="font-size: 11px; text-align: right;padding-left: 2px; padding-right: 2px;">MRP</th>
-                            <?php  } ?>
-                            <th style="font-size: 11px; text-align: right;padding-left: 2px; padding-right: 2px;">Rate</th>
-                            <th style="font-size: 11px; text-align: right;padding-left: 2px; padding-right: 2px;">Amt</th>
-                        </tr>
-                    </thead>
-                    <tbody style="border-bottom-style: dashed;border-width: 0.1px;">
-                        <?php
-			              $i=0;
-			              $tot_qty=0;
-			              $subtotal=0;
-			              $tax_amt=0;
-			              $q2=$this->db->query("select b.mrp, b.item_name,a.sales_qty,a.unit_total_cost,a.price_per_unit,a.tax_amt,c.tax,a.total_cost,a.discount_amt
-                                from db_salesitems a
-                                left join db_items b on b.id=a.item_id
-                                left join db_tax c on c.id=a.tax_id
-                                where a.sales_id='$sales_id'");
-			              foreach ($q2->result() as $res2) {
-			                  echo "<tr>";  
-			                  echo "<td style='padding-left: 2px; padding-right: 2px;' valign='top'>".++$i."</td>";
-			                  echo "<td style='padding-left: 2px; padding-right: 2px;'>".$res2->item_name."</td>";
-			                  
-			                  echo "<td style='text-align: center;padding-left: 2px; padding-right: 2px;'>".format_qty($res2->sales_qty)."</td>";
-			                  if($mrp_column){
-			                  	echo "<td style='text-align: right;padding-left: 2px; padding-right: 2px;'>".store_number_format($res2->mrp)."</td>";
-			                  }
-			                  echo "<td style='text-align: right;padding-left: 2px; padding-right: 2px;'>".store_number_format($res2->unit_total_cost)."</td>";
-			                  echo "<td style='text-align: right;padding-left: 2px; padding-right: 2px;' >".store_number_format($res2->total_cost)."</td>";
-			                  echo "</tr>";  
-			                  //$tot_qty+=$res2->sales_qty;
-			                  // Same subtotal formula used by the GST PDF.
-			                  $subtotal+=($res2->price_per_unit * $res2->sales_qty);
-			                  $tax_amt+=$res2->tax_amt;
-			                  $overall_discounted+=$res2->discount_amt;
-			              }
-			              $before_tax = $subtotal-$tax_amt;
-
-
-
-			              ?>
-
-                    </tbody>
-                    <tfoot>
-                        <!-- Original totals layout - disabled, replaced with screenshot 2x2 grid + big Net Total below
-
-                        <tr>
-                            <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
-                                align="right"><?= $this->lang->line('before_tax'); ?></td>
-                            <td style=" padding-left: 2px; padding-right: 2px;" align="right">
-                                <?= store_number_format($before_tax);?></td>
-                        </tr>
-
-                        <?php if(get_store_details()->pos_invoice_format_id == 1){ ?>
-                        <tr>
-                            <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
-                                align="right"><?= $this->lang->line('tax_amount'); ?></td>
-                            <td style=" padding-left: 2px; padding-right: 2px;" align="right">
-                                <?= store_number_format($tax_amt);?></td>
-                        </tr>
-                        <?php } ?>
-
-                        <?php if(!empty($coupon_code)) {?>
-                        <tr>
-                            <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
-                                align="right"><?= $this->lang->line('couponDiscount'); ?></td>
-                            <td style=" padding-left: 2px; padding-right: 2px;" align="right">
-                                <?= store_number_format($coupon_amt); ?></td>
-                        </tr>
-                        <?php } ?>
-
-                        <?php if(!empty($tot_discount_to_all_amt) && $tot_discount_to_all_amt!=0) {?>
-                        <tr>
-                            <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
-                                align="right"><?= $this->lang->line('discount'); ?></td>
-                            <td style=" padding-left: 2px; padding-right: 2px;" align="right">
-                                <?= store_number_format($tot_discount_to_all_amt); ?></td>
-                        </tr>
-                        <?php } ?>
-
-                        <tr>
-                            <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
-                                align="right"><?= $this->lang->line('total'); ?></td>
-                            <td style=" padding-left: 2px; padding-right: 2px;" align="right">
-<?= store_total_format($grand_total); ?></td>
-                        </tr>
-                        <tr>
-                            <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
-                                align="right"><?= $this->lang->line('tot_discounted_amt'); ?></td>
-                            <td style=" padding-left: 2px; padding-right: 2px;" align="right">
-                                <?= store_number_format($overall_discounted); ?></td>
-                        </tr>
-
-                        <?php if(change_return_status()) {
-                            $change_return_amount = get_change_return_amount($sales_id); ?>
-                        <tr>
-                            <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
-                                align="right"><?= $this->lang->line('paid_amount'); ?></td>
-                            <td style=" padding-left: 2px; padding-right: 2px;" align="right">
-<?= store_total_format($paid_amount+$change_return_amount); ?></td>
-                        </tr>
-                        <tr>
-                            <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
-                                align="right"><?= $this->lang->line('refund'); ?></td>
-                            <td style=" padding-left: 2px; padding-right: 2px;" align="right">
-                                <?= store_number_format($change_return_amount); ?></td>
-                        </tr>
-                        <?php } else { ?>
-                        <tr>
-                            <td style=" padding-left: 2px; padding-right: 2px;" colspan="<?=$mrp_column+4?>"
-                                align="right"><?= $this->lang->line('paid_amount'); ?></td>
-                            <td style=" padding-left: 2px; padding-right: 2px;" align="right">
-<?= store_total_format($paid_amount); ?></td>
-                        </tr>
-                        <?php } ?>
-
-                        -->
-
-                        <!-- Use the same totals and formulas as the GST PDF invoice. -->
-                        <tr>
-                            <td colspan="<?=$mrp_column+5?>" style="padding-top: 4px;">
-                                <table width="100%" style="border-collapse: collapse;">
-                                    <tr>
-                                        <td style="padding: 2px;">Sub Total&nbsp;:&nbsp;<strong><?= store_number_format($subtotal); ?></strong></td>
-                                        <td style="padding: 2px;" align="right">Discount&nbsp;:&nbsp;<strong><?= store_number_format($invoice_discount_amt); ?></strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 2px;">VAT (5%)&nbsp;:&nbsp;<strong><?= store_number_format($tax_amt); ?></strong></td>
-                                        <td style="padding: 2px;" align="right">Change&nbsp;:&nbsp;<strong><?= store_number_format($change_return_amount); ?></strong></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="<?=$mrp_column+5?>" align="center" style="padding-top: 6px; padding-bottom: 4px;">
-<span style="font-size: 22px; font-weight: bold;">Net Total&nbsp;:&nbsp;<?= store_total_format($grand_total); ?></span>
-<?php if(show_number_to_words_pos()){ ?><br><span>Amount in Words: <?= no_to_words(round_off_amount($grand_total)); ?></span><?php } ?>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="<?=$mrp_column+5?>"><hr></td>
-                        </tr>
-
-                        <?php if($previous_balance_bit==1) {?>
-
-                        <?php } ?>
-                        <?php if(!empty($coupon_code)) {?>
-                        <tr>
-                            <td colspan="<?=$mrp_column+5?>" align="left">
-                                <b><?= $this->lang->line('couponCode'); ?>:</b>
-                                <i><?=getTruncatedCCNumber($coupon_code);?></i>
-                            </td>
-                        </tr>
-                        <?php }?>
-                        <?php
-						if($t_and_c_status_pos){ ?>
-                        <tr>
-                            <td colspan="<?=$mrp_column+5?>" align="left">
-                                &nbsp;
-                            </td>
-                        </tr>
-
-                        <?php }
-					 ?>
-
-                        <tr>
-                            <td colspan="<?=$mrp_column+5?>" align="center" style="padding:0;">
-                                <?php
-								/* Dynamic WhatsApp QR code generation - disabled, replaced with static QR image below
-
-									// Build the WhatsApp message with the bill details
-								$wa_message  = "Request for Customer Support *Al Kasir*".PHP_EOL.PHP_EOL;
-								// monospace block (```) so the columns line up
-								$wa_message .= "```".PHP_EOL;
-								$wa_message .= str_pad("Bill Number", 11)." : ".$sales_code.PHP_EOL;
-								$wa_message .= str_pad("Date & Time", 11)." : ".$sales_date." ".$created_time.PHP_EOL;
-$wa_message .= str_pad("Bill Amount", 11)." : ".store_total_format($grand_total).PHP_EOL;
-								$wa_message .= str_pad("Tax Amount", 11)." : ".store_number_format($tax_amt).PHP_EOL;
-								$wa_message .= "```".PHP_EOL.PHP_EOL;
-								$wa_message .= "Thank you!";
-
-								// WhatsApp click-to-chat link
-								$whatsapp_link = "https://api.whatsapp.com/send?phone=971556173300&text=".rawurlencode($wa_message);
-
-								// qr_image() base64-decodes its input, so encode it (URL-safe)
-								$qr_data = str_replace('=', '-', str_replace('/', '_', base64_encode($whatsapp_link)));
-
-									echo $CI->print_qr($qr_data);
-								*/
-						?>
-                                <!-- Static QR code image -->
-                                <?php if(!empty($res1->qr_image)): ?>
-                                <div class="qr-box" style="display:inline-block;vertical-align:middle;line-height:0 !important;font-size:0;"><img src="<?= base_url($res1->qr_image); ?>" alt="QR Code"></div>
-                                <?php endif; ?>
-
-                            </td>
-                        </tr>
-
-                    </tfoot>
-                </table>
-            </td>
-        </tr>
-    </table>
-    <?php if(!empty($store_details->sales_invoice_footer_text)){ ?>
-    <div style="text-align:center; margin-top:20px; font-weight:bold; font-size:16px;">
-        <?= nl2br(html_entity_decode($store_details->sales_invoice_footer_text)); ?>
-    </div>
-    <?php } ?>
-    <center>
-        <div class="row no-print">
-            <div class="col-md-12">
-                <div class="col-md-2 col-md-offset-5 col-xs-4 col-xs-offset-4 form-group">
-                    <button type="button" id="" class="btn btn-block btn-success btn-xs" onclick="window.print();"
-                        title="Print">Print</button>
-                    <?php if(isset($_GET['redirect'])){ ?>
-                    <a href="<?= base_url().$_GET['redirect'];?>"><button type="button"
-                            class="btn btn-block btn-danger btn-xs" title="Back">Back</button></a>
-                    <?php } ?>
-                </div>
-            </div>
-        </div>
-
-    </center>
+  <button type="button" class="print-button no-print" onclick="window.print()">Print</button>
+  <?php if(isset($_GET['redirect'])): ?><div class="center no-print"><a href="<?= base_url($_GET['redirect']); ?>">Back</a></div><?php endif; ?>
+</main>
 </body>
-
 </html>

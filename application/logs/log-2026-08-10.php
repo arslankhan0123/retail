@@ -4,3 +4,5 @@ ERROR - 2026-08-10 19:00:12 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-08-10 19:01:58 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-08-10 19:05:04 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-08-10 19:18:52 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-08-10 23:30:30 --> Could not find the language line "company_address"
+ERROR - 2026-08-10 19:31:58 --> 404 Page Not Found: Faviconico/index

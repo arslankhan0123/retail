@@ -507,7 +507,7 @@
                                                    <div class="col-sm-4">
                                                       <select class="form-control select2" id="sales_invoice_format_id" name="sales_invoice_format_id"  style="width: 100%;">
                                                          <option value="3">Default</option>
-                                                         <option value="4">GST Format</option>
+                                                         <option value="4">FTA Format</option>
                                                       </select>
                                                       <span id="sales_invoice_format_id_msg" style="display:none" class="text-danger"></span>
                                                    </div>
@@ -519,7 +519,7 @@
                                                    <div class="col-sm-4">
                                                       <select class="form-control select2" id="pos_invoice_format_id" name="pos_invoice_format_id"  style="width: 100%;">
                                                          <option value="1">Default</option>
-                                                         <option value="2">GST Format</option>
+                                                         <option value="2">FTA Format</option>
                                                       </select>
                                                       <span id="pos_invoice_format_id_msg" style="display:none" class="text-danger"></span>
                                                    </div>

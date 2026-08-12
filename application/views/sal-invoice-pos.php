@@ -15,8 +15,8 @@
     .solid-rule{border:0;border-top:1px solid #000;margin:5px 0}
     .invoice-meta{width:100%;border-collapse:collapse;font-size:9px}
     .invoice-meta td{padding:0;white-space:nowrap}
-    .barcode{display:block;width:43mm;max-height:11mm;margin:3px auto 0;object-fit:fill}
-    .invoice-number{font-weight:700;margin-top:1px}
+    .barcode{display:block;width:55mm;height:auto;max-height:15mm;margin:3px auto 0;object-fit:fill}
+    .barcode-number{text-align:center;font-size:10px;font-weight:700;line-height:1;margin:1px 0 3px}
     .items{width:100%;border-collapse:collapse;table-layout:fixed}
     .items th{font-size:9px;text-align:left;border-top:1px dashed #000;border-bottom:1px dashed #000;padding:3px 1px}
     .items td{vertical-align:top;padding:2px 1px}
@@ -24,16 +24,20 @@
     .items .price,.items .amount{width:17%;text-align:right}
     .item-barcode{display:block;font-size:8px;margin-top:1px}
     .summary,.details{width:100%;border-collapse:collapse}
-    .summary td{padding:1px 0}.summary .label{width:23%}.summary .value{width:27%;text-align:right;padding-right:5px}
+    .summary td{padding:1px 0}.summary .label{width:65%}.summary .value{width:35%;text-align:right;padding-right:5px}
     .net-amount{text-align:center;font-size:18px;font-weight:700;padding:7px 0 4px}
     .details td{width:50%;vertical-align:top;padding:0 3px 0 0}
     .section-title{font-size:12px;font-weight:700;margin-bottom:3px}
     .detail-row{display:grid;grid-template-columns:20mm minmax(0,1fr);align-items:baseline;font-size:8px;line-height:1.35;white-space:nowrap}
     .detail-row span,.detail-row b{display:block;white-space:nowrap}
+    .details td.vat-details{text-align:left;padding-left:5.5mm;padding-right:0}
+    .vat-details .section-title{text-align:center}
+    .vat-details .detail-row{grid-template-columns:21mm minmax(0,1fr)}
+    .vat-details .detail-row span{text-align:right;padding-right:1mm}
     .policy-title{font-size:11px;font-weight:700;margin:12px 0 7px}
     .policy{font-size:8px;white-space:pre-line}
     .thank-you{font-size:9px;font-weight:700;margin:10px 0 5px}
-    .receipt-marks{display:flex;align-items:center;justify-content:center;gap:3mm;margin-top:7px}
+    .receipt-marks{display:flex;width:100%;align-items:center;justify-content:center;gap:10mm;margin-top:7px}
     .receipt-marks img{display:block;width:auto;height:auto;object-fit:contain}
     .qr{max-width:18mm;max-height:18mm}
     .paid-logo{max-width:25mm;max-height:20mm}
@@ -64,7 +68,8 @@ $payments = $this->db->where('sales_id',(int)$sales_id)->order_by('id','ASC')->g
 
 $store_logo = !empty($store->store_logo) ? $store->store_logo : store_demo_logo();
 $invoice_date = show_date($sale->sales_date);
-$invoice_time = show_time($sale->created_time);
+$invoice_time_value = strtotime($sale->created_time);
+$invoice_time = $invoice_time_value !== false ? date('h:i:s A', $invoice_time_value) : $sale->created_time;
 $item_subtotal = 0; $item_discount = 0; $tax_total = 0;
 foreach($items as $item){
   $item_subtotal += (float)$item->price_per_unit * (float)$item->sales_qty;
@@ -87,7 +92,12 @@ $payment_text = $payment_names ? implode(', ',$payment_names) : '-';
 $received_amount = 0;
 foreach($payments as $payment) $received_amount += (float)$payment->payment;
 $received_amount += $change_return;
-$policy = !empty(trim($sale->invoice_terms)) ? html_entity_decode($sale->invoice_terms) : '';
+$policy = '';
+if((int)$store->t_and_c_status_pos === 1 && !empty(trim($store->invoice_terms))){
+  $policy = html_entity_decode($store->invoice_terms);
+  $policy = preg_replace('/<br\s*\/?>/i', "\n", $policy);
+  $policy = trim(strip_tags($policy));
+}
 $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($store->sales_invoice_footer_text) : 'THANK YOU FOR YOUR BUSINESS!';
 ?>
 <main class="receipt">
@@ -96,8 +106,8 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
     <div class="store-name"><?= html_escape($store->store_name); ?></div>
     <?php if(!empty($store->address)): ?><div><?= html_escape($store->address); ?></div><?php endif; ?>
     <?php if(!empty($store->city)): ?><div><?= html_escape($store->city.(!empty($store->postcode) ? ', '.$store->postcode : '')); ?></div><?php endif; ?>
-    <?php if(!empty($store->mobile) || !empty($store->phone)): ?>
-      <div>Mobile: <?= html_escape(implode(', ',array_filter(array($store->mobile,$store->phone)))); ?></div>
+    <?php if(!empty($store->mobile)): ?>
+      <div>Mobile: <?= html_escape($store->mobile); ?></div>
     <?php endif; ?>
     <?php if(!empty($store->vat_no)): ?><div class="bold">TRN : <?= html_escape($store->vat_no); ?></div><?php endif; ?>
   </header>
@@ -110,8 +120,8 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
       <td class="right">Time : <?= html_escape($invoice_time); ?></td>
     </tr>
   </table>
-  <img class="barcode" src="<?= base_url('barcode/index/'.rawurlencode($sale->sales_code)); ?>" alt="<?= html_escape($sale->sales_code); ?>">
-  <div class="invoice-number center"><?= html_escape($sale->sales_code); ?></div>
+  <img class="barcode" src="<?= base_url('barcode/index/'.rawurlencode($sale->count_id)).'?compact=1'; ?>" alt="<?= html_escape($sale->count_id); ?>">
+  <div class="barcode-number"><?= html_escape($sale->count_id); ?></div>
   <hr class="rule">
 
   <table class="items">
@@ -121,11 +131,11 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
       <tr>
         <td class="sl"><?= $index+1; ?></td>
         <td class="description"><?= html_escape($item->item_name); ?>
-          <?php if(!empty($item->custom_barcode) || !empty($item->item_code)): ?>
-            <span class="item-barcode"><?= html_escape($item->custom_barcode ?: $item->item_code); ?></span>
+          <?php if(!empty($item->custom_barcode)): ?>
+            <span class="item-barcode"><?= html_escape($item->custom_barcode); ?></span>
           <?php endif; ?>
         </td>
-        <td class="qty"><?= format_qty($item->sales_qty); ?></td>
+        <td class="qty"><?= number_format((float)$item->sales_qty, 0, '.', ''); ?></td>
         <td class="price"><?= store_number_format($item->price_per_unit); ?></td>
         <td class="amount"><?= store_number_format($item->total_cost); ?></td>
       </tr>
@@ -135,14 +145,10 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
 
   <hr class="rule">
   <table class="summary">
-    <tr>
-      <td class="label">Subtotal</td><td class="value"><?= store_number_format($item_subtotal); ?></td>
-      <td class="label">Discount</td><td class="value"><?= store_number_format($total_discount); ?></td>
-    </tr>
-    <tr>
-      <td class="label">Net Total</td><td class="value"><?= store_number_format($net_before_rounding); ?></td>
-      <td class="label">Rounding</td><td class="value"><?= store_number_format($sale->round_off); ?></td>
-    </tr>
+    <tr><td class="label">Subtotal</td><td class="value"><?= store_number_format($item_subtotal); ?></td></tr>
+    <tr><td class="label">Discount</td><td class="value"><?= store_number_format($total_discount); ?></td></tr>
+    <tr><td class="label">Net Total</td><td class="value"><?= store_number_format($net_before_rounding); ?></td></tr>
+    <tr><td class="label">Rounding</td><td class="value"><?= store_number_format($sale->round_off); ?></td></tr>
   </table>
   <div class="net-amount">NET AMOUNT : <?= store_total_format($sale->grand_total); ?></div>
   <hr class="solid-rule">
@@ -155,7 +161,7 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
         <div class="detail-row"><span>Received Amount</span><b>: <?= store_number_format($received_amount); ?></b></div>
         <div class="detail-row"><span>Balance Amount</span><b>: <?= store_number_format($change_return); ?></b></div>
       </td>
-      <td>
+      <td class="vat-details">
         <div class="section-title">VAT Details</div>
         <div class="detail-row"><span>Taxable Amount</span><b>: <?= store_number_format($taxable_amount); ?></b></div>
         <div class="detail-row"><span>VAT Rate(s)</span><b>: <?= html_escape($tax_rate_text); ?></b></div>

@@ -12,6 +12,7 @@ class Barcode extends CI_Controller {
     function index($input){
 		
 		$rendererOptions = array();
+		$compactText = $this->input->get('compact') === '1';
 		
 		Laminas_barcode::render(
 				    'code128',
@@ -24,8 +25,8 @@ class Barcode extends CI_Controller {
 				        'barThinWidth' => 2,
 				        'factor' => 1.8,
 				        'withQuietZones' => true,
-				        'drawText' => true,
-				        'stretchText' => true,
+				        'drawText' => !$compactText,
+				        'stretchText' => !$compactText,
 				    ]
 		); // will use the 3rd GD internal font
 

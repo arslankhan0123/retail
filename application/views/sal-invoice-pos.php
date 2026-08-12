@@ -10,7 +10,7 @@
     .receipt{width:80mm;max-width:80mm;margin:0 auto;padding:4mm 5mm 5mm}
     .center{text-align:center}.right{text-align:right}.bold{font-weight:700}
     .store-logo{display:block;max-width:34mm;max-height:20mm;width:auto;height:auto;margin:0 auto 2px}
-    .store-name{font-size:11px;font-weight:700;text-transform:uppercase}
+    .store-name{font-size:9px;font-weight:900;text-transform:uppercase;white-space:nowrap}
     .rule{border:0;border-top:1px dashed #000;margin:5px 0}
     .solid-rule{border:0;border-top:1px solid #000;margin:5px 0}
     .invoice-meta{width:100%;border-collapse:collapse;font-size:9px}
@@ -35,7 +35,7 @@
     .vat-details .detail-row{grid-template-columns:21mm minmax(0,1fr)}
     .vat-details .detail-row span{text-align:right;padding-right:1mm}
     .policy-title{font-size:11px;font-weight:700;margin:12px 0 7px}
-    .policy{font-size:8px;white-space:pre-line}
+    .policy{font-size:8px;line-height:1.2;white-space:pre-line}
     .thank-you{font-size:9px;font-weight:700;margin:10px 0 5px}
     .receipt-marks{display:flex;width:100%;align-items:center;justify-content:center;gap:10mm;margin-top:7px}
     .receipt-marks img{display:block;width:auto;height:auto;object-fit:contain}
@@ -58,6 +58,11 @@ $sale = $this->db
   ->join('db_customers c','c.id=s.customer_id','left')
   ->where('s.id',(int)$sales_id)->get()->row();
 $store = $this->db->where('id',$sale->store_id)->get('db_store')->row();
+$store_location = array_filter(array(
+  trim((string)$store->city),
+  trim((string)$store->state),
+  trim((string)$store->country)
+));
 $items = $this->db
   ->select('si.*, i.item_name, i.item_code, i.custom_barcode, t.tax')
   ->from('db_salesitems si')
@@ -67,6 +72,7 @@ $items = $this->db
 $payments = $this->db->where('sales_id',(int)$sales_id)->order_by('id','ASC')->get('db_salespayments')->result();
 
 $store_logo = !empty($store->store_logo) ? $store->store_logo : store_demo_logo();
+$store_name = html_entity_decode((string)$store->store_name, ENT_QUOTES, 'UTF-8');
 $invoice_date = show_date($sale->sales_date);
 $invoice_time_value = strtotime($sale->created_time);
 $invoice_time = $invoice_time_value !== false ? date('h:i:s A', $invoice_time_value) : $sale->created_time;
@@ -103,9 +109,9 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
 <main class="receipt">
   <header class="center">
     <?php if(!empty($store_logo)): ?><img class="store-logo" src="<?= base_url($store_logo); ?>" alt="Logo"><?php endif; ?>
-    <div class="store-name"><?= html_escape($store->store_name); ?></div>
+    <div class="store-name"><?= html_escape($store_name); ?></div>
     <?php if(!empty($store->address)): ?><div><?= html_escape($store->address); ?></div><?php endif; ?>
-    <?php if(!empty($store->city)): ?><div><?= html_escape($store->city.(!empty($store->postcode) ? ', '.$store->postcode : '')); ?></div><?php endif; ?>
+    <?php if(!empty($store_location)): ?><div><?= html_escape(implode(', ', $store_location)); ?></div><?php endif; ?>
     <?php if(!empty($store->mobile)): ?>
       <div>Mobile: <?= html_escape($store->mobile); ?></div>
     <?php endif; ?>
@@ -173,7 +179,7 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
 
   <?php if($policy!==''): ?>
     <div class="policy-title">RETURN &amp; EXCHANGE POLICY</div>
-    <div class="policy"><?= nl2br(html_escape($policy)); ?></div>
+    <div class="policy"><?= html_escape($policy); ?></div>
     <hr class="rule">
   <?php endif; ?>
 

@@ -12,13 +12,13 @@
 		public function index(){
 			$this->permission_check('warehouse_view');
 			$data=$this->data;//My_Controller constructor data accessed here
-			$data['page_title']='Branch List';
+			$data['page_title']='Store List';
 			$this->load->view('warehouse/warehouse-list',$data);
 		}
 		public function save_or_update(){
 			
 			$data=$this->data;//My_Controller constructor data accessed here
-			$this->form_validation->set_rules('warehouse_name', 'Warehouse Name', 'required|trim');
+			$this->form_validation->set_rules('warehouse_name', 'Store Name', 'required|trim');
 			
 			if ($this->form_validation->run() == TRUE) {
 				if($this->input->post('command')=='save'){
@@ -39,8 +39,7 @@
 		public function add(){
 			$this->permission_check('warehouse_add');
 			$data=$this->data;//My_Controller constructor data accessed here
-			$data['page_title']='Create/Update Branch';
-			$data['page_title']='Branch';
+			$data['page_title']='Store';
 			$this->load->view('warehouse/warehouse',$data);
 		}
 		public function status_update(){
@@ -55,7 +54,7 @@
 			$this->belong_to('db_warehouse',$id);
 			$this->permission_check('warehouse_edit');
 			$data=$this->warehouse->get_details($id);
-			$data['page_title']='Warehouse';
+			$data['page_title']='Store';
 			$this->load->view('warehouse/warehouse', $data);
 		}
 		public function delete_warehouse(){

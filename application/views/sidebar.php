@@ -921,19 +921,19 @@ $CI = &get_instance();
 
           <li class="warehouse-active-li warehouse-list-active-li  treeview">
             <a href="#">
-              <i class="fa fa-building-o text-aqua"></i> <span>Warehouse</span>
+              <i class="fa fa-building-o text-aqua"></i> <span>Store</span>
               <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
             </a>
             <ul class="treeview-menu">
               <?php if ($CI->permissions('warehouse_add')) { ?>
-                <li class="warehouse-active-li"><a href="<?php echo $base_url; ?>warehouse/add"><i class="fa fa-plus-square-o "></i> <span>Add Warehouse</span>
+                <li class="warehouse-active-li"><a href="<?php echo $base_url; ?>warehouse/add"><i class="fa fa-plus-square-o "></i> <span>Add Store</span>
                   </a></li>
               <?php } ?>
 
               <?php if ($CI->permissions('warehouse_view')) { ?>
-                <li class="warehouse-list-active-li"><a href="<?php echo $base_url; ?>warehouse"><i class="fa fa-list "></i> <span>Warehouse List</span></a></li>
+                <li class="warehouse-list-active-li"><a href="<?php echo $base_url; ?>warehouse"><i class="fa fa-list "></i> <span>Store List</span></a></li>
               <?php } ?>
             </ul>
           </li>

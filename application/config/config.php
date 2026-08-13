@@ -383,7 +383,8 @@ $config['encryption_key'] = '';
 */
 $config['sess_driver'] = 'database';
 $config['sess_cookie_name'] = 'v10_session';
-$config['sess_expiration'] = 7200;
+// Keep users signed in for up to one year unless they log out manually.
+$config['sess_expiration'] = 31536000;
 $config['sess_save_path'] = "ci_sessions";
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;

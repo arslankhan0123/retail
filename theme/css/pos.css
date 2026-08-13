@@ -197,15 +197,67 @@
     margin-bottom: 8px;
 }
 
+.hold-list-menu .hold-invoice-badge {
+    background: #ffc107 !important;
+    color: #5b4300 !important;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(255, 193, 7, .4);
+}
+
+.hold-list-menu .hold-list-dropdown {
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(26, 83, 120, .28);
+}
+
+.hold-list-menu .user-body {
+    padding: 12px;
+    background: linear-gradient(135deg, #eef9ff, #fff8df);
+}
+
+.hold-list-menu .hold-list-table {
+    margin: 0;
+    background: #fff;
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+.hold-list-menu .hold-list-table thead th {
+    padding: 10px 8px;
+    border-color: #38a9d8;
+    background: #29abe2;
+    color: #fff;
+    text-align: center;
+}
+
+.hold-list-menu .hold-list-table tbody td {
+    padding: 9px 8px;
+    border-color: #dcecf3;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.hold-list-menu .hold-list-table tbody tr:nth-child(even) {
+    background: #f5fbfe;
+}
+
+.hold-list-menu .hold-list-table tbody tr:hover {
+    background: #fff4c4;
+}
+
 /* Cash checkout uses a focused, wider summary card without empty form space. */
 #multiple-payments-modal.cash-payment-modal .payment-modal-dialog,
-#multiple-payments-modal.card-payment-modal .payment-modal-dialog {
+#multiple-payments-modal.card-payment-modal .payment-modal-dialog,
+#multiple-payments-modal.credit-payment-modal .payment-modal-dialog {
     width: 560px;
     max-width: calc(100% - 30px);
 }
 
 #multiple-payments-modal.cash-payment-modal .modal-content,
-#multiple-payments-modal.card-payment-modal .modal-content {
+#multiple-payments-modal.card-payment-modal .modal-content,
+#multiple-payments-modal.credit-payment-modal .modal-content {
     border: 0;
     border-radius: 14px;
     overflow: hidden;
@@ -213,27 +265,31 @@
 }
 
 #multiple-payments-modal.cash-payment-modal .modal-body,
-#multiple-payments-modal.card-payment-modal .modal-body {
+#multiple-payments-modal.card-payment-modal .modal-body,
+#multiple-payments-modal.credit-payment-modal .modal-body {
     padding: 30px 42px 22px;
     background: #f4f8fc;
 }
 
 #multiple-payments-modal.cash-payment-modal .payment-summary-column,
-#multiple-payments-modal.card-payment-modal .payment-summary-column {
+#multiple-payments-modal.card-payment-modal .payment-summary-column,
+#multiple-payments-modal.credit-payment-modal .payment-summary-column {
     float: none !important;
     width: 100%;
     padding: 0;
 }
 
 #multiple-payments-modal.cash-payment-modal .payment-summary-column > .col-md-12,
-#multiple-payments-modal.card-payment-modal .payment-summary-column > .col-md-12 {
+#multiple-payments-modal.card-payment-modal .payment-summary-column > .col-md-12,
+#multiple-payments-modal.credit-payment-modal .payment-summary-column > .col-md-12 {
     float: none;
     width: 100%;
     padding: 0;
 }
 
 #multiple-payments-modal.cash-payment-modal .payment-summary-column .box,
-#multiple-payments-modal.card-payment-modal .payment-summary-column .box {
+#multiple-payments-modal.card-payment-modal .payment-summary-column .box,
+#multiple-payments-modal.credit-payment-modal .payment-summary-column .box {
     margin: 0;
     border-radius: 10px;
     overflow: hidden;
@@ -241,19 +297,23 @@
 }
 
 #multiple-payments-modal.cash-payment-modal .payment-summary-column .box-body,
-#multiple-payments-modal.card-payment-modal .payment-summary-column .box-body {
+#multiple-payments-modal.card-payment-modal .payment-summary-column .box-body,
+#multiple-payments-modal.credit-payment-modal .payment-summary-column .box-body {
     padding: 0;
 }
 
 #multiple-payments-modal.cash-payment-modal .payment-summary-column .row,
-#multiple-payments-modal.card-payment-modal .payment-summary-column .row {
+#multiple-payments-modal.card-payment-modal .payment-summary-column .row,
+#multiple-payments-modal.credit-payment-modal .payment-summary-column .row {
     margin: 0;
 }
 
 #multiple-payments-modal.cash-payment-modal .payment-summary-column .border-custom-bottom,
 #multiple-payments-modal.cash-payment-modal .payment-summary-column .bg-red,
 #multiple-payments-modal.card-payment-modal .payment-summary-column .border-custom-bottom,
-#multiple-payments-modal.card-payment-modal .payment-summary-column .bg-red {
+#multiple-payments-modal.card-payment-modal .payment-summary-column .bg-red,
+#multiple-payments-modal.credit-payment-modal .payment-summary-column .border-custom-bottom,
+#multiple-payments-modal.credit-payment-modal .payment-summary-column .bg-red {
     min-height: 55px;
     padding: 14px 18px;
 }
@@ -261,16 +321,30 @@
 #multiple-payments-modal.cash-payment-modal .payment-summary-label,
 #multiple-payments-modal.cash-payment-modal .payment-summary-column .custom-font-size,
 #multiple-payments-modal.card-payment-modal .payment-summary-label,
-#multiple-payments-modal.card-payment-modal .payment-summary-column .custom-font-size {
+#multiple-payments-modal.card-payment-modal .payment-summary-column .custom-font-size,
+#multiple-payments-modal.credit-payment-modal .payment-summary-label,
+#multiple-payments-modal.credit-payment-modal .payment-summary-column .custom-font-size {
     font-size: 19px !important;
 }
 
 #multiple-payments-modal.cash-payment-modal .modal-footer,
-#multiple-payments-modal.card-payment-modal .modal-footer {
+#multiple-payments-modal.card-payment-modal .modal-footer,
+#multiple-payments-modal.credit-payment-modal .modal-footer {
     padding: 18px 20px 22px;
     text-align: center;
     border-top: 0;
     background: #fff;
+}
+
+#multiple-payments-modal.cash-payment-modal .cash-paid-input {
+    height: 38px;
+    padding: 5px 10px;
+    border: 2px solid rgba(255, 255, 255, .9);
+    border-radius: 7px;
+    background: #fff;
+    color: #0878b8 !important;
+    font-size: 19px;
+    font-weight: 700 !important;
 }
 
 

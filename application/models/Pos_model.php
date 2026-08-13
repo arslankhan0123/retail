@@ -510,12 +510,14 @@ class Pos_model extends CI_Model {
 		}
 
 		$tot_received_amt = 0;
+		$currency_decimals = (int) decimals();
+		$invoice_total_numeric = round((float) str_replace(',', '', trim($tot_grand)), $currency_decimals);
 		// Calculate change from the complete tendered amount. This also handles
 		// multiple payments where no single row exceeds the invoice total.
 		$tendered_total = isset($paid_amt) ? str_replace(',', '', trim($paid_amt)) : 0;
 		$invoice_total = str_replace(',', '', trim($tot_grand));
 		$expected_change_return = (is_numeric($tendered_total) && is_numeric($invoice_total))
-			? max(0, (float)$tendered_total - (float)$invoice_total)
+			? max(0, round((float)$tendered_total, $currency_decimals) - $invoice_total_numeric)
 			: 0;
 		//UPDATE CUSTMER MULTPLE PAYMENTS
 		for($i=1;$i<=$payment_row_count;$i++){
@@ -537,7 +539,7 @@ class Pos_model extends CI_Model {
 					if(!is_numeric($amount_input) || $amount_input < 0){
 						return "Invalid payment amount in payment row ".$i.".";
 					}
-					$amount 		= (float) $amount_input;
+					$amount 		= round((float) $amount_input, $currency_decimals);
 					$requested_payment_type = isset($_REQUEST['payment_type_'.$i])
 						? $_REQUEST['payment_type_'.$i]
 						: (isset($_REQUEST['direct_payment_type']) ? $_REQUEST['direct_payment_type'] : '');
@@ -551,9 +553,9 @@ class Pos_model extends CI_Model {
 				$account_id 	=$this->xss_html_filter(trim($_REQUEST['account_id_'.$i]));
 				//If amount is greater than paid amount
 				$change_return=0;
-				if($amount>$tot_grand){
-					$change_return =$amount-$tot_grand;
-					$amount =$tot_grand;
+				if($amount>$invoice_total_numeric){
+					$change_return = round($amount-$invoice_total_numeric, $currency_decimals);
+					$amount = $invoice_total_numeric;
 				}
 				if($i===1 && $expected_change_return>$change_return){
 					$change_return = $expected_change_return;
@@ -649,14 +651,14 @@ class Pos_model extends CI_Model {
 				//end
 
 
-				$tot_received_amt += $amount;
+				$tot_received_amt = round($tot_received_amt + $amount, $currency_decimals);
 				
 			}//if()
 		
 		}//for end
 
 
-		if($tot_received_amt>$tot_grand){
+		if(round($tot_received_amt, $currency_decimals)>$invoice_total_numeric){
 			echo "Payble amount should not be exceeds Invoice Amount!!";exit;
 		}
 
@@ -666,7 +668,7 @@ class Pos_model extends CI_Model {
 		
 		$tot_payment = $this->db->select('coalesce(sum(payment),0) as payment')->where('sales_id',$sales_id)->get('db_salespayments')->row()->payment;
 
-		if($tot_payment>$tot_grand){
+		if(round((float)$tot_payment, $currency_decimals)>$invoice_total_numeric){
 			echo "Payble amount should not be exceeds Invoice Amount!!\nPlease check previous payments as well.";exit;
 		}
 		

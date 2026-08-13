@@ -303,10 +303,13 @@
                   </div>
                 </div>
                 <!--  -->
-                <div class="row ">
+                <div class="row payment-paid-row">
                   <div class="col-md-12 border-custom-bottom">
                     <span class="col-md-6 text-right text-bold payment-summary-label">Paid:</span>
-                    <span class="col-md-6 text-right text-bold  custom-font-size sales_div_tot_paid">0.00</span>
+                    <span class="col-md-6 text-right text-bold custom-font-size sales_div_tot_paid">0.00</span>
+                    <span class="col-md-6 cash-paid-input-wrap" style="display:none;">
+                      <input type="text" inputmode="decimal" class="form-control text-right cash-paid-input" autocomplete="off">
+                    </span>
                   </div>
                 </div>
                 <!--  -->

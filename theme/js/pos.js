@@ -429,18 +429,22 @@ $('.show_payments_modal').on("click",function (e) {
     }
     else{
     	$('#multiple-payments-modal').data('card-payment', false);
-		$("#payment_modal_title").text("Payment Processing");
+		$("#payment_modal_title").text("Split Payment Processing");
 		$("#multiple-payments-modal").removeClass("cash-payment-modal");
 		$("#multiple-payments-modal").removeClass("card-payment-modal");
+		$("#multiple-payments-modal").removeClass("credit-payment-modal");
+		$(".cash-paid-input-wrap").hide();
+		$(".sales_div_tot_paid").show();
+		$(".payment-paid-row").show();
 		$(".payment-balance-row,.payment-change-row").show();
-		$(".payment-items-label").text("Total Items:");
+		$(".payment-items-label").text("Items:");
 		$(".payment-entry-column").show();
 		$(".payment-summary-column").removeClass("pull-right");
     	$("#direct_payment_type").val("");
     	$("#payment_mode_icon").attr("class", "fa fa-list");
     	$("#amount_1").prop("readonly", false);
     	$("#amount_1").parent().parent().show();
-    	$(".payment_discount_input").parent().parent().removeClass('col-md-12').addClass('col-md-6');
+		$(".payment_discount_input").closest('.row').hide();
     	adjust_payments();
     	$("#add_payment_row,#payment_type_1").parent().show();
     	$("#amount_1").parent().parent().removeClass('col-md-12').addClass('col-md-6');
@@ -459,10 +463,13 @@ $('#show_cash_modal').on("click",function (e) {
     	$('#multiple-payments-modal').data('card-payment', false);
 		$("#direct_payment_type").val("Cash");
 		$("#multiple-payments-modal").addClass("cash-payment-modal");
-		$("#multiple-payments-modal").removeClass("card-payment-modal");
+		$("#multiple-payments-modal").removeClass("card-payment-modal credit-payment-modal");
 		$(".payment-balance-row,.payment-change-row").show();
 		$("#payment_modal_title").text("Cash Payment Processing");
 		$(".payment-items-label").text("Items:");
+		$(".sales_div_tot_paid").hide();
+		$(".cash-paid-input-wrap").show();
+		$(".payment-paid-row").show();
     	$("#payment_mode_icon").attr("class", "fa fa-money");
 		$(".payment-entry-column").hide();
 		$(".payment-summary-column").addClass("pull-right");
@@ -478,8 +485,9 @@ $('#show_cash_modal').on("click",function (e) {
     	}
     	$("#payment_note_1").val("Paid By Cash");
     	adjust_payments();
-		$("#amount_1").val($(".sales_div_tot_payble").text()).prop("readonly", true);
+		$("#amount_1").val("").prop("readonly", false);
 		adjust_payments();
+		$(".cash-paid-input").val("").focus();
     	$("#add_payment_row,#payment_type_1").parent().hide();
     	$('#multiple-payments-modal').modal('toggle');
     }
@@ -496,7 +504,10 @@ $(document).on("click", "#show_card_modal", function (e) {
     else{
 		$('#multiple-payments-modal').data('card-payment', true);
 		$("#direct_payment_type").val("CARD");
-		$("#multiple-payments-modal").removeClass("cash-payment-modal").addClass("card-payment-modal");
+		$("#multiple-payments-modal").removeClass("cash-payment-modal credit-payment-modal").addClass("card-payment-modal");
+		$(".cash-paid-input-wrap").hide();
+		$(".sales_div_tot_paid").show();
+		$(".payment-paid-row").show();
 		$("#payment_modal_title").text("Card Payment Processing");
 		$(".payment-items-label").text("Items:");
 		$(".payment-items-row,.payment-subtotal-row").show();
@@ -542,13 +553,16 @@ $(document).on("click", "#show_credit_modal", function (e) {
 	// Keep the hidden payment equal to Net when the discount changes.
 	$('#multiple-payments-modal').data('card-payment', true);
 	$("#direct_payment_type").val("CREDIT");
-	$("#multiple-payments-modal").removeClass("cash-payment-modal");
-	$("#multiple-payments-modal").removeClass("card-payment-modal");
-	$(".payment-balance-row,.payment-change-row").show();
-	$("#payment_modal_title").text("Payment Processing");
-	$(".payment-items-label").text("Total Items:");
-	$(".payment-entry-column").show();
-	$(".payment-summary-column").removeClass("pull-right");
+	$("#multiple-payments-modal").removeClass("cash-payment-modal card-payment-modal").addClass("credit-payment-modal");
+	$(".cash-paid-input-wrap").hide();
+	$(".sales_div_tot_paid").show();
+	$(".payment-paid-row").hide();
+	$(".payment-items-row,.payment-subtotal-row").show();
+	$(".payment-balance-row,.payment-change-row").hide();
+	$("#payment_modal_title").text("Credit Payment Processing");
+	$(".payment-items-label").text("Items:");
+	$(".payment-entry-column").hide();
+	$(".payment-summary-column").addClass("pull-right");
 	$("#payment_mode_icon").attr("class", "fa fa-clock-o");
 
 	if($("#payment_type_1 option[value='CREDIT']").length==0){

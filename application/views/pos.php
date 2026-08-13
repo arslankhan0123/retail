@@ -49,20 +49,20 @@
           <ul class="nav navbar-nav">
             
             <!-- User Account Menu -->
-            <li class="dropdown user user-menu">
+            <li class="dropdown user user-menu hold-list-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Click To View Hold Invoices">
              
               <span class=""><?= $this->lang->line('hold_list'); ?></span>
-              <span class="label label-danger hold_invoice_list_count"><?=$tot_count?></span>
+              <span class="label hold-invoice-badge hold_invoice_list_count"><?=$tot_count?></span>
             </a>
 
-            <ul class="dropdown-menu dropdown-width-lg">
+            <ul class="dropdown-menu dropdown-width-lg hold-list-dropdown">
               
               <!-- Menu Body -->
               <li class="user-body">
                 <div class="row">
                   <div class="col-xs-12 text-center " style="max-height:300px;overflow-y: scroll;">
-                    <table class="table table-bordered" width="100%">
+                    <table class="table table-bordered hold-list-table" width="100%">
                       <thead>
                       <tr>
                         <th>ID</th>
@@ -280,7 +280,7 @@
                   </div>
                 </div> 
                 <div class="col-md-2">
-                     <input type="text" class="form-control pos-system-field" data-toggle="tooltip" title="Invoice Count ID" placeholder="Invioce Number" id="count_id" name="count_id" value="<?= $count_id ?>">
+                     <input type="text" class="form-control pos-system-field text-center" data-toggle="tooltip" title="Invoice Count ID" placeholder="Invioce Number" id="count_id" name="count_id" value="<?= $count_id ?>">
                 </div> 
 
               </div><!-- row end -->
@@ -768,7 +768,8 @@ function proceed_addrow(id='',item_obj=''){
         str+='</tr>';   
 
     //LEFT SIDE: ADD OR APPEND TO SALES INVOICE TERMINAL
-    $('#pos-form-tbody').append(str);
+    // Keep the most recently added item visible at the top of the POS list.
+    $('#pos-form-tbody').prepend(str);
 
     //LEFT SIDE: INCREMANT ROW COUNT
     $("#hidden_rowcount").val(parseFloat($("#hidden_rowcount").val())+1);
@@ -994,6 +995,17 @@ function set_total(tot_qty=0, tot_amt=0, tot_disc=0, tot_grand=0, payment_discou
 }
 
 //LEFT SIDE: FINAL TOTAL
+$(document).on("input", ".cash-paid-input", function(){
+  var paid = this.value.replace(/[^0-9.]/g, '');
+  var parts = paid.split('.');
+  if(parts.length > 2){
+    paid = parts.shift() + '.' + parts.join('');
+  }
+  this.value = paid;
+  $("#amount_1").val(paid || 0);
+  adjust_payments();
+});
+
 function adjust_payments(){
   var total=0;
   var item_discount_total=0;
@@ -1309,6 +1321,7 @@ $('#order_date,#delivery_date,#cheque_date').datepicker({
 
       //Find the item details
       var item_name = $("#td_data_"+row_id+"_0").html();
+      var item_barcode = $("#td_"+row_id+"_barcode").text();
       var tax_type = $("#tr_tax_type_"+row_id).val();
       var tax_id = $("#tr_tax_id_"+row_id).val();
       var description = $("#description_"+row_id).val();
@@ -1322,6 +1335,7 @@ $('#order_date,#delivery_date,#cheque_date').datepicker({
       $("#item_discount_type").val(item_discount_type).select2();
 
       $("#popup_item_name").html(item_name);
+      $("#popup_item_barcode").text(item_barcode);
       $("#popup_tax_type").val(tax_type).select2();
       $("#popup_tax_id").val(tax_id).select2();
       $("#popup_row_id").val(row_id);

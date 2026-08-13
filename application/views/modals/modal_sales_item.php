@@ -13,8 +13,9 @@
                   <div class="col-md-12">
                      <div class="row invoice-info">
                       <div class="col-md-12">
-                        <div class="col-sm-6 invoice-col">
-                           <b><?= $this->lang->line('item_name'); ?> : </b> <span id='popup_item_name'><span>
+                        <div class="col-sm-12 invoice-col">
+                           <div><b>Barcode : </b> <span id="popup_item_barcode"></span></div>
+                           <div><b><?= $this->lang->line('item_name'); ?> : </b> <span id='popup_item_name'></span></div>
                         </div>
                       </div>
                         <!-- /.col -->
@@ -29,7 +30,7 @@
                               <div class="box-body">
                                  <div class="row">
                                     
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 hide">
                                         <div class="form-group">
                                           <label for="popup_tax_type"><?= $this->lang->line('tax_type'); ?></label>
                                          <select class="form-control select2" id="popup_tax_type" name="popup_tax_id"  style="width: 100%;" >
@@ -40,7 +41,7 @@
                                    
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 hide">
                                         <div class="form-group">
                                           <label for="popup_tax_id"><?= $this->lang->line('tax'); ?></label>
                                          <select class="form-control select2" id="popup_tax_id" name="popup_tax_id"  style="width: 100%;" >
@@ -86,7 +87,7 @@
                                         </div>
                                    
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-12 hide">
                                         <div class="form-group">
                                           <label for="popup_tax_type"><?= $this->lang->line('description'); ?></label>
                                          <textarea type="text" class="form-control" id="popup_description" placeholder=""></textarea>

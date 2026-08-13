@@ -1,7 +1,7 @@
 <div class="modal fade" id="multiple-payments-modal" tabindex='-1'>
   <input type="hidden" id="direct_payment_type" name="direct_payment_type" value="">
   
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg payment-modal-dialog">
     <div class="modal-content">
       <div class="modal-header header-custom">
         <span class="payment-mode-icon" aria-hidden="true">
@@ -9,13 +9,13 @@
         </span>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #fff; opacity: 1; font-size: 30px; line-height: 20px;">
           <span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title text-center" style="font-size: 20px; font-weight: 700;">Payment Processing</h4>
+        <h4 id="payment_modal_title" class="modal-title text-center" style="font-size: 20px; font-weight: 700;">Payment Processing</h4>
       </div>
       <div class="modal-body">
         
     <div class="row">
       <!-- LEFT HAND -->
-      <div class="col-md-8">
+      <div class="col-md-8 payment-entry-column">
       <?php 
       if(isset($sales_id) && !empty($sales_id)){
         $sales_rec = get_sales_details($sales_id);
@@ -258,7 +258,7 @@
 
 
       <!-- RIGHT HAND -->
-      <div class="col-md-4">
+      <div class="col-md-4 payment-summary-column">
 
         
         
@@ -267,14 +267,14 @@
 
           <div class="box box-solid bg-blue">
               <div class="box-body">
-                <div class="row ">
+                <div class="row payment-items-row">
                   <div class="col-md-12 border-custom-bottom">
-                    <span class="col-md-6 text-right text-bold payment-summary-label">Total Items:</span>
+                    <span class="col-md-6 text-right text-bold payment-summary-label payment-items-label">Total Items:</span>
                     <span class="col-md-6 text-right text-bold  custom-font-size sales_div_tot_qty">0.00</span>
                   </div>
                 </div>
 
-                <div class="row ">
+                <div class="row payment-subtotal-row">
                   <div class="col-md-12 border-custom-bottom">
                     <span class="col-md-6 text-right text-bold payment-summary-label">Subtotal:</span>
                     <span class="col-md-6 text-right text-bold  custom-font-size sales_div_tot_amt">0.00</span>
@@ -311,14 +311,14 @@
                 </div>
                 <!--  -->
                 <!--  -->
-                <div class="row ">
+                <div class="row payment-balance-row">
                   <div class="col-md-12 border-custom-bottom">
                     <span class="col-md-6 text-right text-bold payment-summary-label">Balance:</span>
                     <span class="col-md-6 text-right text-bold  custom-font-size sales_div_tot_balance">0.00</span>
                   </div>
                 </div>
                 <!--  -->
-                <div class="row ">
+                <div class="row payment-change-row">
                   <div class="col-md-12 bg-red">
                     <span class="col-md-6 text-right text-bold payment-summary-label">Change:</span>
                     <span class="col-md-6 text-right text-bold  custom-font-size sales_div_change_return">0.00</span>

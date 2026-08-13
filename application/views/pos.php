@@ -39,7 +39,7 @@
             <li class=""><a href="<?php echo $base_url; ?>items/" title="View Items List"><i class="fa  fa-cubes text-yellow " ></i> <span><?= $this->lang->line('items_list'); ?></span></a></li>
             <?php } ?>
             <?php if($CI->permissions('sales_add')) { ?>
-            <li class=""><a id="new_pos_invoice" href="<?php echo $base_url; ?>pos" title="Create New POS Invoice"><i class="fa fa-calculator text-yellow " ></i> <span><?= $this->lang->line('new_invoice'); ?></span></a></li>
+            <li class=""><a id="new_pos_invoice" href="<?php echo $base_url; ?>pos" title="Void All"><i class="fa fa-calculator text-yellow " ></i> <span>Void All</span></a></li>
             <?php } ?>
           </ul>
         </div>
@@ -286,7 +286,7 @@
               </div><!-- row end -->
               <br>
 
-              <div class="row">
+              <div class="row pos-customer-item-row">
                 <div class="col-md-3">
                   <div class="input-group" data-toggle="tooltip" title="Salesman (Required)">
                     <span class="input-group-addon"><i class="fa fa-user-circle"></i></span>
@@ -297,7 +297,7 @@
                   </div>
                 </div>
                 <div class="col-md-3">
-                  <div class="input-group" data-toggle="tooltip" title="Customer">
+                  <div class="input-group customer-input-group" data-toggle="tooltip" title="Customer">
                     <span class="input-group-addon" ><i class="fa fa-user"></i></span>
                      <select class="form-control select2" id="customer_id" name="customer_id"  style="width: 100%;"  >
                           <?php $customer_id = (isset($customer_id)) ? $customer_id : ''; ?>
@@ -306,7 +306,7 @@
                     <span class="input-group-addon pointer" data-toggle="modal" data-target="#customer-modal" title="New Customer?"><i class="fa fa-user-plus text-primary fa-lg"></i></span>
                   </div>
                     <span class="customer_points text-success" style="display: none;"></span>
-                    <lable><?= $this->lang->line('previous_due'); ?> :<label class="customer_previous_due text-red" style="font-size: 18px;"><?=store_number_format(0)?></label></lable>
+                    <span class="customer-previous-due-wrap"><?= $this->lang->line('previous_due'); ?> :<label class="customer_previous_due text-red" style="font-size: 18px;"><?=store_number_format(0)?></label></span>
                   
                   
                 </div>
@@ -325,15 +325,15 @@
                     <div class="col-sm-12" style="overflow-y:auto;height: 300px;border:1px solid #337ab7;" >
                       <table class="table table-condensed table-bordered  table-responsive items_table" style="">
                         <thead class="bg-gray">
-                          <th class="text-center" width="15%">Barcode</th>
-                          <th class="text-center" width="20%"><?= $this->lang->line('item_name'); ?></th>
-                          <th class="text-center" width="10%"><?= $this->lang->line('stock'); ?></th>
-                          <th class="text-center" width="20%"><?= $this->lang->line('quantity'); ?></th>
+                          <th class="text-center" width="10%">Barcode</th>
+                          <th class="text-center" width="35%"><?= $this->lang->line('item_name'); ?></th>
+                          <th class="text-center" width="9%"><?= $this->lang->line('stock'); ?></th>
+                          <th class="text-center" width="8%"><?= $this->lang->line('quantity'); ?></th>
                           <th class="text-center" width="10%"><?= $this->lang->line('price'); ?></th>
                           <th class="text-center" width="10%"><?= $this->lang->line('discount'); ?></th>
-                          <th class="text-center" width="5%"><?= $this->lang->line('tax'); ?></th>
+                          <th class="text-center" width="5%">VAT</th>
                           <th class="text-center" width="10%"><?= $this->lang->line('subtotal'); ?></th>
-                          <th class="text-center" width="5%">Void</th>
+                          <th class="text-center" width="3%">Void</th>
                         </thead>
                         <tbody id="pos-form-tbody" style="font-size: 16px;font-weight: bold;overflow: scroll;">
                           <!-- body code -->
@@ -474,37 +474,46 @@
             <!-- form start -->
             
               <div class="box-body">
-                
-              <div class="row">
-
-                <div class="col-md-6">
-                  <div class="input-group input-group-md">
-                      <select class="form-control select2" id="category_id" name="category_id"  style="width: 100%;"  >
-                        <option value="">-All Categories-</option>
-                        <?= get_categories_select_list();  ?>
-                      </select>
-                          <span class="input-group-btn">
-                            <button type="button" class="btn text-blue btn-flat reset_categories" title="Reset Categories" data-toggle="tooltip" data-placement="top">
-                              <i class="fa fa-undo"></i>
-                            </button>
-                          </span>
-                    </div>
+              <div class="row pos-item-search-row">
+                <div class="col-md-12">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control" id="pos_item_search" placeholder="Search by item name, barcode or item code" autocomplete="off">
+                    <span class="input-group-addon pointer" id="clear_pos_item_search" title="Clear Search"><i class="fa fa-times text-muted"></i></span>
+                  </div>
                 </div>
-
-
-                <div class="col-md-6">
-                  <div class="input-group input-group-md">
-                      <select class="form-control select2" id="brand_id" name="brand_id"  style="width: 100%;"  >
-                        <option value="">-All Brands-</option>
-                        <?= get_brands_select_list();  ?>
-                      </select>
-                          <span class="input-group-btn">
-                            <button type="button" class="btn text-blue btn-flat reset_brands" title="Reset Brand" data-toggle="tooltip" data-placement="top">
-                              <i class="fa fa-undo"></i>
-                            </button>
-                          </span>
-                    </div>
-                </div>                
+              </div>
+              <div class="row">
+                <?php
+                  $pos_store_id = get_current_store_id();
+                  $pos_departments = $this->db->where(array('store_id'=>$pos_store_id,'status'=>1))->order_by('dptName')->get('db_department')->result();
+                  $pos_categories = $this->db->where(array('store_id'=>$pos_store_id,'status'=>1))->order_by('category_name')->get('db_category')->result();
+                  $pos_subcategories = $this->db->where(array('store_id'=>$pos_store_id,'status'=>1))->order_by('scatName')->get('db_subcategory')->result();
+                ?>
+                <div class="col-md-3">
+                  <select class="form-control select2 pos-item-filter" id="dptid" style="width:100%">
+                    <option value="">-All Departments-</option>
+                    <?php foreach($pos_departments as $row): ?><option value="<?= (int)$row->dptid ?>"><?= html_escape($row->dptName) ?></option><?php endforeach; ?>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <select class="form-control select2 pos-item-filter" id="category_id" name="category_id" style="width:100%">
+                    <option value="">-All Categories-</option>
+                    <?php foreach($pos_categories as $row): ?><option value="<?= (int)$row->id ?>" data-department="<?= (int)$row->dptid ?>"><?= html_escape($row->category_name) ?></option><?php endforeach; ?>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <select class="form-control select2 pos-item-filter" id="scatid" style="width:100%">
+                    <option value="">-All Sub Categories-</option>
+                    <?php foreach($pos_subcategories as $row): ?><option value="<?= (int)$row->scatid ?>" data-department="<?= (int)$row->dptid ?>" data-category="<?= (int)$row->catid ?>"><?= html_escape($row->scatName) ?></option><?php endforeach; ?>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <select class="form-control select2 pos-item-filter" id="brand_id" name="brand_id" style="width:100%">
+                    <option value="">-All Brands-</option>
+                    <?= get_brands_select_list(); ?>
+                  </select>
+                </div>
 
                <!--  <div class="col-md-6">
                   <div class="input-group col-md-10">
@@ -720,7 +729,7 @@ function proceed_addrow(id='',item_obj=''){
         console.log($('#div_'+id).attr('data-mrp'));
 
     var quantity        ='<div class="input-group input-group-sm"><span class="input-group-btn"><button onclick="decrement_qty('+item_id+','+rowcount+')" type="button" class="btn btn-default btn-flat"><i class="fa fa-minus text-danger"></i></button></span>';
-        quantity       +='<input typ="text" value="'+format_pos_qty(1)+'" class="form-control no-padding text-center min_width" style="font-size:16px;font-weight:bold;" onchange="item_qty_input('+item_id+','+rowcount+')" id="item_qty_'+rowcount+'" name="item_qty_'+rowcount+'">';
+        quantity       +='<input type="text" inputmode="numeric" maxlength="3" value="1" data-last-valid="1" class="form-control no-padding text-center min_width pos-qty-input" style="font-size:16px;font-weight:bold;" onkeydown="return allow_pos_qty_key(event)" oninput="validate_pos_qty(this)" onchange="item_qty_input('+item_id+','+rowcount+')" id="item_qty_'+rowcount+'" name="item_qty_'+rowcount+'">';
         quantity       +='<span class="input-group-btn"><button onclick="increment_qty('+item_id+','+rowcount+')" type="button" class="btn btn-default btn-flat"><i class="fa fa-plus text-success"></i></button></span></div>';
     var sub_total       =(to_Fixed(1)*to_Fixed(sales_price));//Initial
     var remove_btn      ='<img src="<?= base_url('uploads/icon02.png') ?>" class="pos-remove-icon" onclick="removerow('+rowcount+')" title="Delete Item?" alt="Remove">';
@@ -770,36 +779,26 @@ function proceed_addrow(id='',item_obj=''){
   }
 
 function update_price(row_id,item_cost){
-  /*Input*/
-  /*var sales_price=$("#sales_price_"+row_id).val();
-  if(sales_price!='' || sales_price==0) {sales_price = parseFloat(sales_price); }
+  var sales_price=parseFloat($("#sales_price_"+row_id).val());
+  item_cost=parseFloat(item_cost);
 
-  Default set from item master
-  var item_price=parseFloat($("#tr_sales_price_temp_"+row_id).val());
-
-  if(sales_price<item_cost){
-    //toastr["warning"]("Minimum Sales Price is "+item_cost);
+  if(!isNaN(sales_price) && sales_price<item_cost){
     $("#sales_price_"+row_id).parent().addClass('has-error');
   }else{
     $("#sales_price_"+row_id).parent().removeClass('has-error');
-  }*/
+  }
 
   make_subtotal($("#tr_item_id_"+row_id).val(),row_id);
 }
 
 function set_to_original(row_id,item_cost) {
-  return true;
-  /*Input*/
-  var sales_price=$("#sales_price_"+row_id).val();
-  if(sales_price!='' || sales_price==0) {sales_price = parseFloat(sales_price); }
+  var sales_price=parseFloat($("#sales_price_"+row_id).val());
+  item_cost=parseFloat(item_cost);
 
-  /*Default set from item master*/
-  var item_price=parseFloat($("#tr_sales_price_temp_"+row_id).val());
-
-  if(sales_price<item_cost){
-    toastr["success"]("Default Price Set "+item_price);
+  if(isNaN(sales_price) || sales_price<item_cost){
+    toastr["error"]("Sales price cannot be less than purchase price ("+item_cost.toFixed(2)+")");
     $("#sales_price_"+row_id).parent().removeClass('has-error');
-    $("#sales_price_"+row_id).val(item_price);
+    $("#sales_price_"+row_id).val(item_cost.toFixed(2));
   }
   make_subtotal($("#tr_item_id_"+row_id).val(),row_id);
 }
@@ -807,12 +806,35 @@ function set_to_original(row_id,item_cost) {
 
 //INCREMENT ITEM
 function format_pos_qty(value){
-  return format_qty(value);
+  var quantity = parseInt(value,10);
+  return isNaN(quantity) ? 0 : quantity;
+}
+
+function allow_pos_qty_key(event){
+  if(event.ctrlKey || event.metaKey || event.altKey){ return true; }
+  if(['Backspace','Delete','Tab','ArrowLeft','ArrowRight','Home','End','Enter'].indexOf(event.key)!==-1){ return true; }
+  return /^[0-9]$/.test(event.key);
+}
+
+function validate_pos_qty(input){
+  var value=input.value;
+  if(!/^\d{1,3}$/.test(value) || parseInt(value,10)<1){
+    input.value=input.getAttribute('data-last-valid') || '1';
+    toastr["warning"]("Quantity must be a whole number between 1 and 999");
+    return false;
+  }
+  input.value=String(Math.min(999,parseInt(value,10)));
+  input.setAttribute('data-last-valid',input.value);
+  return true;
 }
 
 function increment_qty(item_id,rowcount){
-  var item_qty=$("#item_qty_"+rowcount).val();
-  item_qty=parseFloat(item_qty)+1;
+  var item_qty=parseInt($("#item_qty_"+rowcount).val(),10) || 0;
+  if(item_qty>=999){
+    $("#item_qty_"+rowcount).val(999);
+    return;
+  }
+  item_qty=item_qty+1;
   $("#item_qty_"+rowcount).val(format_pos_qty(item_qty));
   make_subtotal(item_id,rowcount);
 }
@@ -823,19 +845,21 @@ function decrement_qty(item_id,rowcount){
     $("#item_qty_"+rowcount).val(format_pos_qty(1));
     return;
   }
-  $("#item_qty_"+rowcount).val(format_pos_qty(parseFloat(item_qty)-1));
+  $("#item_qty_"+rowcount).val(format_pos_qty(parseInt(item_qty,10)-1));
   make_subtotal(item_id,rowcount);
 }
 //LEFT SIDE: IF ITEM QTY CHANGED MANUALLY
 function item_qty_input(item_id,rowcount){
-  var item_qty=$("#item_qty_"+rowcount).val();
+  var input=document.getElementById("item_qty_"+rowcount);
+  validate_pos_qty(input);
+  var item_qty=parseInt(input.value,10);
 
   // Selling above available stock is allowed; only keep quantity positive.
-  if(isNaN(parseFloat(item_qty)) || parseFloat(item_qty)<=0){
+  if(isNaN(item_qty) || item_qty<=0){
     $("#item_qty_"+rowcount).val(format_pos_qty(1));
     toastr["warning"]("You must have at least one Quantity");
   }else{
-    $("#item_qty_"+rowcount).val(format_pos_qty(item_qty));
+    $("#item_qty_"+rowcount).val(Math.min(999,item_qty));
   }
 
   make_subtotal(item_id,rowcount);
@@ -1137,10 +1161,51 @@ $(document).ready(function(){
     search_it();
   });*/
 
-  //CATEGORY WISE ITEM FETCH FROM SERVER
+  //DEPARTMENT, CATEGORY, SUB CATEGORY & BRAND WISE ITEM FILTER
   var show_only_searched=true;
-  $("#category_id,#brand_id").on("change",function () {
-      get_details(null,show_only_searched);
+  var all_pos_categories = $("#category_id option").clone();
+  var all_pos_subcategories = $("#scatid option").clone();
+  var pos_filter_request_timer = null;
+
+  function request_filtered_pos_items(){
+      clearTimeout(pos_filter_request_timer);
+      pos_filter_request_timer = setTimeout(function(){
+          get_details(null,show_only_searched);
+      },50);
+  }
+
+  function filter_pos_select(select_id, all_options, department_id, category_id){
+      var $select = $(select_id).empty();
+      all_options.each(function(){
+          var $option = $(this);
+          if(!$option.val() ||
+             ((!department_id || String($option.data('department')) === String(department_id)) &&
+              (!category_id || String($option.data('category')) === String(category_id)))){
+              $select.append($option.clone());
+          }
+      });
+      $select.val('').trigger('change.select2');
+  }
+
+  $(document).on("change select2:select","#dptid",function () {
+      var department_id = $(this).val();
+      filter_pos_select('#category_id',all_pos_categories,department_id,'');
+      filter_pos_select('#scatid',all_pos_subcategories,department_id,'');
+      request_filtered_pos_items();
+  });
+  $(document).on("change select2:select","#category_id",function () {
+      filter_pos_select('#scatid',all_pos_subcategories,$("#dptid").val(),$(this).val());
+      request_filtered_pos_items();
+  });
+  $(document).on("change select2:select","#scatid,#brand_id",function () {
+      request_filtered_pos_items();
+  });
+  $(document).on("input","#pos_item_search",function () {
+      request_filtered_pos_items();
+  });
+  $(document).on("click","#clear_pos_item_search",function () {
+      $("#pos_item_search").val('');
+      request_filtered_pos_items();
   });
 
   //DISCOUNT UPDATE
@@ -1417,9 +1482,11 @@ function get_details(last_id='',show_only_searched=false){
         last_id       : (!show_only_searched) ? last_id : '',
         customer_id   : $("#customer_id").val(),
         id            : $("#category_id").val(),
+        dptid         : $("#dptid").val(),
+        scatid        : $("#scatid").val(),
         store_id      : $("#store_id").val(),
         warehouse_id  : $("#warehouse_id").val(),
-        //search_it  : $("#search_it").val(),
+        search_it     : $("#pos_item_search").val(),
         brand_id  : $("#brand_id").val(),
 
       },

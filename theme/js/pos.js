@@ -429,6 +429,13 @@ $('.show_payments_modal').on("click",function (e) {
     }
     else{
     	$('#multiple-payments-modal').data('card-payment', false);
+		$("#payment_modal_title").text("Payment Processing");
+		$("#multiple-payments-modal").removeClass("cash-payment-modal");
+		$("#multiple-payments-modal").removeClass("card-payment-modal");
+		$(".payment-balance-row,.payment-change-row").show();
+		$(".payment-items-label").text("Total Items:");
+		$(".payment-entry-column").show();
+		$(".payment-summary-column").removeClass("pull-right");
     	$("#direct_payment_type").val("");
     	$("#payment_mode_icon").attr("class", "fa fa-list");
     	$("#amount_1").prop("readonly", false);
@@ -450,10 +457,15 @@ $('#show_cash_modal').on("click",function (e) {
     }
     else{
     	$('#multiple-payments-modal').data('card-payment', false);
-    	$("#direct_payment_type").val("Cash");
+		$("#direct_payment_type").val("Cash");
+		$("#multiple-payments-modal").addClass("cash-payment-modal");
+		$("#multiple-payments-modal").removeClass("card-payment-modal");
+		$(".payment-balance-row,.payment-change-row").show();
+		$("#payment_modal_title").text("Cash Payment Processing");
+		$(".payment-items-label").text("Items:");
     	$("#payment_mode_icon").attr("class", "fa fa-money");
-    	$("#amount_1").prop("readonly", false);
-    	$("#amount_1").parent().parent().show();
+		$(".payment-entry-column").hide();
+		$(".payment-summary-column").addClass("pull-right");
     	$(".payment_discount_input").parent().parent().removeClass('col-md-12').addClass('col-md-6');
     	var cash_option = $("#payment_type_1 option").filter(function(){
     		return $.trim($(this).val()).toUpperCase() === "CASH";
@@ -466,9 +478,9 @@ $('#show_cash_modal').on("click",function (e) {
     	}
     	$("#payment_note_1").val("Paid By Cash");
     	adjust_payments();
+		$("#amount_1").val($(".sales_div_tot_payble").text()).prop("readonly", true);
+		adjust_payments();
     	$("#add_payment_row,#payment_type_1").parent().hide();
-    	$("#amount_1").focus();
-    	$("#amount_1").parent().parent().removeClass('col-md-6').addClass('col-md-12');
     	$('#multiple-payments-modal').modal('toggle');
     }
 }); //hold_invoice end
@@ -482,8 +494,15 @@ $(document).on("click", "#show_card_modal", function (e) {
 		return;
     }
     else{
-    	$('#multiple-payments-modal').data('card-payment', true);
-    	$("#direct_payment_type").val("CARD");
+		$('#multiple-payments-modal').data('card-payment', true);
+		$("#direct_payment_type").val("CARD");
+		$("#multiple-payments-modal").removeClass("cash-payment-modal").addClass("card-payment-modal");
+		$("#payment_modal_title").text("Card Payment Processing");
+		$(".payment-items-label").text("Items:");
+		$(".payment-items-row,.payment-subtotal-row").show();
+		$(".payment-entry-column").hide();
+		$(".payment-summary-column").addClass("pull-right");
+		$(".payment-balance-row,.payment-change-row").hide();
     	$("#payment_mode_icon").attr("class", "fa fa-credit-card");
     	adjust_payments();
 
@@ -523,6 +542,13 @@ $(document).on("click", "#show_credit_modal", function (e) {
 	// Keep the hidden payment equal to Net when the discount changes.
 	$('#multiple-payments-modal').data('card-payment', true);
 	$("#direct_payment_type").val("CREDIT");
+	$("#multiple-payments-modal").removeClass("cash-payment-modal");
+	$("#multiple-payments-modal").removeClass("card-payment-modal");
+	$(".payment-balance-row,.payment-change-row").show();
+	$("#payment_modal_title").text("Payment Processing");
+	$(".payment-items-label").text("Total Items:");
+	$(".payment-entry-column").show();
+	$(".payment-summary-column").removeClass("pull-right");
 	$("#payment_mode_icon").attr("class", "fa fa-clock-o");
 
 	if($("#payment_type_1 option[value='CREDIT']").length==0){
@@ -779,8 +805,12 @@ $("#customer_id").on("change",function(){
           set_previous_due();
 });
 function set_previous_due(){
-  $(".customer_previous_due").html($('option:selected', "#customer_id").attr('data-previous_due'));
-  $(".customer_tot_advance").html($('option:selected', "#customer_id").attr('data-tot_advance'));
+  var selected_customer = $('option:selected', "#customer_id");
+  var is_walk_in = String(selected_customer.attr('data-delete_bit')) === '1';
+  $(".customer-previous-due-wrap").toggle(!is_walk_in);
+  $(".pos-customer-item-row").toggleClass("walkin-customer-gap", is_walk_in);
+  $(".customer_previous_due").html(selected_customer.attr('data-previous_due') || '0.00');
+  $(".customer_tot_advance").html(selected_customer.attr('data-tot_advance'));
 }
 
 

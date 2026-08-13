@@ -290,7 +290,7 @@ class Items_model extends CI_Model {
 			    				'status' 					=> 1,
 			    			);
 				$initial = array_merge($initial,$this->log_details());
-				if ($barcode_type == 'Automatic') {
+				if ($barcode_type == 'Automatic' || !empty($pos_quick_add)) {
 					$custom_barcode = $item_code_val;
 				}
 			}//Command SAVE

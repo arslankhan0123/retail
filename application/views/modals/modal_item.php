@@ -3,9 +3,13 @@ $CI =& get_instance();
 $barcode_row = $CI->db->select('barcode_type')->where('id', get_current_store_id())->get('db_store')->row();
 $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $barcode_row->barcode_type : 'Automatic';
 ?>
+<style>
+  #item-modal .pos-item-optional { display: none !important; }
+</style>
 <div class="modal fade " id="item-modal" tabindex='-1'>
                 <?= form_open('#', array('class' => '', 'id' => 'item-form','enctype'=>'multipart/form-data', 'method'=>'POST')); ?>
                 <input type="hidden" id="barcode_type" value="<?= $barcode_type; ?>">
+                <input type="hidden" name="pos_quick_add" value="1">
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
                     <div class="modal-header header-custom">
@@ -65,7 +69,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                           
                               
                               <?php $icolors = $this->db->select("*")->FROM('bd_clcategory')->get()->result(); ?>
-                              <div class="form-group col-md-4">
+                              <div class="form-group col-md-4 pos-item-optional">
                                 <label for="subcategory" >Select Colors</label>
                                 <div class="">
                                     <select class="form-control" name="clid" id="clid"  >
@@ -77,7 +81,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                                 </div>
                               </div>
                               <?php $isizes = $this->db->select("*")->FROM('bd_szcategory')->get()->result(); ?>
-                              <div class="form-group col-md-4">
+                              <div class="form-group col-md-4 pos-item-optional">
                                 <label for="subcategory" >Select Size</label>
                                 <div class="">
                                     <select class="form-control" name="szid" id="szid"  >
@@ -89,7 +93,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                                 </div>
                               </div>
                               <?php $iraks = $this->db->select("*")->FROM('db_rack')->get()->result(); ?>
-                              <div class="form-group col-md-4">
+                              <div class="form-group col-md-4 pos-item-optional">
                                 <label for="subcategory" >Select Rack</label>
                                 <div class="">
                                     <select class="form-control" name="rkid" id="rkid"  >
@@ -101,7 +105,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                                 </div>
                               </div>
                               <?php $ibin = $this->db->select("*")->FROM('bd_bncategory')->get()->result(); ?>
-                              <div class="form-group col-md-4">
+                              <div class="form-group col-md-4 pos-item-optional">
                                 <label for="subcategory" >Select Bin</label>
                                 <div class="">
                                     <select class="form-control" name="bnid" id="bnid"  >
@@ -113,7 +117,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                                 </div>
                               </div>
                               <?php $isbin = $this->db->select("*")->FROM('bd_sbcategory')->where('bnid',$bnid??'')->get()->result(); ?>
-                              <div class="form-group col-md-4">
+                              <div class="form-group col-md-4 pos-item-optional">
                                 <label for="subcategory" >Select Sub Bin</label>
                                 <div class="">
                                     <select class="form-control" name="bsid" id="bsid"  >
@@ -149,7 +153,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                               </div>
                             </div>
                           </div>
-                          <div class="col-md-4">
+                          <div class="col-md-4 pos-item-optional">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="m_sku"><?= $this->lang->line('sku'); ?></label>
@@ -158,7 +162,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                               </div>
                             </div>
                           </div>
-                          <div class="col-md-4">
+                          <div class="col-md-4 pos-item-optional">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="m_alert_qty"><?= $this->lang->line('alert_qty'); ?></label>
@@ -168,7 +172,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                             </div>
                           </div>
                           
-                          <div class="col-md-4">
+                          <div class="col-md-4 pos-item-optional">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="maximum_qty">Maximum Qty</label>
@@ -178,7 +182,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                             </div>
                           </div>
                           
-                          <div class="col-md-4">
+                          <div class="col-md-4 pos-item-optional">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="m_alert_qty">Minimum Qty</label>
@@ -188,7 +192,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                             </div>
                           </div>
                           
-                          <div class="col-md-4">
+                          <div class="col-md-4 pos-item-optional">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="reorder_qty">Reorder Qty</label>
@@ -208,7 +212,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                             </div>
                           </div>
                           
-                          <div class="col-md-4 <?= ($barcode_type=='Automatic')?'hide':''; ?>">
+                          <div class="col-md-4 pos-item-optional <?= ($barcode_type=='Automatic')?'hide':''; ?>">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="m_custom_barcode"><?= $this->lang->line('barcode'); ?></label>
@@ -231,7 +235,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                             </div>
                           </div>
 
-                          <div class="col-md-4">
+                          <div class="col-md-4 pos-item-optional">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="m_description"><?= $this->lang->line('description'); ?></label>
@@ -242,9 +246,9 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                           </div>
                           
                         </div>
-                        <hr>
-                        <div class="row">                          
-                          <div class="col-md-4">
+                        <hr class="pos-item-optional">
+                        <div class="row pos-item-optional">
+                          <div class="col-md-4 pos-item-optional">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="m_discount_type"><?= $this->lang->line('discount_type'); ?></label>
@@ -256,7 +260,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                               </div>
                             </div>
                           </div>
-                          <div class="col-md-4">
+                          <div class="col-md-4 pos-item-optional">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="m_discount"><?= $this->lang->line('discount'); ?></label>
@@ -338,7 +342,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                               </div>
                             </div>
                           </div>
-                          <div class="col-md-4">
+                          <div class="col-md-4 pos-item-optional">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="m_mrp"><?= $this->lang->line('mrp'); ?><i class="hover-q " data-container="body" data-toggle="popover" data-placement="top" data-content="<?= $this->lang->line('mrp_definition'); ?>" data-html="true" data-trigger="hover" data-original-title="">
@@ -351,7 +355,7 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
                           </div>
 
                         
-                          <div class="col-md-4">
+                          <div class="col-md-4 pos-item-optional">
                             <div class="box-body">
                               <div class="form-group">
                                 <label for="item_image"><?= $this->lang->line('select_image'); ?></label>
@@ -364,8 +368,8 @@ $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $
 
                         </div>
 
-                        <hr>
-                        <div class="row">                          
+                        <hr class="pos-item-optional">
+                        <div class="row pos-item-optional">
                           <div class="col-md-4">
                             <div class="box-body">
                               <div class="form-group">

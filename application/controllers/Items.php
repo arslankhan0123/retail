@@ -213,8 +213,7 @@ public function get_sub_bin_data()
 			$row[] = $items->item_code;
 			$row[] = "<label class='text-blue'>".$items->item_name."</label>";
 			$row[] = $items->department_name;
-			$service_or_item_name = ($items->service_bit) ? 'SERVICE' : "ITEM";
-			$row[] = $items->category_name."<br>[<label class='text-orange'>".$service_or_item_name."</label>]";
+			$row[] = $items->category_name;
 			$row[] = $items->subcategory_name;
 			$row[] = $items->brand_name;
 
@@ -227,7 +226,7 @@ public function get_sub_bin_data()
 
 			$row[] = $items->alert_qty;
 			$row[] = store_number_format($items->sales_price);
-			$row[] = "VAT ".store_number_format($items->tax)."%";
+			$row[] = store_number_format($items->tax)."%";
 
 			 		if($items->status==1){ 
 			 			$str= "<span onclick='update_status(".$items->id.",0)' id='span_".$items->id."'  class='label label-success' style='cursor:pointer'>Active </span>";}

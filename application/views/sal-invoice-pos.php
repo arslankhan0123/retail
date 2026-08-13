@@ -26,15 +26,19 @@
     .summary,.details{width:100%;border-collapse:collapse}
     .summary td{padding:1px 0}.summary .label{width:65%}.summary .value{width:35%;text-align:right;padding-right:5px}
     .net-amount{text-align:center;font-size:18px;font-weight:700;padding:7px 0 4px}
-    .details td{width:50%;vertical-align:top;padding:0 3px 0 0}
-    .section-title{font-size:12px;font-weight:700;margin-bottom:3px}
-    .detail-row{display:grid;grid-template-columns:20mm minmax(0,1fr);align-items:baseline;font-size:8px;line-height:1.35;white-space:nowrap}
-    .detail-row span,.detail-row b{display:block;white-space:nowrap}
-    .details td.vat-details{text-align:left;padding-left:5.5mm;padding-right:0}
-    .vat-details .section-title{text-align:center}
-    .vat-details .detail-row{grid-template-columns:21mm minmax(0,1fr)}
-    .vat-details .detail-row span{text-align:right;padding-right:1mm}
-    .policy-title{font-size:11px;font-weight:700;margin:12px 0 7px}
+    .details td{width:50%;vertical-align:top;padding:0}
+    .details td:first-child{padding-right:2mm}
+    .section-title{font-size:14px;font-weight:700;margin-bottom:4px;white-space:nowrap}
+    .detail-row{display:grid;grid-template-columns:21mm 2mm minmax(0,1fr);align-items:baseline;font-size:10px;line-height:1.45;white-space:nowrap}
+    .detail-row span,.detail-row i,.detail-row b{display:block;white-space:nowrap}
+    .detail-row i{font-style:normal;text-align:center}
+    .detail-row b{text-align:right;font-variant-numeric:tabular-nums}
+    .details td.vat-details{text-align:left;padding-left:2mm;padding-right:1mm}
+    .vat-details .section-title{text-align:left}
+    .vat-details .detail-row{grid-template-columns:21mm 2mm minmax(0,1fr)}
+    .vat-details .detail-row span{text-align:left;padding-right:0}
+    .details + .rule{margin-bottom:0}
+    .policy-title{font-size:11px;font-weight:700;margin:2px 0 1px}
     .policy{font-size:8px;line-height:1.2;white-space:pre-line}
     .thank-you{font-size:9px;font-weight:700;margin:10px 0 5px}
     .receipt-marks{display:flex;width:100%;align-items:center;justify-content:center;gap:10mm;margin-top:7px}
@@ -82,7 +86,9 @@ foreach($items as $item){
   $item_discount += (float)$item->discount_amt;
   $tax_total += (float)$item->tax_amt;
 }
-$total_discount = $item_discount + (float)$sale->tot_discount_to_all_amt + (float)$sale->coupon_amt;
+// tot_discount_to_all_amt already contains the item/overall discount total
+// saved by POS. Adding item discounts again would double-count them.
+$total_discount = (float)$sale->tot_discount_to_all_amt + (float)$sale->coupon_amt;
 $change_return = (float)get_change_return_amount($sales_id);
 $net_before_rounding = (float)$sale->grand_total - (float)$sale->round_off;
 $taxable_amount = max(0,$net_before_rounding-$tax_total);
@@ -102,7 +108,9 @@ $policy = '';
 if((int)$store->t_and_c_status_pos === 1 && !empty(trim($store->invoice_terms))){
   $policy = html_entity_decode($store->invoice_terms);
   $policy = preg_replace('/<br\s*\/?>/i', "\n", $policy);
-  $policy = trim(strip_tags($policy));
+  $policy = strip_tags($policy);
+  $policy = preg_replace('/^[\p{Z}\s]+|[\p{Z}\s]+$/u', '', $policy);
+  if(!preg_match('/[\p{L}\p{N}]/u', $policy)) $policy = '';
 }
 $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($store->sales_invoice_footer_text) : 'THANK YOU FOR YOUR BUSINESS!';
 ?>
@@ -156,29 +164,29 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
     <tr><td class="label">Net Total</td><td class="value"><?= store_number_format($net_before_rounding); ?></td></tr>
     <tr><td class="label">Rounding</td><td class="value"><?= store_number_format($sale->round_off); ?></td></tr>
   </table>
-  <div class="net-amount">NET AMOUNT : <?= store_total_format($sale->grand_total); ?></div>
+  <div class="net-amount">NET AMOUNT : AED <?= store_total_format($sale->grand_total); ?></div>
   <hr class="solid-rule">
 
   <table class="details">
     <tr>
       <td>
-        <div class="section-title">Tender Details</div>
-        <div class="detail-row"><span>Payment Type</span><b>: <?= html_escape($payment_text); ?></b></div>
-        <div class="detail-row"><span>Received Amount</span><b>: <?= store_number_format($received_amount); ?></b></div>
-        <div class="detail-row"><span>Balance Amount</span><b>: <?= store_number_format($change_return); ?></b></div>
+        <div class="section-title">PAYMENT DETAILS</div>
+        <div class="detail-row"><span>Payment Type</span><i>:</i><b><?= html_escape($payment_text); ?></b></div>
+        <div class="detail-row"><span>Received Amount</span><i>:</i><b><?= store_number_format($received_amount); ?></b></div>
+        <div class="detail-row"><span>Balance Amount</span><i>:</i><b><?= store_number_format($change_return); ?></b></div>
       </td>
       <td class="vat-details">
-        <div class="section-title">VAT Details</div>
-        <div class="detail-row"><span>Taxable Amount</span><b>: <?= store_number_format($taxable_amount); ?></b></div>
-        <div class="detail-row"><span>VAT Rate(s)</span><b>: <?= html_escape($tax_rate_text); ?></b></div>
-        <div class="detail-row"><span>VAT Amount</span><b>: <?= store_number_format($tax_total); ?></b></div>
+        <div class="section-title">VAT DETAILS</div>
+        <div class="detail-row"><span>Taxable Amount</span><i>:</i><b><?= store_number_format($taxable_amount); ?></b></div>
+        <div class="detail-row"><span>VAT Rate(s)</span><i>:</i><b><?= html_escape($tax_rate_text); ?></b></div>
+        <div class="detail-row"><span>VAT Amount</span><i>:</i><b><?= store_number_format($tax_total); ?></b></div>
       </td>
     </tr>
   </table>
   <hr class="rule">
 
   <?php if($policy!==''): ?>
-    <div class="policy-title">RETURN &amp; EXCHANGE POLICY</div>
+    <div class="policy-title">WARRANTY &amp; RETURN POLICY</div>
     <div class="policy"><?= html_escape($policy); ?></div>
     <hr class="rule">
   <?php endif; ?>
@@ -186,7 +194,7 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
   <div class="thank-you center"><?= nl2br(html_escape($footer)); ?></div>
   <div class="receipt-marks">
     <div><?php if(!empty($store->qr_image)): ?><img class="qr" src="<?= base_url($store->qr_image); ?>" alt="QR Code"><?php endif; ?></div>
-    <div><img class="paid-logo" src="<?= base_url('uploads/paid2.png'); ?>" alt="Paid"></div>
+    <div><img class="paid-logo" src="<?= base_url('uploads/paid3.jpeg'); ?>" alt="Paid"></div>
   </div>
 
   <button type="button" class="print-button no-print" onclick="window.print()">Print</button>

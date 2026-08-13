@@ -105,16 +105,26 @@ class Pos_model extends CI_Model {
 		extract($data);
 		extract($_POST);
 		$CI =& get_instance();
+		$category_id = $this->input->post('id', true);
+		$department_id = $this->input->post('dptid', true);
+		$subcategory_id = $this->input->post('scatid', true);
+		$selected_brand_id = $this->input->post('brand_id', true);
 		
 		
 		  $i=0;
 		 
-		  if(!empty($id)){
-		  	$this->db->where(" a.category_id=$id ");
-		  }
-		  if($brand_id!=''){
-		  	$this->db->where(" a.brand_id=$brand_id");
-		  }
+		if($category_id !== null && $category_id !== ''){
+			$this->db->where("a.category_id", (int)$category_id);
+		}
+		if($department_id !== null && $department_id !== ''){
+			$this->db->where("a.dptid", (int)$department_id);
+		}
+		if($subcategory_id !== null && $subcategory_id !== ''){
+			$this->db->where("a.scatid", (int)$subcategory_id);
+		}
+		if($selected_brand_id !== null && $selected_brand_id !== ''){
+			$this->db->where("a.brand_id", (int)$selected_brand_id);
+		}
 		  $this->db->select("a.*,b.tax,b.tax_name");
 
 		  $this->db->join(" db_tax b ","b.id=a.tax_id",'left');
@@ -122,9 +132,13 @@ class Pos_model extends CI_Model {
 		  $this->db->from("db_items as a");
 		  $this->db->where("a.store_id",$store_id);
 		  $this->db->where("a.status",1);
-		  if(!empty($search_it)){
-		  	$this->db->where("upper(a.item_name) like upper('%".$search_it."%')");
-		  }
+		if(!empty($search_it)){
+			$this->db->group_start()
+				->like('a.item_name', $search_it)
+				->or_like('a.item_code', $search_it)
+				->or_like('a.custom_barcode', $search_it)
+			->group_end();
+		}
 		  if(isset($last_id) && !empty($last_id)){
 		  	$this->db->where("a.id>".$last_id);
 		  }
@@ -408,6 +422,10 @@ class Pos_model extends CI_Model {
 				//RECEIVE VALUES FROM FORM
 				$item_id 	=$this->xss_html_filter(trim($_REQUEST['tr_item_id_'.$i]));
 				$sales_qty 	=$this->xss_html_filter(trim($_REQUEST['item_qty_'.$i]));
+				if (!ctype_digit((string) $sales_qty) || (int) $sales_qty < 1 || (int) $sales_qty > 999) {
+					$this->db->trans_rollback();
+					return "Quantity must be a whole number between 1 and 999.";
+				}
 				$price_per_unit =$this->xss_html_filter(trim($_REQUEST['sales_price_'.$i]));
 				$tax_amt =$this->xss_html_filter(trim($_REQUEST['td_data_'.$i.'_11']));
 				$tax_type =$this->xss_html_filter(trim($_REQUEST['tr_tax_type_'.$i]));
@@ -439,6 +457,12 @@ class Pos_model extends CI_Model {
 				$item_name = $item_details->item_name;
 				$service_bit = $item_details->service_bit;
 				$purchase_price = $item_details->purchase_price;
+
+				if ((float) $price_per_unit < (float) $purchase_price) {
+					$this->db->trans_rollback();
+					return $item_name." sales price cannot be less than purchase price (".
+						store_number_format($purchase_price).")";
+				}
 
 				
 				/*$current_stock_of_item = total_available_qty_items_of_warehouse($warehouse_id,null,$item_id);
@@ -775,7 +799,7 @@ class Pos_model extends CI_Model {
 		  		$service_bit = $q5->row()->service_bit;
 		  		$stock=$q5->row()->stock + $res3->sales_qty;
 
-		  		$item_discount = $res3->discount_amt;
+			$item_discount = store_number_format($res3->discount_amt, false);
 		  		$item_discount_type = $res3->discount_type;
 		  		$item_discount_input = $res3->discount_input;
 
@@ -792,13 +816,13 @@ class Pos_model extends CI_Model {
 				$per_item_price_inc_tax=$price_per_unit;
 				$per_item_price_inc_tax=number_format($per_item_price_inc_tax,decimals(),'.','');	
 
-				$tax_amt = $res3->tax_amt;
+			$tax_amt = store_number_format($res3->tax_amt, false);
 				$tax_type = $res3->tax_type;
 				$tax_id = $res3->tax_id;
 				$tax_value = $q6->tax;
 
 		  		$quantity        ='<div class="input-group input-group-sm"><span class="input-group-btn"><button onclick="decrement_qty('.$res3->item_id.','.$i.')" type="button" class="btn btn-default btn-flat"><i class="fa fa-minus text-danger"></i></button></span>';
-		  		$quantity       .='<input typ="text" value="'.format_qty($res3->sales_qty).'" class="form-control no-padding text-center min_width" style="font-size:16px;font-weight:bold;" onkeyup="item_qty_input('.$res3->item_id.','.$i.')" id="item_qty_'.$i.'" name="item_qty_'.$i.'">';
+			$quantity       .='<input type="text" inputmode="numeric" maxlength="3" value="'.min(999,max(1,(int)$res3->sales_qty)).'" data-last-valid="'.min(999,max(1,(int)$res3->sales_qty)).'" class="form-control no-padding text-center min_width pos-qty-input" style="font-size:16px;font-weight:bold;" onkeydown="return allow_pos_qty_key(event)" oninput="validate_pos_qty(this)" onchange="item_qty_input('.$res3->item_id.','.$i.')" id="item_qty_'.$i.'" name="item_qty_'.$i.'">';
 			    $quantity       .='<span class="input-group-btn"><button onclick="increment_qty('.$res3->item_id.','.$i.')" type="button" class="btn btn-default btn-flat"><i class="fa fa-plus text-success"></i></button></span></div>';
 			    $sub_total       =$res3->total_cost;
 			    $remove_btn      ='<img src="'.base_url('uploads/icon02.png').'" class="pos-remove-icon" onclick="removerow('.$i.')" title="Delete Item?" alt="Remove">';
@@ -924,7 +948,7 @@ class Pos_model extends CI_Model {
 		  		$warehouse_stock = total_available_qty_items_of_warehouse($warehouse_id,null,$res3->item_id);
 		  		$stock=$warehouse_stock;//$q5->row()->stock + $res3->sales_qty;
 
-		  		$item_discount = $res3->discount_amt;
+			$item_discount = store_number_format($res3->discount_amt, false);
 		  		$item_discount_type = $res3->discount_type;
 		  		$item_discount_input = $res3->discount_input;
 
@@ -935,13 +959,13 @@ class Pos_model extends CI_Model {
 				$per_item_price_inc_tax=$price_per_unit;
 				$per_item_price_inc_tax=number_format($per_item_price_inc_tax,decimals(),'.','');	
 
-				$tax_amt = $res3->tax_amt;
+			$tax_amt = store_number_format($res3->tax_amt, false);
 				$tax_type = $res3->tax_type;
 				$tax_id = $res3->tax_id;
 				$tax_value = $q6->tax;
 
 		  		$quantity        ='<div class="input-group input-group-sm"><span class="input-group-btn"><button onclick="decrement_qty('.$res3->item_id.','.$i.')" type="button" class="btn btn-default btn-flat"><i class="fa fa-minus text-danger"></i></button></span>';
-			    $quantity       .='<input typ="text" value="'.format_qty($res3->sales_qty).'" class="form-control min_width" onkeyup="item_qty_input('.$res3->item_id.','.$i.')" id="item_qty_'.$i.'" name="item_qty_'.$i.'">';
+			    $quantity       .='<input type="text" inputmode="numeric" maxlength="3" value="'.min(999,max(1,(int)$res3->sales_qty)).'" data-last-valid="'.min(999,max(1,(int)$res3->sales_qty)).'" class="form-control min_width text-center pos-qty-input" onkeydown="return allow_pos_qty_key(event)" oninput="validate_pos_qty(this)" onchange="item_qty_input('.$res3->item_id.','.$i.')" id="item_qty_'.$i.'" name="item_qty_'.$i.'">';
 			    $quantity       .='<span class="input-group-btn"><button onclick="increment_qty('.$res3->item_id.','.$i.')" type="button" class="btn btn-default btn-flat"><i class="fa fa-plus text-success"></i></button></span></div>';
 			    $sub_total       =$res3->total_cost;
 			    $remove_btn      ='<img src="'.base_url('uploads/icon02.png').'" class="pos-remove-icon" onclick="removerow('.$i.')" title="Delete Item?" alt="Remove">';
@@ -1058,6 +1082,10 @@ class Pos_model extends CI_Model {
 				//RECEIVE VALUES FROM FORM
 				$item_id 	=$this->xss_html_filter(trim($_REQUEST['tr_item_id_'.$i]));
 				$sales_qty 	=$this->xss_html_filter(trim($_REQUEST['item_qty_'.$i]));
+				if (!ctype_digit((string) $sales_qty) || (int) $sales_qty < 1 || (int) $sales_qty > 999) {
+					$this->db->trans_rollback();
+					return "Quantity must be a whole number between 1 and 999.";
+				}
 				$price_per_unit =$this->xss_html_filter(trim($_REQUEST['sales_price_'.$i]));
 				$tax_amt =$this->xss_html_filter(trim($_REQUEST['td_data_'.$i.'_11']));
 				$tax_type =$this->xss_html_filter(trim($_REQUEST['tr_tax_type_'.$i]));

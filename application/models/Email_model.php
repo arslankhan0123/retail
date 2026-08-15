@@ -64,6 +64,9 @@ class Email_model extends CI_Model {
 	//Send email
 	public function send_email(array $content){
 
+		$requested_store_id = isset($content['store_id']) ? (int)$content['store_id'] : 0;
+		$attachments = isset($content['attachments']) && is_array($content['attachments']) ? $content['attachments'] : array();
+		unset($content['attachments']);
 		extract($this->xss_html_filter($content));
 
 		//Validate
@@ -78,9 +81,12 @@ class Email_model extends CI_Model {
 		}
 
 		//is SaaS module enabled ?
-		$store_id = (store_module()) ? 1 : get_current_store_id();
+		$store_id = $requested_store_id>0 ? $requested_store_id : get_current_store_id();
 
 		$store_rec = get_store_details($store_id);
+		if(empty($store_rec)){
+			return "Branch SMTP settings not found.";
+		}
 
 		$smtp_status=$store_rec->smtp_status;
 
@@ -97,30 +103,44 @@ class Email_model extends CI_Model {
 				  'newline' => "\r\n"
 				);
 
-		    //Load email library
+			    //Load email library
 		    $this->load->library('email',$config);
+		    $this->email->initialize($config);
+		    $this->email->clear(true);
 		    
 		    $this->email->to($to);
-		    $this->email->from($store_rec->smtp_user,$store_rec->store_name);
+		    $from_email = filter_var($store_rec->email,FILTER_VALIDATE_EMAIL) ? $store_rec->email : $store_rec->smtp_user;
+		    if(!filter_var($from_email,FILTER_VALIDATE_EMAIL)){
+		      return "Please set a valid Branch Email address for SMTP sender.";
+		    }
+		    $this->email->from($from_email,$store_rec->store_name);
 
 		    //Email content
 		    $this->email->subject($subject);
 		    $this->email->message($message);
+		    foreach($attachments as $attachment){
+		      if(!isset($attachment['content'],$attachment['name'],$attachment['mime'])) continue;
+		      $this->email->attach($attachment['content'],'attachment',$attachment['name'],$attachment['mime']);
+		    }
 
 		    //Send email
 		    if($this->email->send()){
 		        return true;
 		    }
 		    else{
-		        return "Failed to send Email!";
+		        log_message('error','SMTP send failed for store '.$store_id.': '.$this->email->print_debugger(array('headers')));
+		        return "Failed to send email. Please verify SMTP host, port, username and password.";
 		    }
 
 		    //echo $this->email->print_debugger();	
 		}//If SMTP enabled
 		else{
 			//Send trough regular email method
+			if(!empty($attachments)){
+				return "SMTP must be enabled to send the invoice PDF attachment.";
+			}
 
-			if(mail($to, $server_subject, $ready_message)){
+			if(mail($to, $subject, $message)){
 				return true;
 			}
 			else{

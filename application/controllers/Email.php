@@ -28,7 +28,7 @@ class Email extends MY_Controller {
 							'message' 			=> $this->input->post('email_content'), 
 						);
 		$response = $this->email_model->send_email($email_info);
-		if($response){
+		if($response===true){
 			$this->session->set_flashdata('success', 'Success!! Email Sent Successfully! ');
 		}
 		else{

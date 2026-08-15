@@ -89,7 +89,7 @@
                                         <b><?= format_qty(total_available_qty_items_of_warehouse($res1->id,$res1->store_id)); ?></b>
                                         <br>
                                         <i><?= $CI->lang->line('worth'); ?></i>:
-                                        <b><?= $CI->currency(total_worth_of_warehouse_items($res1->id,$res1->store_id)); ?></b>
+                                        <b><?= store_number_format(total_worth_of_warehouse_items($res1->id,$res1->store_id)); ?></b>
 
                                     </td>
                                     <td>

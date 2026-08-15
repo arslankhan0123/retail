@@ -99,6 +99,7 @@ class Users_model extends CI_Model {
 		
 		extract($_POST);
 		extract($data);
+		$is_self_update=((int)$q_id===(int)$this->session->userdata('inv_userid')) && !is_admin() && !permissions('users_edit');
 		$this->db->trans_begin();
 
 		$profile_picture='';
@@ -126,12 +127,16 @@ class Users_model extends CI_Model {
 
 
 		if(!is_admin()){
-			$user_store_id = $this->db->select('store_id')->where("id",$q_id)->get('db_users')->row()->store_id;
-			if(empty($user_store_id)){
+			$user_record = $this->db->select('store_id,role_id')->where('id',(int)$q_id)->get('db_users')->row();
+			if(empty($user_record)){
 				echo "Something went Wrong!!";exit();
 			}
-			if($user_store_id!=get_current_store_id()){
+			if($user_record->store_id!=get_current_store_id()){
 				echo "Something went Wrong!!";exit();
+			}
+			if($is_self_update){
+				$role_id=$user_record->role_id;
+				$store_id=$user_record->store_id;
 			}
 		}
 
@@ -177,7 +182,7 @@ class Users_model extends CI_Model {
 		if (!$q1){
 			return "failed";
 		}
-		if(warehouse_module() && isset($_POST['warehouses']) && $role_id!=1 && $role_id!=store_admin_id()){
+		if(!$is_self_update && warehouse_module() && isset($_POST['warehouses']) && $role_id!=1 && $role_id!=store_admin_id()){
 			$this->db->where('user_id',$q_id)->delete("db_userswarehouses");
 			$warehouses_list = sizeof($_POST['warehouses']);
 			foreach ($_POST['warehouses'] as $res => $val) {

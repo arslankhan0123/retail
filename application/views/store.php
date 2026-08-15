@@ -95,7 +95,7 @@
                                                 <div class="form-group">
                                                    <label for="mobile" class="col-sm-4 control-label"><?= $this->lang->line('mobile'); ?><label class="text-danger">*</label></label>
                                                    <div class="col-sm-8">
-                                                      <input type="text" class="form-control no_special_char_no_space" id="mobile" name="mobile" placeholder="" value="<?php print $mobile; ?>" onkeyup="shift_cursor(event,'email')" >
+                                                      <input type="text" class="form-control multiple_mobile_numbers" id="mobile" name="mobile" placeholder="+971500000000,+971511111111" title="Separate multiple mobile numbers with a comma" value="<?php print $mobile; ?>" onkeyup="shift_cursor(event,'email')" >
                                                       <span id="mobile_msg" style="display:none" class="text-danger"></span>
                                                    </div>
                                                 </div>

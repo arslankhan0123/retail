@@ -1,4 +1,8 @@
 
+$('.multiple_mobile_numbers').on('input',function(){
+	this.value=this.value.replace(/[^0-9+,]/g,'');
+});
+
 $('#update').on("click",function (e) {
 	var base_url=$("#base_url").val();
     //Initially flag set true

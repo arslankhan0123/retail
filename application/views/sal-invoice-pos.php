@@ -6,8 +6,9 @@
   <style>
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;background:#fff;color:#000}
-    body{font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:1.22}
+    body{font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:1.22;font-weight:700}
     .receipt{width:80mm;max-width:80mm;margin:0 auto;padding:4mm 5mm 5mm}
+    .receipt,.receipt table,.receipt th,.receipt td,.receipt div,.receipt span{font-weight:700}
     .center{text-align:center}.right{text-align:right}.bold{font-weight:700}
     .store-logo{display:block;max-width:34mm;max-height:20mm;width:auto;height:auto;margin:0 auto 2px}
     .store-name{font-size:9px;font-weight:900;text-transform:uppercase;white-space:nowrap}
@@ -34,6 +35,11 @@
     .detail-row span,.detail-row i,.detail-row b{display:block;white-space:nowrap}
     .detail-row i{font-style:normal;text-align:center}
     .detail-row b{text-align:right;font-variant-numeric:tabular-nums}
+    .detail-list{width:100%;border-collapse:collapse;font-size:9px;table-layout:fixed}
+    .detail-list td{padding:1px 0;white-space:nowrap}
+    .detail-list .detail-label{width:58%;text-align:left}
+    .detail-list .detail-colon{width:7%;text-align:center}
+    .detail-list .detail-value{width:35%;text-align:right;font-variant-numeric:tabular-nums}
     .details td.vat-details{text-align:left;padding-left:2mm;padding-right:0}
     .vat-details .section-title{text-align:left}
     .vat-details .detail-row{grid-template-columns:19mm 2mm minmax(0,1fr)}
@@ -42,11 +48,19 @@
     .policy-title{font-size:11px;font-weight:700;margin:2px 0 1px}
     .policy{font-size:8px;line-height:1.2;white-space:pre-line}
     .thank-you{font-size:9px;font-weight:700;margin:10px 0 5px}
-    .receipt-marks{display:flex;width:100%;align-items:center;justify-content:center;gap:10mm;margin-top:7px}
-    .receipt-marks img{display:block;width:auto;height:auto;object-fit:contain}
+    .receipt-marks{width:48mm;margin:7px auto 0;border-collapse:collapse;table-layout:fixed}
+    .receipt-marks td{width:50%;padding:0 2mm;text-align:center;vertical-align:middle}
+    .receipt-marks img{display:inline-block;width:auto;height:auto;object-fit:contain}
     .qr{max-width:18mm;max-height:18mm}
     .paid-logo{max-width:25mm;max-height:20mm}
     .print-button{display:block;width:55mm;margin:12px auto 0;padding:5px;border:0;background:#00a65a;color:#fff;cursor:pointer}
+    body.email-pdf .receipt{width:70mm;max-width:70mm}
+    body.email-pdf .store-name{white-space:normal}
+    body.email-pdf .invoice-meta{font-size:8px}
+    body.email-pdf .items th{font-size:8px}
+    body.email-pdf .section-title{font-size:12px}
+    body.email-pdf .detail-row{font-size:8px;grid-template-columns:16mm 2mm minmax(0,1fr)}
+    body.email-pdf .vat-details .detail-row{grid-template-columns:15mm 2mm minmax(0,1fr)}
     @media print{
       @page{size:80mm auto;margin:0}
       html,body,.receipt{width:80mm;max-width:80mm}
@@ -55,7 +69,7 @@
     }
   </style>
 </head>
-<body onload="window.print();">
+<body<?= !empty($email_pdf) ? ' class="email-pdf"' : ''; ?>>
 <?php
 $sale = $this->db
   ->select('s.*, c.customer_name')
@@ -171,15 +185,19 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
     <tr>
       <td>
         <div class="section-title">PAYMENT DETAILS</div>
-        <div class="detail-row"><span>Payment Type</span><i>:</i><b><?= html_escape($payment_text); ?></b></div>
-        <div class="detail-row"><span>Received Amount</span><i>:</i><b><?= store_number_format($received_amount); ?></b></div>
-        <div class="detail-row"><span>Balance Amount</span><i>:</i><b><?= store_number_format($change_return); ?></b></div>
+        <table class="detail-list">
+          <tr><td class="detail-label">Payment Type</td><td class="detail-colon">:</td><td class="detail-value"><?= html_escape($payment_text); ?></td></tr>
+          <tr><td class="detail-label">Received Amount</td><td class="detail-colon">:</td><td class="detail-value"><?= store_number_format($received_amount); ?></td></tr>
+          <tr><td class="detail-label">Balance Amount</td><td class="detail-colon">:</td><td class="detail-value"><?= store_number_format($change_return); ?></td></tr>
+        </table>
       </td>
       <td class="vat-details">
         <div class="section-title">VAT DETAILS</div>
-        <div class="detail-row"><span>Taxable Amount</span><i>:</i><b><?= store_number_format($taxable_amount); ?></b></div>
-        <div class="detail-row"><span>VAT Rate(s)</span><i>:</i><b><?= html_escape($tax_rate_text); ?></b></div>
-        <div class="detail-row"><span>VAT Amount</span><i>:</i><b><?= store_number_format($tax_total); ?></b></div>
+        <table class="detail-list">
+          <tr><td class="detail-label">Taxable Amount</td><td class="detail-colon">:</td><td class="detail-value"><?= store_number_format($taxable_amount); ?></td></tr>
+          <tr><td class="detail-label">VAT Rate(s)</td><td class="detail-colon">:</td><td class="detail-value"><?= html_escape($tax_rate_text); ?></td></tr>
+          <tr><td class="detail-label">VAT Amount</td><td class="detail-colon">:</td><td class="detail-value"><?= store_number_format($tax_total); ?></td></tr>
+        </table>
       </td>
     </tr>
   </table>
@@ -192,12 +210,14 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
   <?php endif; ?>
 
   <div class="thank-you center"><?= nl2br(html_escape($footer)); ?></div>
-  <div class="receipt-marks">
-    <div><?php if(!empty($store->qr_image)): ?><img class="qr" src="<?= base_url($store->qr_image); ?>" alt="QR Code"><?php endif; ?></div>
-    <div><img class="paid-logo" src="<?= base_url('uploads/paid3.jpeg'); ?>" alt="Paid"></div>
-  </div>
+  <table class="receipt-marks">
+    <tr>
+      <td><?php if(!empty($store->qr_image)): ?><img class="qr" src="<?= base_url($store->qr_image); ?>" alt="QR Code"><?php endif; ?></td>
+      <td><img class="paid-logo" src="<?= base_url('uploads/paid3.jpeg'); ?>" alt="Paid"></td>
+    </tr>
+  </table>
 
-  <button type="button" class="print-button no-print" onclick="window.print()">Print</button>
+  <?php if(empty($email_pdf)): ?><button type="button" class="print-button no-print" onclick="window.print()">Print</button><?php endif; ?>
   <?php if(isset($_GET['redirect'])): ?><div class="center no-print"><a href="<?= base_url($_GET['redirect']); ?>">Back</a></div><?php endif; ?>
 </main>
 </body>

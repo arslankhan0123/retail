@@ -250,7 +250,11 @@ $sales_due_total = $this->db->select("COALESCE(SUM(sales_due),0) AS sales_due")-
                     <div class="form-group">
                        <label for="users"><?=$this->lang->line('users');?> </label></label>
                        <select class="form-control select2" id="users" name="users"  style="width: 100%;">
-                        <?=get_users_select_list($this->session->userdata("role_id"), get_current_store_id());?>
+                        <?php if(is_admin() || is_store_admin()){ ?>
+                          <?=get_users_select_list($this->session->userdata("role_id"), get_current_store_id());?>
+                        <?php }else{ ?>
+                          <option value="<?=html_escape($this->session->userdata('inv_username'));?>"><?=html_escape(ucfirst($this->session->userdata('inv_username')));?></option>
+                        <?php } ?>
                      </select>
                        <span id="users_msg" style="display:none" class="text-danger"></span>
                     </div>

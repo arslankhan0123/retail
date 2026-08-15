@@ -3,6 +3,15 @@
    <head>
   <!-- TABLES CSS CODE -->
   <?php include"comman/code_css.php"; ?>
+  <style>
+    #item-fields-layout{display:flex;flex-wrap:wrap;align-items:flex-start}
+    #item-fields-layout>.form-group{float:none;width:25%;margin-bottom:15px}
+    .select2-container--open{z-index:99999}
+    #items-form .box-body>hr.item-layout-empty-separator{display:none}
+    #items-form .box-body>.row.item-layout-empty-row{display:none}
+    @media(max-width:991px){#item-fields-layout>.form-group{width:50%}}
+    @media(max-width:767px){#item-fields-layout>.form-group{width:100%}}
+  </style>
   
   <!-- </copy> -->  
   </head>
@@ -86,6 +95,7 @@
                           </div>
 
                            <div class="row">
+                              <div id="item-fields-layout"></div>
                               <div class="form-group col-md-4">
                                  <label for="item_name"><?= $this->lang->line('item_name'); ?><span class="text-danger">*</span></label>
                                  <input type="text" autofocus="" class="form-control" id="item_name" name="item_name" placeholder="" value="<?php print $item_name; ?>">
@@ -508,6 +518,41 @@
       <script src="<?php echo $theme_link; ?>js/items.js?v=<?= filemtime(FCPATH.'theme/js/items.js'); ?>"></script>
       <script src="<?php echo $theme_link; ?>js/modals.js"></script>
       <script type="text/javascript">
+        $(document).ready(function(){
+          var itemFieldOrder = [
+            'item_name','dptid','category_id','unit_id',
+            'item_group','price','tax_id','purchase_price',
+            'tax_type','sales_price','__spacer__','__spacer__',
+            'supid','brand_id','scatid','clid',
+            'szid','rkid','bnid','bsid',
+            'sku','alert_qty','maximum_qty','minimum_qty',
+            'reorder_qty','custom_barcode','description','item_image',
+            'discount_type','discount','warehouse_id','adjustment_qty',
+            'previous_opening_stock'
+          ];
+          var $layout = $('#item-fields-layout');
+          $.each(itemFieldOrder,function(index,id){
+            if(id==='__spacer__'){
+              $layout.append('<div class="form-group col-md-3 hidden-sm hidden-xs" aria-hidden="true"></div>');
+              return;
+            }
+            var $field = $('#items-form').find('[id="'+id+'"]').first();
+            if(!$field.length) return;
+            var $group = $field.closest('.form-group');
+            $group.removeClass('col-md-4').addClass('col-md-3');
+            $layout.append($group);
+          });
+          $('#supid').next('.select2-container').css('width','100%');
+          $('#items-form .box-body>hr').addClass('item-layout-empty-separator');
+          $('#items-form .box-body>.row').each(function(){
+            var $row=$(this);
+            if($row.find('#item-fields-layout').length || $row.hasClass('variant_div')) return;
+            if(!$row.find('.form-group:visible').length){
+              $row.addClass('item-layout-empty-row');
+            }
+          });
+        });
+
          $("#discount_type").val(<?= json_encode(in_array($discount_type, array('Percentage', 'Fixed'), true) ? $discount_type : 'Percentage'); ?>);
         <?php if(isset($q_id)){ ?>
           $("#store_id").attr('readonly',true);

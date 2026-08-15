@@ -39,7 +39,7 @@
             <li class=""><a href="<?php echo $base_url; ?>items/" title="View Items List"><i class="fa  fa-cubes text-yellow " ></i> <span><?= $this->lang->line('items_list'); ?></span></a></li>
             <?php } ?>
             <?php if($CI->permissions('sales_add')) { ?>
-            <li class=""><a id="new_pos_invoice" href="<?php echo $base_url; ?>pos" title="Void All"><i class="fa fa-calculator text-yellow " ></i> <span>Void All</span></a></li>
+            <li class=""><a id="new_pos_invoice" href="<?php echo $base_url; ?>pos" title="New Invoice"><i class="fa fa-calculator text-yellow " ></i> <span>New Invoice</span></a></li>
             <?php } ?>
           </ul>
         </div>
@@ -145,9 +145,10 @@
 
     <!-- **********************MODALS***************** -->
     <?php include"modals/modal_customer.php"; ?>
-    <?php include"modals/modal_sales_item.php"; ?>
+    <?php $show_sales_item_details = true; include"modals/modal_sales_item.php"; unset($show_sales_item_details); ?>
     <?php include"modals/modal_item.php"; ?>
     <?php include"modals/modal_item_or_service.php"; ?>
+
     
     <?php /*include"modals/modal_service.php";*/ ?>
 
@@ -395,6 +396,13 @@
               <!-- /.box-body -->
 
               <div class="box-footer bg-gray">
+                <div class="row">
+                  <div class="col-md-12">
+                    <label class="cursor-pointer" style="margin-bottom:8px;">
+                      <input type="checkbox" id="send_invoice_email" name="send_invoice_email" value="1" autocomplete="off"> Send Email
+                    </label>
+                  </div>
+                </div>
                 <div class="row">
                   <div class="col-md-3 text-center">
                           <label> <?= $this->lang->line('quantity'); ?>:</label><br>

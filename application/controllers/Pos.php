@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 //use chillerlan\QRCode\{QRCode, QROptions};
 
 
@@ -67,16 +70,21 @@ class Pos extends MY_Controller {
 	    echo $this->pos_model->receive_order();
 	}
 	public function pos_save_update(){
-	    $response = $this->pos_model->pos_save_update();
+		$response = $this->pos_model->pos_save_update();
 
-	    $explode = explode("<<<###>>>",$response);
-	    if($explode['0']=='success'){
-	    	$init_code=get_only_init_code('sales');
-      		$count_id=get_last_count_id('db_sales');
-      		$customer_remaining_advance=get_customer_details($_REQUEST['customer_id'])->tot_advance;
-	    	$response .="<<<###>>>".$init_code."<<<###>>>".$count_id."<<<###>>>".$customer_remaining_advance;
-	    }
-	    echo $response;
+		$explode = explode("<<<###>>>",$response);
+		if($explode['0']=='success'){
+			$init_code=get_only_init_code('sales');
+			$count_id=get_last_count_id('db_sales');
+			$customer_remaining_advance=get_customer_details($_REQUEST['customer_id'])->tot_advance;
+			$email_result=array('status'=>'skipped','message'=>'');
+			if($this->input->post('send_invoice_email')=='1'){
+				$email_result=$this->send_pos_invoice_email((int)$explode[1]);
+			}
+			$response .="<<<###>>>".$init_code."<<<###>>>".$count_id."<<<###>>>".$customer_remaining_advance
+				."<<<###>>>".$email_result['status']."<<<###>>>".$email_result['message'];
+		}
+		echo $response;
 	}
 	public function edit($sales_id){
 		$this->belong_to('db_sales',$sales_id);
@@ -169,6 +177,71 @@ class Pos extends MY_Controller {
 	}
 	public function get_item_details(){
 		echo $this->pos_model->get_item_details($this->input->post('item_id'));
+	}
+
+	public function email_invoice(){
+		if(!$this->permissions('sales_add') && !$this->permissions('sales_edit')){
+			return $this->output->set_content_type('application/json')->set_status_header(403)
+				->set_output(json_encode(array('status'=>'error','message'=>'Access denied.')));
+		}
+
+		$sales_id=(int)$this->input->post('sales_id');
+		if($sales_id<=0){
+			return $this->output->set_content_type('application/json')->set_status_header(422)
+				->set_output(json_encode(array('status'=>'error','message'=>'Invalid invoice.')));
+		}
+
+		$this->belong_to('db_sales',$sales_id);
+		$result=$this->send_pos_invoice_email($sales_id);
+		$status=$result['status']==='success' ? 200 : 422;
+		return $this->output->set_content_type('application/json')->set_status_header($status)
+			->set_output(json_encode($result));
+	}
+
+	private function send_pos_invoice_email($sales_id){
+		$sale=$this->db->select('count_id,store_id')->where('id',(int)$sales_id)->get('db_sales')->row();
+		if(empty($sale)){
+			return array('status'=>'error','message'=>'Invoice not found.');
+		}
+		$store=get_store_details($sale->store_id);
+		$email=!empty($store) ? trim((string)$store->email) : '';
+		if(!filter_var($email,FILTER_VALIDATE_EMAIL)){
+			return array('status'=>'error','message'=>'Please set a valid Email in Branch Settings.');
+		}
+
+		try{
+			$data=$this->data;
+			$data['sales_id']=$sales_id;
+			$data['email_pdf']=true;
+			$html=$this->load->view('sal-invoice-pos',$data,true);
+			$options=new Options();
+			$options->set('isRemoteEnabled',true);
+			$dompdf=new Dompdf($options);
+			$dompdf->loadHtml($html,'UTF-8');
+			$dompdf->setPaper(array(0,0,226.77,1000),'portrait');
+			$dompdf->render();
+
+			$this->load->model('email_model');
+			$invoice_number=!empty($sale->count_id) ? $sale->count_id : $sales_id;
+			$response=$this->email_model->send_email(array(
+				'to'=>$email,
+				'subject'=>'Al Kasir Invoice #'.$invoice_number,
+				'message'=>"Thank you for your purchase. Your POS invoice summary is attached as a PDF.",
+				'store_id'=>$sale->store_id,
+				'attachments'=>array(array(
+					'content'=>$dompdf->output(),
+					'name'=>'Al-Kasir-Invoice-'.$invoice_number.'.pdf',
+					'mime'=>'application/pdf',
+				)),
+			));
+			if($response===true){
+				return array('status'=>'success','message'=>'Invoice PDF emailed to '.$email.'.');
+			}
+			return array('status'=>'error','message'=>$response);
+		}catch(Throwable $exception){
+			log_message('error','POS invoice email failed for sale '.$sales_id.': '.$exception->getMessage());
+			return array('status'=>'error','message'=>'Invoice email failed: '.$exception->getMessage());
+		}
 	}
 
 	public function save_void_log(){

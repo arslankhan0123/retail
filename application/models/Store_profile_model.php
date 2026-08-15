@@ -29,6 +29,12 @@ class Store_profile_model extends CI_Model {
 			}
 		}
 
+		$mobile = trim(preg_replace('/\s+/', '', $mobile), ',');
+		if(!preg_match('/^\+?\d+(,\+?\d+)*$/', $mobile)){
+			echo 'Enter valid mobile numbers separated by commas.';
+			exit();
+		}
+
 		$this->db->trans_begin();
 		
 		$store_logo='';

@@ -108,17 +108,18 @@ Thank you
 								'to' => $to,
 								'subject' => $subject,
 								'message' => $message,
+								'store_id' => $store_id,
 							);
 			$response = $this->email_model->send_email($contants);
 
-			if($response){
+			if($response===true){
 				$this->session->set_flashdata('success', 'OTP has been sent to your email ID! (Check Inbox/Spam Box)');
 				$otpdata = array('email'  => $to,'otp'  => $otp );
 				$this->session->set_userdata($otpdata);
 				return true;
 			}
 			else{
-				$this->session->set_flashdata('error', $response);
+				$this->session->set_flashdata('failed', $response);
 				return false;
 			}
 		

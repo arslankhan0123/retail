@@ -903,8 +903,8 @@ class Pos_model extends CI_Model {
                   $str =$str."<td>".show_date($res2->sales_date)."</td>";
                   $str =$str."<td>".$res2->reference_id."</td>";
                   $str =$str."<td>";
-                  	$str =$str.'<a class="fa fa-fw fa-trash-o text-red" style="cursor: pointer;font-size: 20px;" onclick="hold_invoice_delete('.$res2->id.')" title="Delete Invoive?"></a>';
-                  	$str =$str.'<a class="fa fa-fw fa-edit text-success" style="cursor: pointer;font-size: 20px;" onclick="hold_invoice_edit('.$res2->id.')" title="Edit Invoive?"></a>';
+                  $str =$str.'<a class="fa fa-fw fa-trash-o text-red" style="color:#dd4b39 !important;cursor:pointer;font-size:20px;" onclick="hold_invoice_delete('.$res2->id.')" title="Delete Invoice?"></a>';
+                  $str =$str.'<a class="fa fa-fw fa-edit text-yellow" style="color:#f39c12 !important;cursor:pointer;font-size:20px;" onclick="hold_invoice_edit('.$res2->id.')" title="Edit Invoice?"></a>';
                   $str =$str."</td>";
                 $str =$str."</tr>";
 	     

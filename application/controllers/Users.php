@@ -19,6 +19,13 @@
 		}
 		public function save_or_update(){
 			$data=$this->data;//My_Controller constructor data accessed here
+			if($this->input->get('command')=='update'){
+				$target_user_id=(int)$this->input->post('q_id');
+				$is_self=($target_user_id===(int)$this->session->userdata('inv_userid'));
+				if(!$is_self){
+					$this->permission_check_with_msg('users_edit');
+				}
+			}
 			$this->form_validation->set_rules('new_user', 'Usenname', 'required|trim|min_length[2]|max_length[50]');
 			
 			if($_GET['command']!='update'){
@@ -118,16 +125,19 @@
 		}
 
 		public function edit($id){
+			$is_self=((int)$id===(int)$this->session->userdata('inv_userid'));
 			if(!is_admin()){
-				$user_store_id = $this->db->select('store_id')->where("id",$id)->get('db_users')->row()->store_id;
-				if(empty($user_store_id)){
+				$user_record = $this->db->select('store_id')->where('id',(int)$id)->get('db_users')->row();
+				if(empty($user_record)){
 					show_error("Invalid Data", 403, $heading = "You have entered Invalid Data!!");exit();
 				}
-				if($user_store_id!=get_current_store_id()){
+				if($user_record->store_id!=get_current_store_id()){
 					show_error("Access Denied", 403, $heading = "Unauthorized Access!!");exit();
 				}
 			}
-			$this->permission_check('users_edit');
+			if(!$is_self){
+				$this->permission_check('users_edit');
+			}
 			$this->load->model('users_model');
 			$data=$this->users_model->get_details($id);
 			$data['page_title']=$this->lang->line('edit_user');

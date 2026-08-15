@@ -29,8 +29,24 @@
                            <div class="box box-solid bg-gray">
                               <div class="box-body">
                                  <div class="row">
-                                    
-                                    <div class="col-md-6 hide">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label for="item_discount_input"><?= $this->lang->line('discount'); ?></label>
+                                          <input type="text" class="form-control only_currency" id="item_discount_input" name="item_discount_input" placeholder="" value="0" onkeyup="click_this(event,'.set_options')">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label for="item_discount_type"><?= $this->lang->line('discount_type'); ?></label>
+                                          <select class="form-control" id="item_discount_type" name="item_discount_type" style="width: 100%;">
+                                            <option value='Percentage'>Percentage(%)</option>
+                                            <option value='Fixed'>Fixed(<?= $CI->currency() ?>)</option>
+                                          </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6<?= empty($show_sales_item_details) ? ' hide' : '' ?>">
                                         <div class="form-group">
                                           <label for="popup_tax_type"><?= $this->lang->line('tax_type'); ?></label>
                                          <select class="form-control select2" id="popup_tax_type" name="popup_tax_id"  style="width: 100%;" >
@@ -41,7 +57,7 @@
                                    
                                     </div>
 
-                                    <div class="col-md-6 hide">
+                                    <div class="col-md-6<?= empty($show_sales_item_details) ? ' hide' : '' ?>">
                                         <div class="form-group">
                                           <label for="popup_tax_id"><?= $this->lang->line('tax'); ?></label>
                                          <select class="form-control select2" id="popup_tax_id" name="popup_tax_id"  style="width: 100%;" >
@@ -68,25 +84,6 @@
                                    
                                     </div>
 
-                                    
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                          <label for="item_discount_type"><?= $this->lang->line('discount_type'); ?></label>
-                                         <select class="form-control" id="item_discount_type" name="item_discount_type"  style="width: 100%;" >
-                                          <option value='Percentage'>Percentage(%)</option>
-                                          <option value='Fixed'>Fixed(<?= $CI->currency() ?>)</option>
-                                          </select>
-                                        </div>
-                                   
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                          <label for="item_discount_input"><?= $this->lang->line('discount'); ?></label>
-                                        <input type="text" class="form-control only_currency" id="item_discount_input" name="item_discount_input" placeholder="" value="0" onkeyup="click_this(event,'.set_options')">
-                                        </div>
-                                   
-                                    </div>
                                     <div class="col-md-12 hide">
                                         <div class="form-group">
                                           <label for="popup_tax_type"><?= $this->lang->line('description'); ?></label>

@@ -59,6 +59,7 @@ function save(print=false,pay_all=false){
 //$('.make_sale').on("click",function (e) {
 	
 	var base_url=$("#base_url").val();
+	var send_invoice_email=$("#send_invoice_email").is(':checked');
 
     if(!$("#salesman_id").val()){
         toastr["warning"]("Please Select Salesman!!");
@@ -139,6 +140,10 @@ function save(print=false,pay_all=false){
 			            toastr['success']("Record Saved Successfully!!");
 			            success.currentTime = 0;
 			            success.play();
+			            if(send_invoice_email){
+			              if(result[5]==='success') toastr['success'](result[6] || "Invoice PDF emailed successfully.");
+			              else toastr['error'](result[6] || "Invoice email failed.");
+			            }
 						var warehouse_id=$("#warehouse_id").val();
 						var print_done=true;
 						if(print){

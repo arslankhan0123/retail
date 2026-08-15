@@ -436,7 +436,7 @@ $CI = &get_instance();
 
 
 
-      <?php if (($CI->permissions('discountCouponView') || $CI->permissions('customerCouponView')) && !is_admin()) { ?>
+      <?php if (false && ($CI->permissions('discountCouponView') || $CI->permissions('customerCouponView')) && !is_admin()) { ?>
         <!-- <li class="header">QUOTATION</li> -->
         <li class="coupon-active-li treeview">
           <a href="#">

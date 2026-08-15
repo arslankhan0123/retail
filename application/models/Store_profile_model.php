@@ -79,6 +79,7 @@ class Store_profile_model extends CI_Model {
 		$mrp_column = (isset($mrp_column) && (int)$mrp_column === 1) ? 1 : 0;
 		$previous_balance_bit = (isset($previous_balance_bit)) ? 1 : 0;
 		$round_off = (isset($round_off)) ? 1 : 0;
+		$allow_negative_stock = (isset($allow_negative_stock) && (int)$allow_negative_stock === 1) ? 1 : 0;
 
 		
 
@@ -122,7 +123,8 @@ class Store_profile_model extends CI_Model {
 		    				'pdf_format'				=> $pdf_format,
 		    				'sales_invoice_footer_text'	=> $sales_invoice_footer_text,
 		    				'invoice_terms'				=> $invoice_terms,
-		    				'round_off'					=> $round_off,
+						'round_off'					=> $round_off,
+						'allow_negative_stock'		=> $allow_negative_stock,
 		    				'language_id'				=> $language_id,
 		    				'barcode_type'				=> $barcode_type,
 		    				'decimals'					=> $decimals,

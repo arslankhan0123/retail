@@ -55,6 +55,22 @@ class Sales_model extends CI_Model {
 		/*If warehouse selected*/
 		$warehouse_id = $this->input->post('warehouse_id');
 		$customer_id = $this->input->post('customer_id');
+		$dptid = $this->input->post('dptid');
+		$category_id = $this->input->post('category_id');
+		$scatid = $this->input->post('scatid');
+		$salesman_id = $this->input->post('salesman_id');
+
+		if(!empty($dptid) || !empty($category_id) || !empty($scatid)){
+			$this->db->join('db_salesitems as si','si.sales_id=a.id','inner');
+			$this->db->join('db_items as i','i.id=si.item_id','inner');
+			if(!empty($dptid)) $this->db->where('i.dptid',(int)$dptid);
+			if(!empty($category_id)) $this->db->where('i.category_id',(int)$category_id);
+			if(!empty($scatid)) $this->db->where('i.scatid',(int)$scatid);
+			$this->db->distinct();
+		}
+		if(!empty($salesman_id)){
+			$this->db->where('a.salesman_id',(int)$salesman_id);
+		}
 
 		if(!empty($warehouse_id)){
 			//$this->db->join('db_warehouse as w','w.id='.$warehouse_id,'left');
@@ -371,6 +387,7 @@ class Sales_model extends CI_Model {
 		//end
 
 		
+		$remaining_stock_by_item = array();
 		//Import post data from form
 		for($i=1;$i<=$rowcount;$i++){
 		
@@ -424,10 +441,14 @@ class Sales_model extends CI_Model {
 				$item_name = $item_details->item_name;
 				$service_bit = $item_details->service_bit;
 				$purchase_price = $item_details->purchase_price;
-				$current_stock_of_item = total_available_qty_items_of_warehouse($warehouse_id,null,$item_id);
-				if($current_stock_of_item<$sales_qty && $service_bit==0){
+				if(!isset($remaining_stock_by_item[(int)$item_id])){
+					$remaining_stock_by_item[(int)$item_id] = total_available_qty_items_of_warehouse($warehouse_id,null,$item_id);
+				}
+				$current_stock_of_item = $remaining_stock_by_item[(int)$item_id];
+				if(!is_negative_stock_allowed($sales_entry['store_id']) && $current_stock_of_item<$sales_qty && $service_bit==0){
 					return $item_name." has only ".$current_stock_of_item." in Stock!!";exit;
 				}
+				$remaining_stock_by_item[(int)$item_id] -= (float)$sales_qty;
 				
 				$salesitems_entry = array(
 		    				'sales_id' 			=> $sales_id, 

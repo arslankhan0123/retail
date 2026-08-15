@@ -20,9 +20,13 @@
          $hsn ='';
          $discount='';
          $discount_type='Percentage';
+         $dptid='';
+         $scatid='';
          }
          $new_opening_stock ='';
          $CI =& get_instance();
+         $barcode_row = $this->db->select('barcode_type')->where('id',get_current_store_id())->get('db_store')->row();
+         $barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $barcode_row->barcode_type : 'Automatic';
          ?>
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
@@ -68,29 +72,46 @@
                                  <span id="item_name_msg" style="display:none" class="text-danger"></span>
                               </div>
                               
+                              <?php $departments = $this->db->select('*')->from('db_department')->get()->result(); ?>
+                              <div class="form-group col-md-4">
+                                 <label for="dptid">Department <span class="text-danger">*</span></label>
+                                 <select class="form-control select2" id="dptid" name="dptid" style="width: 100%;">
+                                    <option value="">Select One</option>
+                                    <?php foreach($departments as $department){ ?>
+                                       <option value="<?= $department->dptid; ?>" <?= ((string)$dptid === (string)$department->dptid) ? 'selected' : ''; ?>><?= $department->dptName; ?></option>
+                                    <?php } ?>
+                                 </select>
+                                 <span id="dptid_msg" style="display:none" class="text-danger"></span>
+                              </div>
+                              <?php $categories = $this->db->select('*')->from('db_category')->where('dptid',$dptid)->get()->result(); ?>
                               <div class="form-group col-md-4">
                                  <label for="category_id">Category <span class="text-danger">*</span></label>
-                                 <select class="form-control select2" id="category_id" name="category_id"  style="width: 100%;"  value="<?php print $category_id; ?>">
-                                    <option value="">-Select-</option>
-                                  <?= get_categories_select_list($category_id);  ?>
+                                 <select class="form-control select2" id="category_id" name="category_id" style="width: 100%;">
+                                    <option value="">Select Department</option>
+                                    <?php foreach($categories as $category){ ?>
+                                       <option value="<?= $category->id; ?>" <?= ((string)$category_id === (string)$category->id) ? 'selected' : ''; ?>><?= $category->category_name; ?></option>
+                                    <?php } ?>
                                  </select>
                                  <span id="category_id_msg" style="display:none" class="text-danger"></span>
                               </div>
+                              <?php $subcategories = $this->db->select('*')->from('db_subcategory')->where('catid',$category_id)->get()->result(); ?>
                               <div class="form-group col-md-4">
-                                 <label for="custom_barcode" ><?= $this->lang->line('barcode'); ?><span class="text-danger">*</span></label>
-                                 <input type="text" class="form-control" id="custom_barcode" name="custom_barcode" placeholder=""  value="<?php print $custom_barcode; ?>" required >
+                                 <label for="scatid">Sub Category</label>
+                                 <select class="form-control select2" id="scatid" name="scatid" style="width: 100%;">
+                                    <option value="">Select Category</option>
+                                    <?php foreach($subcategories as $subcategory){ ?>
+                                       <option value="<?= $subcategory->scatid; ?>" <?= ((string)$scatid === (string)$subcategory->scatid) ? 'selected' : ''; ?>><?= $subcategory->scatName; ?></option>
+                                    <?php } ?>
+                                 </select>
+                                 <span id="scatid_msg" style="display:none" class="text-danger"></span>
+                              </div>
+                              <div class="form-group col-md-4 <?= ($barcode_type==='Automatic') ? 'hide' : ''; ?>">
+                                 <label for="custom_barcode" ><?= $this->lang->line('barcode'); ?></label>
+                                 <input type="text" class="form-control" id="custom_barcode" name="custom_barcode" placeholder="Optional" value="<?php print $custom_barcode; ?>">
                                  <span id="custom_barcode_msg" style="display:none" class="text-danger"></span>
                               </div>
-                              <div class="form-group col-md-4">
-                                 <label for="hsn" ><?= $this->lang->line('hsn'); ?></label>
-                                 <input type="text" class="form-control" id="hsn" name="hsn" placeholder=""  value="<?php print $hsn; ?>" >
-                                 <span id="hsn_msg" style="display:none" class="text-danger"></span>
-                              </div>
-                              <div class="form-group col-md-4">
-                                 <label for="seller_points" ><?= $this->lang->line('seller_points'); ?></label>
-                                 <input type="text" class="form-control only_currency" id="seller_points" name="seller_points" placeholder=""  value="<?php print $seller_points; ?>" >
-                                 <span id="seller_points_msg" style="display:none" class="text-danger"></span>
-                              </div>
+                              <input type="hidden" id="hsn" name="hsn" value="<?php print $hsn; ?>">
+                              <input type="hidden" id="seller_points" name="seller_points" value="<?php print $seller_points; ?>">
                               <div class="form-group col-md-4">
                                  <label for="custom_barcode" ><?= $this->lang->line('description'); ?></label>
                                  <textarea type="text" class="form-control" id="description" name="description" placeholder=""><?php print $description; ?></textarea>
@@ -222,6 +243,21 @@
       <script src="<?php echo $theme_link; ?>js/services/services.js"></script>
       <script type="text/javascript">
          $("#discount_type").val('<?=$discount_type; ?>');
+         $(document).on('change','#dptid',function(){
+            $.post('<?= base_url('items/get_category_data'); ?>',{id:$(this).val()},function(data){
+               var options='<option value="">Select One</option>';
+               $.each(data,function(_,category){ options+='<option value="'+category.id+'">'+category.category_name+'</option>'; });
+               $('#category_id').html(options).val('').trigger('change.select2');
+               $('#scatid').html('<option value="">Select Category</option>').val('').trigger('change.select2');
+            },'json');
+         });
+         $(document).on('change','#category_id',function(){
+            $.post('<?= base_url('items/get_sub_category_data'); ?>',{id:$(this).val()},function(data){
+               var options='<option value="">Select One</option>';
+               $.each(data,function(_,subcategory){ options+='<option value="'+subcategory.scatid+'">'+subcategory.scatName+'</option>'; });
+               $('#scatid').html(options).val('').trigger('change.select2');
+            },'json');
+         });
         <?php if(isset($q_id)){ ?>
           $("#store_id").attr('readonly',true);
         <?php }?>

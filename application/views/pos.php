@@ -405,7 +405,7 @@
                           <span style="font-size: 19px;" class="tot_amt text-bold"></span>
                   </div>
                   <div class="col-md-3 text-center">
-                          <label><?= $this->lang->line('total_discount'); ?>:<a class="fa fa-pencil-square-o cursor-pointer" data-toggle="modal" data-target="#discount-modal"></a></label><br>
+                          <label><?= $this->lang->line('total_discount'); ?>:<a class="fa fa-pencil-square-o cursor-pointer text-red" style="color:#dd4b39 !important;font-size:18px;margin-left:4px;vertical-align:middle;" data-toggle="modal" data-target="#discount-modal"></a></label><br>
                           <span style="font-size: 19px;" class="tot_disc text-bold"></span>
                   </div>
                   <div class="col-md-3 text-center">
@@ -602,6 +602,8 @@
   <?php if(store_module()){ ?> 
     store_module=true;
   <?php } ?>
+
+  var allow_negative_stock=<?= is_negative_stock_allowed() ? 'true' : 'false'; ?>;
 </script>
 <script src="<?php echo $theme_link; ?>js/pos.js?v=<?php echo time(); ?>"></script>
 <script>
@@ -719,6 +721,14 @@ function proceed_addrow(id='',item_obj=''){
  
     
     var service_bit   =(item_obj=='') ? $('#div_'+id).attr('data-service_bit') : item_obj.service_bit; 
+
+    var requested_stock_after_add=get_pos_other_row_qty(item_id,-1)+1;
+    if(!allow_negative_stock && parseInt(service_bit,10)!==1 && requested_stock_after_add>parseFloat(stock)){
+      toastr["error"](item_name+" has only "+stock+" in Stock!!");
+      failed.currentTime = 0;
+      failed.play();
+      return false;
+    }
     //var gst_per         =$('#div_'+id).attr('data-item-tax-per');
     //var gst_amt         =$('#div_'+id).attr('data-item-gst-amt');
 
@@ -763,6 +773,7 @@ function proceed_addrow(id='',item_obj=''){
         str+='<input type="hidden" id="tr_tax_value_'+rowcount+'" name="tr_tax_value_'+rowcount+'" value="'+tax_value+'">';
         str+='<input type="hidden" id="description_'+rowcount+'" name="description_'+rowcount+'" value="">';
         str+='<input type="hidden" id="service_bit_'+rowcount+'" name="service_bit_'+rowcount+'" value="'+service_bit+'">';
+        str+='<input type="hidden" id="available_stock_'+rowcount+'" value="'+stock+'">';
         str+='<input id="item_discount_type_'+rowcount+'" name="item_discount_type_'+rowcount+'" type="hidden" value="'+discount_type+'">';
          str+='<input id="item_discount_input_'+rowcount+'" name="item_discount_input_'+rowcount+'" type="hidden" value="'+discount+'">';
         str+='</tr>';   
@@ -829,6 +840,37 @@ function validate_pos_qty(input){
   return true;
 }
 
+function get_pos_available_stock(rowcount){
+  var hidden_stock=parseFloat($("#available_stock_"+rowcount).val());
+  if(!isNaN(hidden_stock)){ return hidden_stock; }
+  var displayed_stock=parseFloat($("#td_"+rowcount+"_1").text());
+  return isNaN(displayed_stock) ? 0 : displayed_stock;
+}
+
+function get_pos_other_row_qty(item_id,rowcount){
+  var total=0;
+  $("input[id^='tr_item_id_']").each(function(){
+    var other_row=this.id.replace('tr_item_id_','');
+    if(String(other_row)!==String(rowcount) && String($(this).val())===String(item_id)){
+      total += parseFloat($("#item_qty_"+other_row).val()) || 0;
+    }
+  });
+  return total;
+}
+
+function pos_qty_is_available(item_id,rowcount,requested_qty){
+  if(allow_negative_stock || parseInt($("#service_bit_"+rowcount).val(),10)===1){ return true; }
+  var available=get_pos_available_stock(rowcount);
+  var requested_total=get_pos_other_row_qty(item_id,rowcount)+requested_qty;
+  if(requested_total>available){
+    toastr["error"]($("#td_data_"+rowcount+"_0").text()+" has only "+available+" in Stock!!");
+    failed.currentTime = 0;
+    failed.play();
+    return false;
+  }
+  return true;
+}
+
 function increment_qty(item_id,rowcount){
   var item_qty=parseInt($("#item_qty_"+rowcount).val(),10) || 0;
   if(item_qty>=999){
@@ -836,6 +878,7 @@ function increment_qty(item_id,rowcount){
     return;
   }
   item_qty=item_qty+1;
+  if(!pos_qty_is_available(item_id,rowcount,item_qty)){ return; }
   $("#item_qty_"+rowcount).val(format_pos_qty(item_qty));
   make_subtotal(item_id,rowcount);
 }
@@ -855,10 +898,13 @@ function item_qty_input(item_id,rowcount){
   validate_pos_qty(input);
   var item_qty=parseInt(input.value,10);
 
-  // Selling above available stock is allowed; only keep quantity positive.
   if(isNaN(item_qty) || item_qty<=0){
     $("#item_qty_"+rowcount).val(format_pos_qty(1));
     toastr["warning"]("You must have at least one Quantity");
+  }else if(!pos_qty_is_available(item_id,rowcount,item_qty)){
+    var available_for_row=Math.floor(get_pos_available_stock(rowcount)-get_pos_other_row_qty(item_id,rowcount));
+    available_for_row=Math.max(1,available_for_row);
+    $("#item_qty_"+rowcount).val(available_for_row).attr('data-last-valid',available_for_row);
   }else{
     $("#item_qty_"+rowcount).val(Math.min(999,item_qty));
   }
@@ -920,6 +966,9 @@ function make_subtotal(item_id,rowcount){
   subtotal -= parseFloat(discount_amt);
   
   $("#td_data_"+rowcount+"_4").val(to_Fixed(subtotal));
+  if($("#discount-modal").data("distributed-to-items")){
+    distribute_pos_discount_to_items();
+  }
   final_total();
 }
 
@@ -932,6 +981,120 @@ function calulate_discount(discount_input,discount_type,total){
     return parseFloat(discount_input);
   }
 }
+
+/*
+ * Apply the invoice discount to the individual sale lines. Percentage
+ * discounts use each line's quantity x unit price. Fixed discounts are
+ * distributed in the same proportion, with the last line absorbing any
+ * one-cent rounding difference so the allocated total stays exact.
+ */
+function distribute_pos_discount_to_items(){
+  var discount_input = parseFloat($("#discount_input").val());
+  var discount_type = $("#discount_type").val();
+  var rows = [];
+  var total_line_amount = 0;
+  var rowcount = parseInt($("#hidden_rowcount").val(), 10) || 0;
+
+  discount_input = isNaN(discount_input) || discount_input < 0 ? 0 : discount_input;
+
+  for(var i = 0; i < rowcount; i++){
+    if(document.getElementById("tr_item_id_"+i)){
+      var qty = parseFloat($("#item_qty_"+i).val()) || 0;
+      var price = parseFloat($("#sales_price_"+i).val()) || 0;
+      var line_amount = qty * price;
+      rows.push({id:i, qty:qty, line_amount:line_amount});
+      total_line_amount += line_amount;
+    }
+  }
+
+  if(rows.length === 0){
+    toastr["warning"]("Please add at least one item before applying a discount.");
+    return false;
+  }
+
+  if(discount_type === "in_percentage" && discount_input > 100){
+    toastr["warning"]("Percentage discount cannot exceed 100%.");
+    return false;
+  }
+  if(discount_type === "in_fixed" && discount_input > total_line_amount){
+    toastr["warning"]("Discount cannot exceed the total line amount.");
+    return false;
+  }
+
+  var target_discount = discount_type === "in_percentage"
+    ? Math.round(total_line_amount * discount_input) / 100
+    : Math.round(discount_input * 100) / 100;
+  var allocated = 0;
+
+  $.each(rows, function(index, row){
+    var line_discount;
+    if(index === rows.length - 1){
+      line_discount = Math.max(0, Math.round((target_discount - allocated) * 100) / 100);
+    }
+    else if(discount_type === "in_percentage"){
+      line_discount = Math.round(row.line_amount * discount_input) / 100;
+    }
+    else{
+      line_discount = total_line_amount > 0
+        ? Math.round(((row.line_amount / total_line_amount) * target_discount) * 100) / 100
+        : 0;
+    }
+    allocated += line_discount;
+
+    $("#item_discount_type_"+row.id).val(discount_type === "in_percentage" ? "Percentage" : "Fixed");
+    $("#item_discount_input_"+row.id).val(
+      discount_type === "in_percentage" ? discount_input : (row.qty > 0 ? line_discount / row.qty : 0)
+    );
+    var tax_type = $("#tr_tax_type_"+row.id).val();
+    var tax_rate = parseFloat($("#tr_tax_value_"+row.id).val()) || 0;
+    var taxable_amount = row.line_amount - line_discount;
+    var tax_amount = tax_type === "Inclusive"
+      ? calculate_inclusive(taxable_amount, tax_rate)
+      : calculate_exclusive(taxable_amount, tax_rate);
+    var subtotal = row.line_amount + (tax_type === "Inclusive" ? 0 : tax_amount) - line_discount;
+    $("#item_discount_"+row.id).val(to_Fixed(line_discount));
+    $("#td_data_"+row.id+"_11").val(to_Fixed(tax_amount));
+    $("#td_data_"+row.id+"_4").val(to_Fixed(subtotal));
+  });
+
+  $("#discount-modal").data("distributed-to-items", true);
+  return true;
+}
+
+/*
+ * Saved sales created by the item-distribution flow contain both the original
+ * invoice discount input and the allocated discount on every item. Detect
+ * that shape when a sale is restored so the invoice discount is not deducted
+ * a second time on Edit/Hold load.
+ */
+function restore_distributed_pos_discount_state(){
+  var discount_input = parseFloat($("#discount_input").val()) || 0;
+  var discount_type = $("#discount_type").val();
+  var rowcount = parseInt($("#hidden_rowcount").val(), 10) || 0;
+  var total_line_amount = 0;
+  var allocated_discount = 0;
+
+  for(var i = 0; i < rowcount; i++){
+    if(document.getElementById("tr_item_id_"+i)){
+      total_line_amount += (parseFloat($("#item_qty_"+i).val()) || 0) *
+        (parseFloat($("#sales_price_"+i).val()) || 0);
+      allocated_discount += parseFloat($("#item_discount_"+i).val()) || 0;
+    }
+  }
+
+  var expected_discount = discount_type === "in_percentage"
+    ? Math.round(total_line_amount * discount_input) / 100
+    : Math.round(discount_input * 100) / 100;
+  var is_distributed = discount_input > 0 && allocated_discount > 0 &&
+    Math.abs(allocated_discount - expected_discount) <= 0.02;
+
+  if(is_distributed){
+    $("#discount-modal").data("distributed-to-items", true);
+  }
+  else{
+    $("#discount-modal").removeData("distributed-to-items");
+  }
+}
 //LEFT SIDE: FINAL TOTAL
 
 
@@ -942,6 +1105,9 @@ function final_total(){
   var rowcount=$("#hidden_rowcount").val();
   var discount_input=$("#discount_input").val();
   var discount_type=$("#discount_type").val();
+  if($(".items_table tr").length <= 1){
+    $("#discount-modal").removeData("distributed-to-items");
+  }
   /*var other_charges=parseFloat($("#other_charges").val());
       other_charges = (isNaN(other_charges)) ? parseFloat(0) :other_charges;*/
 
@@ -969,7 +1135,7 @@ function final_total(){
   //total =round_off(total);
   
   var discount_amt=0;
-  if(total>0){
+  if(total>0 && !$("#discount-modal").data("distributed-to-items")){
     var discount_amt=calulate_discount(discount_input,discount_type,total);//return value 
   }
 
@@ -983,7 +1149,7 @@ function final_total(){
     total + item_discount_total,
     discount_amt + item_discount_total,
     subtotal,
-    discount_amt
+    $("#discount-modal").data("distributed-to-items") ? item_discount_total : discount_amt
   );
 }
 function set_total(tot_qty=0, tot_amt=0, tot_disc=0, tot_grand=0, payment_discount=0){
@@ -1048,7 +1214,9 @@ function adjust_payments(){
   }
   
   //RIGHT SIDE DIV
-  var discount_amt=calulate_discount(discount_input,discount_type,total);//return value
+  var discount_amt=$("#discount-modal").data("distributed-to-items")
+    ? 0
+    : calulate_discount(discount_input,discount_type,total);//return value
 
 
   var change_return = 0;
@@ -1103,6 +1271,7 @@ $(document).on("input", ".payment_discount_input", function(){
 
   $("#discount_type").val("in_fixed");
   $("#discount_input").val(discount);
+  distribute_pos_discount_to_items();
   final_total();
   adjust_payments();
 
@@ -1222,6 +1391,9 @@ $(document).ready(function(){
 
   //DISCOUNT UPDATE
   $(".discount_update").on("click",function () {
+      if(!distribute_pos_discount_to_items()){
+        return;
+      }
       final_total();
       $('#discount-modal').modal('toggle');    
   });
@@ -1272,6 +1444,7 @@ $(document).ready(function(){
       
       
       $("#hidden_rowcount").val(parseInt($(".items_table tr").length)-1);
+      restore_distributed_pos_discount_state();
       final_total();
      // get_details();
       $(".overlay").remove();

@@ -14,6 +14,10 @@ $("#item_search").autocomplete({
                 name: data.term,
                 store_id:$("#store_id").val(),
                 search_for:'labels',
+                dptid:$("#label_department_id").val(),
+                category_id:$("#label_category_id").val(),
+                scatid:$("#label_subcategory_id").val(),
+                brand_id:$("#label_brand_id").val(),
                 //warehouse_id:$("#warehouse_id").val(),
             },
             success: function(res){
@@ -81,6 +85,52 @@ function return_row_with_data(item_id){
         success.play();
         final_total();
     }); 
+}
+
+var label_filter_request=0;
+function load_filtered_label_items(){
+  var request_id=++label_filter_request;
+  var department_id=$("#label_department_id").val();
+  var category_id=$("#label_category_id").val();
+  var subcategory_id=$("#label_subcategory_id").val();
+  var brand_id=$("#label_brand_id").val();
+
+  $("#sales_table tbody").empty();
+  $("#hidden_rowcount").val(1);
+  $("#preview_data").empty();
+  final_total();
+
+  if(!department_id && !category_id && !subcategory_id && !brand_id){
+    return;
+  }
+
+  $.getJSON($("#base_url").val()+'items/get_json_items_details',{
+    name:'',
+    store_id:$("#store_id").val(),
+    search_for:'labels',
+    dptid:department_id,
+    category_id:category_id,
+    scatid:subcategory_id,
+    brand_id:brand_id,
+    no_limit:1
+  },function(items){
+    if(request_id!==label_filter_request) return;
+    function append_item(index){
+      if(request_id!==label_filter_request) return;
+      if(index>=items.length){
+        final_total();
+        return;
+      }
+      var rowcount=$("#hidden_rowcount").val();
+      $.post($("#base_url").val()+"items/return_row_with_data/"+rowcount+"/"+items[index].id,{},function(result){
+        if(request_id!==label_filter_request) return;
+        $('#sales_table tbody').append(result);
+        $("#hidden_rowcount").val(parseInt(rowcount)+1);
+        append_item(index+1);
+      });
+    }
+    append_item(0);
+  });
 }
 //INCREMENT ITEM
 function increment_qty(rowcount){

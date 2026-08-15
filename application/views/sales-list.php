@@ -256,6 +256,47 @@ $sales_due_total = $this->db->select("COALESCE(SUM(sales_due),0) AS sales_due")-
                     </div>
                   </div>
 
+                  <?php $sales_departments = $this->db->select('*')->from('db_department')->get()->result(); ?>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label for="filter_dptid">Department</label>
+                      <select class="form-control select2" id="filter_dptid" style="width:100%;">
+                        <option value="">-All Departments-</option>
+                        <?php foreach($sales_departments as $department){ ?>
+                          <option value="<?= $department->dptid; ?>"><?= $department->dptName; ?></option>
+                        <?php } ?>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label for="filter_category_id">Category</label>
+                      <select class="form-control select2" id="filter_category_id" style="width:100%;">
+                        <option value="">-All Categories-</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label for="filter_scatid">Sub Category</label>
+                      <select class="form-control select2" id="filter_scatid" style="width:100%;">
+                        <option value="">-All Sub Categories-</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label for="filter_salesman_id">Salesman</label>
+                      <select class="form-control select2" id="filter_salesman_id" style="width:100%;">
+                        <option value="">-All Salesmen-</option>
+                        <?= get_salesmans_select_list(null,get_current_store_id()); ?>
+                      </select>
+                    </div>
+                  </div>
+
                   <div class="col-md-4">
                     <div class="form-group">
                        <label for="sales_from_date"><?=$this->lang->line('from_date');?> </label></label>
@@ -434,6 +475,10 @@ $sales_due_total = $this->db->select("COALESCE(SUM(sales_due),0) AS sales_due")-
                       users: $("#users").val(),
                       sales_type: $("#sales_type").val(),
                       customer_id: $("#search_customer_id").val(),
+                      dptid: $("#filter_dptid").val(),
+                      category_id: $("#filter_category_id").val(),
+                      scatid: $("#filter_scatid").val(),
+                      salesman_id: $("#filter_salesman_id").val(),
                     },
                   complete: function (data) {
                    $('.column_checkbox').iCheck({
@@ -503,9 +548,30 @@ $sales_due_total = $this->db->select("COALESCE(SUM(sales_due),0) AS sales_due")-
           //datatables
          load_datatable();
       });
-      $("#warehouse_id,#sales_from_date,#sales_to_date,#users,#search_customer_id, #sales_type").on("change",function(){
+      $("#warehouse_id,#sales_from_date,#sales_to_date,#users,#search_customer_id,#sales_type,#filter_scatid,#filter_salesman_id").on("change",function(){
           $('#example2').DataTable().destroy();
           load_datatable();
+      });
+
+      $("#filter_dptid").on("change",function(){
+        $.post("<?= base_url('items/get_category_data'); ?>",{id:$(this).val()},function(data){
+          var options='<option value="">-All Categories-</option>';
+          $.each(data,function(_,category){ options+='<option value="'+category.id+'">'+category.category_name+'</option>'; });
+          $("#filter_category_id").html(options).val('').trigger('change.select2');
+          $("#filter_scatid").html('<option value="">-All Sub Categories-</option>').val('').trigger('change.select2');
+          $('#example2').DataTable().destroy();
+          load_datatable();
+        },'json');
+      });
+
+      $("#filter_category_id").on("change",function(){
+        $.post("<?= base_url('items/get_sub_category_data'); ?>",{id:$(this).val()},function(data){
+          var options='<option value="">-All Sub Categories-</option>';
+          $.each(data,function(_,subcategory){ options+='<option value="'+subcategory.scatid+'">'+subcategory.scatName+'</option>'; });
+          $("#filter_scatid").html(options).val('').trigger('change.select2');
+          $('#example2').DataTable().destroy();
+          load_datatable();
+        },'json');
       });
 
 

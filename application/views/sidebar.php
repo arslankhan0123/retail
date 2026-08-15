@@ -1023,9 +1023,6 @@ $CI = &get_instance();
         </li>
       <?php } ?>
 
-      <?php if ($CI->permissions('help_link')) { ?>
-        <li><a href="<?php echo $base_url; ?>help/" target="_blank"><i class="fa fa-book text-green"></i> <span><?= $this->lang->line('help'); ?></span></a></li>
-      <?php } ?>
     </ul>
   </section>
   <!-- /.sidebar -->

@@ -201,22 +201,30 @@
           <div class="box">
             <div class="box-header with-border">
               <!-- <h3 class="box-title"><?=$page_title;?></h3> -->
-              <div class="col-xs-8 input-group">
+              <?php if($CI->permissions('sales_return_add')) { ?>
+              <div class="row"><div class="col-md-2 pull-right"><a class="btn btn-block btn-info" href="<?php echo $base_url; ?>sales_return/create"><i class="fa fa-plus"></i> <?= $this->lang->line('create_new'); ?></a></div></div>
+              <?php } ?>
+              <div class="row"><div class="col-md-12">
                 <!-- Warehouse Code -->
                 <?php 
-                 if(warehouse_module() && warehouse_count()>1) {$this->load->view('warehouse/warehouse_code',array('show_warehouse_select_box_2'=>true,'show_all_option'=>true)); }else{
+                 if(warehouse_module() && warehouse_count()>1) { echo '<div class="col-md-4">'; $this->load->view('warehouse/warehouse_code',array('show_warehouse_select_box_2'=>true,'show_all_option'=>true)); echo '</div>'; }else{
                   echo "<input type='hidden' name='warehouse_id' id='warehouse_id' value='".get_store_warehouse_id()."'>";
-                  echo '<h3 class="box-title">'.$page_title.'</h3>';
                  }
                 ?>
                 <!-- Warehouse Code end -->
-              </div>
-              <?php if($CI->permissions('sales_return_add')) { ?>
-              <div class="box-tools">
-                <a class="btn btn-block btn-info" href="<?php echo $base_url; ?>sales_return/create">
-                <i class="fa fa-plus"></i> <?= $this->lang->line('create_new'); ?></a>
-              </div>
-              <?php } ?>
+                <div class="col-md-4"><div class="form-group"><label>Customers</label><select class="form-control select2" id="search_customer_id" style="width:100%;"><option value="">-All Customers-</option><?=get_customers_select_list(null,get_current_store_id());?></select></div></div>
+                <div class="col-md-4"><div class="form-group"><label>Users</label><select class="form-control select2" id="users" style="width:100%;"><?=get_users_select_list($this->session->userdata('role_id'),get_current_store_id());?></select></div></div>
+
+                <?php $return_departments=$this->db->select('*')->from('db_department')->get()->result(); ?>
+                <div class="col-md-3"><div class="form-group"><label>Department</label><select class="form-control select2" id="filter_dptid" style="width:100%;"><option value="">-All Departments-</option><?php foreach($return_departments as $department){ ?><option value="<?=$department->dptid;?>"><?=$department->dptName;?></option><?php } ?></select></div></div>
+                <div class="col-md-3"><div class="form-group"><label>Category</label><select class="form-control select2" id="filter_category_id" style="width:100%;"><option value="">-All Categories-</option></select></div></div>
+                <div class="col-md-3"><div class="form-group"><label>Sub Category</label><select class="form-control select2" id="filter_scatid" style="width:100%;"><option value="">-All Sub Categories-</option></select></div></div>
+                <div class="col-md-3"><div class="form-group"><label>Salesman</label><select class="form-control select2" id="filter_salesman_id" style="width:100%;"><option value="">-All Salesmen-</option><?=get_salesmans_select_list(null,get_current_store_id());?></select></div></div>
+
+                <div class="col-md-4"><div class="form-group"><label>From Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control datepicker" id="return_from_date"></div></div></div>
+                <div class="col-md-4"><div class="form-group"><label>To Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control datepicker" id="return_to_date"></div></div></div>
+                <div class="col-md-4"><div class="form-group"><label>Type</label><select class="form-control" id="sales_type"><option value="all">All</option><option value="retail">Retail</option><option value="wholesale">Wholesale</option></select></div></div>
+              </div></div>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -336,8 +344,17 @@
               "ajax": {
                   "url": "<?php echo site_url('sales_return/ajax_list')?>",
                   "type": "POST",
-                  "data": {
-                      warehouse_id: $("#warehouse_id").val()
+                  "data": function(d) {
+                      d.warehouse_id = $("#warehouse_id").val();
+                      d.return_from_date = $("#return_from_date").val();
+                      d.return_to_date = $("#return_to_date").val();
+                      d.users = $("#users").val();
+                      d.sales_type = $("#sales_type").val();
+                      d.customer_id = $("#search_customer_id").val();
+                      d.dptid = $("#filter_dptid").val();
+                      d.category_id = $("#filter_category_id").val();
+                      d.scatid = $("#filter_scatid").val();
+                      d.salesman_id = $("#filter_salesman_id").val();
                     },
                   complete: function (data) {
                    $('.column_checkbox').iCheck({
@@ -407,9 +424,26 @@
           //datatables
          load_datatable();
       });
-      $("#warehouse_id").on("change",function(){
+      $("#warehouse_id,#return_from_date,#return_to_date,#users,#search_customer_id,#sales_type,#filter_scatid,#filter_salesman_id").on("change",function(){
           $('#example2').DataTable().destroy();
           load_datatable();
+      });
+      $("#filter_dptid").on("change",function(){
+        $.post("<?=base_url('items/get_category_data');?>",{id:$(this).val()},function(data){
+          var options='<option value="">-All Categories-</option>';
+          $.each(data,function(_,category){ options+='<option value="'+category.id+'">'+category.category_name+'</option>'; });
+          $("#filter_category_id").html(options).val('').trigger('change.select2');
+          $("#filter_scatid").html('<option value="">-All Sub Categories-</option>').val('').trigger('change.select2');
+          $('#example2').DataTable().destroy(); load_datatable();
+        },'json');
+      });
+      $("#filter_category_id").on("change",function(){
+        $.post("<?=base_url('items/get_sub_category_data');?>",{id:$(this).val()},function(data){
+          var options='<option value="">-All Sub Categories-</option>';
+          $.each(data,function(_,subcategory){ options+='<option value="'+subcategory.scatid+'">'+subcategory.scatName+'</option>'; });
+          $("#filter_scatid").html(options).val('').trigger('change.select2');
+          $('#example2').DataTable().destroy(); load_datatable();
+        },'json');
       });
 </script>
 <script src="<?php echo $theme_link; ?>js/sales-return.js"></script>

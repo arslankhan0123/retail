@@ -328,8 +328,14 @@ class Pos_model extends CI_Model {
 
 
 		$prev_item_ids = array();
+		$previous_sales_qty = array();
 
 		if($command=='update'){
+				$previous_rows = $this->db->select('item_id, SUM(sales_qty) AS sales_qty', false)
+					->where('sales_id',$sales_id)->group_by('item_id')->get('db_salesitems')->result();
+				foreach($previous_rows as $previous_row){
+					$previous_sales_qty[(int)$previous_row->item_id] = (float)$previous_row->sales_qty;
+				}
 				$sales_entry = array(
 		    				'store_id' 				=> $store_id,
 		    				'sales_date' 				=> $sales_date,
@@ -414,6 +420,7 @@ class Pos_model extends CI_Model {
 		}
 
 
+		$remaining_stock_by_item = array();
 		//Import post data from form
 		for($i=0;$i<$rowcount;$i++){
 		
@@ -465,10 +472,15 @@ class Pos_model extends CI_Model {
 				}
 
 				
-				/*$current_stock_of_item = total_available_qty_items_of_warehouse($warehouse_id,null,$item_id);
-				if($current_stock_of_item<$sales_qty && $service_bit==0){
-					return $item_name." has only ".$current_stock_of_item." in Stock!!";exit;
-				}*/
+				if(!isset($remaining_stock_by_item[(int)$item_id])){
+					$current_stock_of_item = total_available_qty_items_of_warehouse($warehouse_id,null,$item_id);
+					$remaining_stock_by_item[(int)$item_id] = $current_stock_of_item + (($command=='update' && isset($previous_sales_qty[(int)$item_id])) ? $previous_sales_qty[(int)$item_id] : 0);
+				}
+				$available_for_sale = $remaining_stock_by_item[(int)$item_id];
+				if(!is_negative_stock_allowed($store_id) && $available_for_sale<$sales_qty && $service_bit==0){
+					return $item_name." has only ".$available_for_sale." in Stock!!";exit;
+				}
+				$remaining_stock_by_item[(int)$item_id] -= (float)$sales_qty;
 				
 				$salesitems_entry = array(
 		    				'store_id' 			=> $store_id, 

@@ -323,10 +323,20 @@ public function get_sub_bin_data()
 			
 			$this->db->where("a.status",1);
 			$this->db->where("a.store_id",$store_id);
+			if(isset($search_for) && $search_for=='labels'){
+				$dptid=$this->input->get('dptid');
+				$category_id=$this->input->get('category_id');
+				$scatid=$this->input->get('scatid');
+				$brand_id=$this->input->get('brand_id');
+				if(!empty($dptid)) $this->db->where('a.dptid',(int)$dptid);
+				if(!empty($category_id)) $this->db->where('a.category_id',(int)$category_id);
+				if(!empty($scatid)) $this->db->where('a.scatid',(int)$scatid);
+				if(!empty($brand_id)) $this->db->where('a.brand_id',(int)$brand_id);
+			}
 			$this->db->where("(LOWER(a.custom_barcode) LIKE '%$name%' or LOWER(a.item_name) LIKE '%$name%' or LOWER(a.item_code) LIKE '%$name%')");
 
 			$this->db->group_by("a.id");
-			$this->db->limit("20");
+			if(!$this->input->get('no_limit')) $this->db->limit("20");
 			//echo $this->db->get_compiled_select();exit();
 			$sql =$this->db->get();
 			

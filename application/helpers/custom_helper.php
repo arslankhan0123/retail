@@ -165,6 +165,15 @@
     }
     return false;
   }
+  function is_negative_stock_allowed($store_id=null){
+    $CI =& get_instance();
+    $store_id = empty($store_id) ? get_current_store_id() : (int)$store_id;
+    if(!$CI->db->field_exists('allow_negative_stock', 'db_store')){
+      return false;
+    }
+    $row = $CI->db->select('allow_negative_stock')->where('id',$store_id)->get('db_store')->row();
+    return $row && (int)$row->allow_negative_stock === 1;
+  }
   function numberTowords($num)
   {
     $CI =& get_instance();

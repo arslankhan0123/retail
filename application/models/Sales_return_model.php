@@ -50,6 +50,32 @@ class Sales_return_model extends CI_Model {
 		$this->db->join('db_customers as b','b.id=a.customer_id','left');
 		$this->db->join('db_sales as c','c.id=a.sales_id','left');
 
+		$customer_id = $this->input->post('customer_id');
+		$dptid = $this->input->post('dptid');
+		$category_id = $this->input->post('category_id');
+		$scatid = $this->input->post('scatid');
+		$salesman_id = $this->input->post('salesman_id');
+
+		if(!empty($dptid) || !empty($category_id) || !empty($scatid)){
+			$this->db->join('db_salesitemsreturn as sri','sri.return_id=a.id','inner');
+			$this->db->join('db_items as i','i.id=sri.item_id','inner');
+			if(!empty($dptid)) $this->db->where('i.dptid',(int)$dptid);
+			if(!empty($category_id)) $this->db->where('i.category_id',(int)$category_id);
+			if(!empty($scatid)) $this->db->where('i.scatid',(int)$scatid);
+			$this->db->distinct();
+		}
+		if(!empty($customer_id)) $this->db->where('a.customer_id',(int)$customer_id);
+		if(!empty($salesman_id)) $this->db->where('a.salesman_id',(int)$salesman_id);
+
+		$return_from_date = system_fromatted_date($this->input->post('return_from_date'));
+		$return_to_date = system_fromatted_date($this->input->post('return_to_date'));
+		$users = $this->input->post('users');
+		$sales_type = $this->input->post('sales_type');
+		if(!empty($users)) $this->db->where('upper(a.created_by)',strtoupper($users));
+		if($return_from_date!='1970-01-01') $this->db->where('a.return_date>=',$return_from_date);
+		if($return_to_date!='1970-01-01') $this->db->where('a.return_date<=',$return_to_date);
+		if($sales_type=='retail' || $sales_type=='wholesale') $this->db->where('c.sales_type',$sales_type);
+
 		/*If warehouse selected*/
 		$warehouse_id = $this->input->post('warehouse_id');
 		if(!empty($warehouse_id)){

@@ -19,6 +19,7 @@
                 $store_name=$logo=$currency_id=$currency_placement=$timezone=
                 $date_format=$time_format=
                 $round_off='';
+                $allow_negative_stock=0;
                 $mobile=$phone=$email=$country=$state=$city=
                 $postcode=$address=$gst_no=$vat_no=
                 $store_website=$pan_no=$bank_details=$store_logo=$qr_image='';
@@ -445,6 +446,17 @@
                                                    <div class="col-sm-4">
                                                       <input type="checkbox" <?=$round_off_checkbox;?> class="form-control" id="round_off" name="round_off" >
                                                       <span id="round_off_msg" style="display:none" class="text-danger"></span>
+                                                   </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                   <label for="allow_negative_stock" class="col-sm-4 control-label">Stock Negative Allow</label>
+                                                   <div class="col-sm-8">
+                                                      <select class="form-control select2" id="allow_negative_stock" name="allow_negative_stock" style="width: 100%;">
+                                                         <option value="0" <?= empty($allow_negative_stock) ? 'selected' : ''; ?>>No</option>
+                                                         <option value="1" <?= !empty($allow_negative_stock) ? 'selected' : ''; ?>>Yes</option>
+                                                      </select>
+                                                      <span id="allow_negative_stock_msg" style="display:none" class="text-danger"></span>
                                                    </div>
                                                 </div>
                                                

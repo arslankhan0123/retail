@@ -24,6 +24,7 @@
     .items .price,.items .amount{width:17%;text-align:right}
     .item-barcode{display:block;font-size:8px;margin-top:1px}
     .summary,.details{width:100%;border-collapse:collapse}
+    .details{table-layout:fixed}
     .summary td{padding:1px 0}.summary .label{width:65%}.summary .value{width:35%;text-align:right;padding-right:5px}
     .net-amount{text-align:center;font-size:18px;font-weight:700;padding:7px 0 4px}
     .details td{width:50%;vertical-align:top;padding:0}
@@ -33,9 +34,9 @@
     .detail-row span,.detail-row i,.detail-row b{display:block;white-space:nowrap}
     .detail-row i{font-style:normal;text-align:center}
     .detail-row b{text-align:right;font-variant-numeric:tabular-nums}
-    .details td.vat-details{text-align:left;padding-left:2mm;padding-right:1mm}
+    .details td.vat-details{text-align:left;padding-left:2mm;padding-right:0}
     .vat-details .section-title{text-align:left}
-    .vat-details .detail-row{grid-template-columns:21mm 2mm minmax(0,1fr)}
+    .vat-details .detail-row{grid-template-columns:19mm 2mm minmax(0,1fr)}
     .vat-details .detail-row span{text-align:left;padding-right:0}
     .details + .rule{margin-bottom:0}
     .policy-title{font-size:11px;font-weight:700;margin:2px 0 1px}
@@ -136,7 +137,6 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
   </table>
   <img class="barcode" src="<?= base_url('barcode/index/'.rawurlencode($sale->count_id)).'?compact=1'; ?>" alt="<?= html_escape($sale->count_id); ?>">
   <div class="barcode-number"><?= html_escape($sale->count_id); ?></div>
-  <hr class="rule">
 
   <table class="items">
     <thead><tr><th class="sl">SL</th><th class="description">Description</th><th class="qty">Qty</th><th class="price">Price</th><th class="amount">Amount</th></tr></thead>

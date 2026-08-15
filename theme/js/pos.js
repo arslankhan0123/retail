@@ -150,7 +150,9 @@ function save(print=false,pay_all=false){
 							}
 							else{
 								$(".items_table > tbody").empty();
-								$(".discount_input").val(0);
+								$("#discount_input").val(0);
+								$("#discount_type").val("in_percentage");
+								$("#discount-modal").removeData("distributed-to-items");
 
 								/**
 								 * Note:
@@ -379,6 +381,9 @@ function hold_invoice_edit(id){
       $('#customer_id').val(result[3]).select2();
       $("#hidden_invoice_id").val(result[7]);
       $("#hidden_rowcount").val(parseInt($(".items_table tr").length)-1);
+      if(typeof restore_distributed_pos_discount_state === "function"){
+        restore_distributed_pos_discount_state();
+      }
       final_total();
       get_details(null,true);
       $(".overlay").remove();

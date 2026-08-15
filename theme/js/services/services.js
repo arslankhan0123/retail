@@ -23,7 +23,7 @@ $('#save,#update').on("click",function (e) {
 
     //Validate Input box or selection box should not be blank or empty
 	check_field("item_name");
-	check_field("custom_barcode");
+	check_field("dptid");
 	check_field("category_id");
 	//check_field("unit_id");//units of measurments
 	check_field("price");

@@ -3,12 +3,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Services_model extends CI_Model {
 
+	private function validate_category_hierarchy($dptid, $category_id, $scatid=''){
+		$category_exists = $this->db->where('id',(int)$category_id)->where('dptid',(int)$dptid)->count_all_results('db_category');
+		if(!$category_exists){
+			return 'Selected category does not belong to the selected department.';
+		}
+		if(!empty($scatid)){
+			$subcategory_exists = $this->db->where('scatid',(int)$scatid)->where('catid',(int)$category_id)->count_all_results('db_subcategory');
+			if(!$subcategory_exists){
+				return 'Selected sub category does not belong to the selected category.';
+			}
+		}
+		return true;
+	}
 
 	
 	//Save Cutomers
 	public function verify_and_save(){
 		//Filtering XSS and html escape from user inputs 
 		extract($this->security->xss_clean(html_escape(array_merge($this->data,$_POST))));
+		$hierarchy_validation = $this->validate_category_hierarchy($dptid,$category_id,$scatid);
+		if($hierarchy_validation !== true){ return $hierarchy_validation; }
 
 		$this->db->trans_begin();
 		$this->db->trans_strict(TRUE);
@@ -52,6 +67,13 @@ class Services_model extends CI_Model {
 		
 		//Validate This items already exist or not
 		$store_id=(store_module() && is_admin()) ? $store_id : get_current_store_id();
+		$custom_barcode = isset($custom_barcode) && trim($custom_barcode) !== '' ? trim($custom_barcode) : null;
+		$barcode_row = $this->db->select('barcode_type')->where('id',$store_id)->get('db_store')->row();
+		$barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $barcode_row->barcode_type : 'Automatic';
+		$item_code_val = get_init_code('item');
+		if($barcode_type === 'Automatic'){
+			$custom_barcode = $item_code_val;
+		}
 		/*$query=$this->db->query("select * from db_items where upper(item_name)=upper('$item_name') and store_id=$store_id");
 		if($query->num_rows()>0){
 			return "Sorry! This Items Name already Exist.";
@@ -69,9 +91,11 @@ class Services_model extends CI_Model {
 		#------------------------------------
 		$info = array(
 							'count_id' 					=> get_count_id('db_items'), 
-		    				'item_code' 				=> get_init_code('item'), 
+						'item_code' 				=> $item_code_val,
 		    				'item_name' 				=> $item_name,
-		    				'category_id' 				=> $category_id,
+						'category_id' 				=> $category_id,
+						'dptid' 					=> $dptid,
+						'scatid' 					=> empty($scatid) ? null : $scatid,
 		    				'price' 					=> $price,
 		    				'tax_id' 					=> $tax_id,
 		    				'purchase_price' 			=> $purchase_price,
@@ -127,9 +151,18 @@ class Services_model extends CI_Model {
 	public function update_services(){
 		//Filtering XSS and html escape from user inputs 
 		extract($this->security->xss_clean(html_escape(array_merge($this->data,$_POST))));
+		$hierarchy_validation = $this->validate_category_hierarchy($dptid,$category_id,$scatid);
+		if($hierarchy_validation !== true){ return $hierarchy_validation; }
 		
 		//Validate This items already exist or not
 		$store_id=(store_module() && is_admin()) ? $store_id : get_current_store_id();
+		$custom_barcode = isset($custom_barcode) && trim($custom_barcode) !== '' ? trim($custom_barcode) : null;
+		$barcode_row = $this->db->select('barcode_type')->where('id',$store_id)->get('db_store')->row();
+		$barcode_type = (!empty($barcode_row) && !empty($barcode_row->barcode_type)) ? $barcode_row->barcode_type : 'Automatic';
+		if($barcode_type === 'Automatic'){
+			$item_code_row = $this->db->select('item_code')->where('id',$q_id)->where('store_id',$store_id)->get('db_items')->row();
+			$custom_barcode = !empty($item_code_row) ? $item_code_row->item_code : null;
+		}
 		$this->db->trans_begin();
 		/*$query=$this->db->query("select * from db_items where upper(item_name)=upper('$item_name') and id<>$q_id and store_id=$store_id");
 		if($query->num_rows()>0){
@@ -182,7 +215,9 @@ class Services_model extends CI_Model {
 
 			$info = array(
 		    				'item_name' 				=> $item_name,
-		    				'category_id' 				=> $category_id,		    				
+						'category_id' 				=> $category_id,
+						'dptid' 					=> $dptid,
+						'scatid' 					=> empty($scatid) ? null : $scatid,
 		    				'price' 					=> $price,
 		    				'tax_id' 					=> $tax_id,
 		    				'purchase_price' 			=> $purchase_price,

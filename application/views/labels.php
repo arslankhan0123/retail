@@ -99,6 +99,41 @@
                               </div>
                             </div>
 
+                            <?php $label_departments=$this->db->select('*')->from('db_department')->get()->result(); ?>
+                            <div class="row">
+                              <div class="col-md-10 col-md-offset-1">
+                                <div class="col-md-3">
+                                  <div class="form-group">
+                                    <label for="label_department_id">Department</label>
+                                    <select class="form-control select2" id="label_department_id" style="width:100%;">
+                                      <option value="">-All Departments-</option>
+                                      <?php foreach($label_departments as $department){ ?>
+                                        <option value="<?=$department->dptid;?>"><?=$department->dptName;?></option>
+                                      <?php } ?>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <div class="form-group">
+                                    <label for="label_category_id">Category</label>
+                                    <select class="form-control select2" id="label_category_id" style="width:100%;"><option value="">-All Categories-</option></select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <div class="form-group">
+                                    <label for="label_subcategory_id">Sub Category</label>
+                                    <select class="form-control select2" id="label_subcategory_id" style="width:100%;"><option value="">-All Sub Categories-</option></select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <div class="form-group">
+                                    <label for="label_brand_id">Brand</label>
+                                    <select class="form-control select2" id="label_brand_id" style="width:100%;"><option value="">-All Brands-</option><?=get_brands_select_list(null,get_current_store_id());?></select>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
                                           
                                           
                                             <div class="col-md-8 col-md-offset-2 d-flex justify-content" >
@@ -227,6 +262,32 @@
               $("#sales_table > tbody").empty();
               final_total();
           });
+        });
+
+        $("#label_department_id").on("change",function(){
+          $.post(base_url+"items/get_category_data",{id:$(this).val()},function(data){
+            var options='<option value="">-All Categories-</option>';
+            $.each(data,function(_,category){ options+='<option value="'+category.id+'">'+category.category_name+'</option>'; });
+            $("#label_category_id").html(options).val('').trigger('change.select2');
+            $("#label_subcategory_id").html('<option value="">-All Sub Categories-</option>').val('').trigger('change.select2');
+            $("#item_search").val('');
+            load_filtered_label_items();
+          },'json');
+        });
+
+        $("#label_category_id").on("change",function(){
+          $.post(base_url+"items/get_sub_category_data",{id:$(this).val()},function(data){
+            var options='<option value="">-All Sub Categories-</option>';
+            $.each(data,function(_,subcategory){ options+='<option value="'+subcategory.scatid+'">'+subcategory.scatName+'</option>'; });
+            $("#label_subcategory_id").html(options).val('').trigger('change.select2');
+            $("#item_search").val('');
+            load_filtered_label_items();
+          },'json');
+        });
+
+        $("#label_subcategory_id,#label_brand_id").on("change",function(){
+          $("#item_search").val('');
+          load_filtered_label_items();
         });
 
          /* ---------- Final Description of amount ------------*/

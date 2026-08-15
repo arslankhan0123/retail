@@ -27,7 +27,13 @@ class Updates_model extends CI_Model {
     }
 
 	public function index()
-	{	
+	{
+		$result = $this->db->query("SHOW COLUMNS FROM `db_store` LIKE 'allow_negative_stock'");
+		if(!$result->num_rows()){
+			$q1 = $this->db->query("ALTER TABLE `db_store` ADD COLUMN `allow_negative_stock` TINYINT(1) NOT NULL DEFAULT 0 AFTER `round_off`");
+			if(!$q1){ echo "failed"; exit(); }
+		}
+
 		if($this->db_version <=2.8){
 			
 			$result = $this->db->query("SHOW COLUMNS FROM `db_store` LIKE 'qty_decimals'");

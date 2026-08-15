@@ -692,16 +692,30 @@ function addrow(id='',item_obj=''){
     if(item_check != -1){
         swal({
           title: "Are you sure?",
-          text: "This item is already added. Do you want to add it as a new row?",
+          text: "This item is already added. Press + to increase its quantity, or Cancel to add it as a new row.",
           icon: "warning",
-          buttons: true,
+          buttons: {
+            cancel: {
+              text: "Cancel",
+              value: "new-row",
+              visible: true,
+              closeModal: true
+            },
+            confirm: {
+              text: "+ Add Quantity",
+              value: "increase",
+              visible: true,
+              closeModal: true
+            }
+          },
           dangerMode: false,
-        }).then((sure) => {
-          if(sure){
+          closeOnClickOutside: false,
+          closeOnEsc: false
+        }).then((action) => {
+          if(action === "increase"){
+            increment_qty(item_id,item_check);
+          } else if(action === "new-row"){
             proceed_addrow(id, item_obj);
-          } else {
-            failed.currentTime = 0;
-            failed.play();
           }
         });
         return false;

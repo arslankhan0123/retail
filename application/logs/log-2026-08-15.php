@@ -53,3 +53,7 @@ ERROR - 2026-08-15 13:48:36 --> Severity: Notice --> Undefined variable: tax_id 
 ERROR - 2026-08-15 14:06:57 --> Severity: Notice --> Undefined variable: tax_id F:\Projects\retail\application\views\items.php 349
 ERROR - 2026-08-15 10:08:01 --> 404 Page Not Found: Theme/plugins
 ERROR - 2026-08-15 10:08:34 --> 404 Page Not Found: Theme/plugins
+ERROR - 2026-08-15 14:53:48 --> Severity: Notice --> Undefined variable: tax_id F:\Projects\retail\application\views\items.php 349
+ERROR - 2026-08-15 15:00:01 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 265
+ERROR - 2026-08-15 15:31:50 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 265
+ERROR - 2026-08-15 11:32:32 --> 404 Page Not Found: Theme/plugins

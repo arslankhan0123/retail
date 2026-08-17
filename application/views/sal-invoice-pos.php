@@ -220,7 +220,7 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
 
   <?php if($policy!==''): ?>
     <div class="policy-title">WARRANTY &amp; RETURN POLICY</div>
-    <div class="policy"><?= html_escape($policy); ?></div>
+    <div class="policy"><?= str_replace("\n", '<div style="height: 6px;"></div>', html_escape(str_replace("\r", "", $policy))); ?></div>
     <hr class="rule">
   <?php endif; ?>
 

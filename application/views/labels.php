@@ -128,7 +128,12 @@
                                 <div class="col-md-3">
                                   <div class="form-group">
                                     <label for="label_brand_id">Brand</label>
-                                    <select class="form-control select2" id="label_brand_id" style="width:100%;"><option value="">-All Brands-</option><?=get_brands_select_list(null,get_current_store_id());?></select>
+                                    <div class="input-group" style="width:100%;">
+                                      <select class="form-control select2" id="label_brand_id" style="width:100%;"><option value="">-All Brands-</option><?=get_brands_select_list(null,get_current_store_id());?></select>
+                                      <span class="input-group-btn">
+                                        <button type="button" id="apply_label_filters" class="btn btn-primary" title="Apply Filters">OK</button>
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -271,7 +276,6 @@
             $("#label_category_id").html(options).val('').trigger('change.select2');
             $("#label_subcategory_id").html('<option value="">-All Sub Categories-</option>').val('').trigger('change.select2');
             $("#item_search").val('');
-            load_filtered_label_items();
           },'json');
         });
 
@@ -281,12 +285,14 @@
             $.each(data,function(_,subcategory){ options+='<option value="'+subcategory.scatid+'">'+subcategory.scatName+'</option>'; });
             $("#label_subcategory_id").html(options).val('').trigger('change.select2');
             $("#item_search").val('');
-            load_filtered_label_items();
           },'json');
         });
 
         $("#label_subcategory_id,#label_brand_id").on("change",function(){
           $("#item_search").val('');
+        });
+
+        $("#apply_label_filters").on("click",function(){
           load_filtered_label_items();
         });
 

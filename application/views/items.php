@@ -6,11 +6,14 @@
   <style>
     #item-fields-layout{display:flex;flex-wrap:wrap;align-items:flex-start}
     #item-fields-layout>.form-group{float:none;width:25%;margin-bottom:15px}
+    #item-fields-layout>.form-group.item-layout-col-4{width:33.333333%}
+    #item-fields-layout>.form-group>.select2-container,
+    #item-fields-layout>.form-group>div:not(.input-group)>.select2-container{width:100%!important;max-width:100%}
     .select2-container--open{z-index:99999}
     #items-form .box-body>hr.item-layout-empty-separator{display:none}
     #items-form .box-body>.row.item-layout-empty-row{display:none}
-    @media(max-width:991px){#item-fields-layout>.form-group{width:50%}}
-    @media(max-width:767px){#item-fields-layout>.form-group{width:100%}}
+    @media(max-width:991px){#item-fields-layout>.form-group,#item-fields-layout>.form-group.item-layout-col-4{width:50%}}
+    @media(max-width:767px){#item-fields-layout>.form-group,#item-fields-layout>.form-group.item-layout-col-4{width:100%}}
   </style>
   
   <!-- </copy> -->  
@@ -101,6 +104,10 @@
                                  <input type="text" autofocus="" class="form-control" id="item_name" name="item_name" placeholder="" value="<?php print $item_name; ?>">
                                  <span id="item_name_msg" style="display:none" class="text-danger"></span>
                               </div>
+                              <div class="form-group col-md-4">
+                                 <label for="item_code_display">Item Code<span class="text-danger">*</span></label>
+                                 <input type="text" class="form-control" id="item_code_display" value="<?= html_escape(!empty($item_code) ? $item_code : get_init_code('item')); ?>" readonly>
+                              </div>
                               <?php $supplier = $this->db->select("*")->FROM('db_suppliers')->get()->result(); ?>
                               <div class="form-group col-md-4">
                                 <label for="supplier" >Supplier</label>
@@ -176,7 +183,7 @@
                               
                               <?php $icolors = $this->db->select("*")->FROM('bd_clcategory')->get()->result(); ?>
                               <div class="form-group col-md-4">
-                                <label for="subcategory" >Select Colors</label>
+                                <label for="clid">Color</label>
                                 <div class="">
                                     <select class="form-control" name="clid" id="clid"  >
                                       <option value="">Select One</option>
@@ -188,7 +195,7 @@
                               </div>
                               <?php $isizes = $this->db->select("*")->FROM('bd_szcategory')->get()->result(); ?>
                               <div class="form-group col-md-4">
-                                <label for="subcategory" >Select Size</label>
+                                <label for="szid">Size</label>
                                 <div class="">
                                     <select class="form-control" name="szid" id="szid"  >
                                       <option value="">Select One</option>
@@ -200,7 +207,7 @@
                               </div>
                               <?php $iraks = $this->db->select("*")->FROM('db_rack')->get()->result(); ?>
                               <div class="form-group col-md-4">
-                                <label for="subcategory" >Select Rack</label>
+                                <label for="rkid">Rack</label>
                                 <div class="">
                                     <select class="form-control" name="rkid" id="rkid"  >
                                       <option value="">Select One</option>
@@ -212,7 +219,7 @@
                               </div>
                               <?php $ibin = $this->db->select("*")->FROM('bd_bncategory')->get()->result(); ?>
                               <div class="form-group col-md-4">
-                                <label for="subcategory" >Select Bin</label>
+                                <label for="bnid">Bin</label>
                                 <div class="">
                                     <select class="form-control" name="bnid" id="bnid"  >
                                       <option value="">Select One</option>
@@ -224,7 +231,7 @@
                               </div>
                               <?php $isbin = $this->db->select("*")->FROM('bd_sbcategory')->where('bnid',$bnid??'')->get()->result(); ?>
                               <div class="form-group col-md-4">
-                                <label for="subcategory" >Select Sub Bin</label>
+                                <label for="bsid">Sub Bin</label>
                                 <div class="">
                                     <select class="form-control" name="bsid" id="bsid"  >
                                       <option value="">Select Bin</option>
@@ -302,12 +309,12 @@
                                  <span id="custom_barcode_msg" style="display:none" class="text-danger"></span>
                               </div>
                               <div class="form-group col-md-4">
-                                 <label for="custom_barcode" ><?= $this->lang->line('description'); ?></label>
+                                 <label for="description"><?= $this->lang->line('description'); ?></label>
                                  <textarea type="text" class="form-control" id="description" name="description" placeholder=""><?php print $description; ?></textarea>
                                  <span id="description_msg" style="display:none" class="text-danger"></span>
                               </div>
                               <div class="form-group col-md-4">
-                                 <label for="item_image"><?= $this->lang->line('select_image'); ?></label>
+                                 <label for="item_image">Image</label>
                                  <input type="file" name="item_image" id="item_image">
                                  <span id="item_image_msg" style="display:block;" class="text-danger">Max Width/Height: 1000px * 1000px & Size: 1MB </span>
                                  <div id="image_preview_container" style="display:none; margin-top:10px; position:relative; width:100px;">
@@ -338,12 +345,12 @@
                            <hr>
                            <div class="row">
                               <div class="form-group col-md-4 ">
-                                 <label for="price"><?= $this->lang->line('price'); ?><span class="text-danger">*</span></label>
+                                 <label for="price">Cost Price<span class="text-danger">*</span></label>
                                  <input type="text" class="form-control only_currency" id="price" name="price" placeholder="Price of Item without Tax"  value="<?php print $price; ?>" >
                                  <span id="price_msg" style="display:none" class="text-danger"></span>
                               </div>
                               <div class="form-group col-md-4">
-                                 <label for="tax_id"><?= $this->lang->line('tax'); ?><span class="text-danger">*</span></label>
+                                 <label for="tax_id">Tax%<span class="text-danger">*</span></label>
                                  <div class="input-group">
                                  <select class="form-control select2" id="tax_id" name="tax_id"  style="width: 100%;"  >
                                     <?= get_tax_select_list($tax_id);  ?>
@@ -353,7 +360,7 @@
                                  <span id="tax_id_msg" style="display:none" class="text-danger"></span>
                               </div>
                               <div class="form-group col-md-4">
-                                 <label for="purchase_price"><?= $this->lang->line('purchase_price'); ?><span class="text-danger">*</span></label>
+                                 <label for="purchase_price">Cost Price<span class="text-danger">*</span></label>
                                  <input type="text" class="form-control only_currency" id="purchase_price" name="purchase_price" placeholder="Total Price with Tax Amount"  value="<?php print $purchase_price; ?>" readonly='' >
                                  <span id="purchase_price_msg" style="display:none" class="text-danger"></span>
                               </div>
@@ -396,7 +403,7 @@
                            <hr>
                            <div class="row">
                               <div class="form-group col-md-4">
-                                 <label for="warehouse_id"><?= $this->lang->line('warehouse'); ?></label>
+                                 <label for="warehouse_id">Store</label>
                                  <select class="form-control" id="warehouse_id" name="warehouse_id"  style="width: 100%;" >
                                  <?= get_warehouse_select_list();?>
                                  </select>
@@ -520,15 +527,15 @@
       <script type="text/javascript">
         $(document).ready(function(){
           var itemFieldOrder = [
-            'item_name','dptid','category_id','unit_id',
-            'item_group','price','tax_id','purchase_price',
-            'tax_type','sales_price','__spacer__','__spacer__',
-            'supid','brand_id','scatid','clid',
-            'szid','rkid','bnid','bsid',
-            'sku','alert_qty','maximum_qty','minimum_qty',
-            'reorder_qty','custom_barcode','description','item_image',
-            'discount_type','discount','warehouse_id','adjustment_qty',
-            'previous_opening_stock'
+            'item_code_display','item_name','item_group',
+            'custom_barcode','dptid','category_id','scatid',
+            'brand_id','unit_id','clid','szid',
+            'supid','adjustment_qty','item_image',
+            'purchase_price','tax_type','tax_id',
+            'price','discount','discount_type','sales_price',
+            'minimum_qty','maximum_qty','reorder_qty','alert_qty',
+            'warehouse_id','rkid','bnid','bsid',
+            'description','previous_opening_stock','sku'
           ];
           var $layout = $('#item-fields-layout');
           $.each(itemFieldOrder,function(index,id){
@@ -540,6 +547,10 @@
             if(!$field.length) return;
             var $group = $field.closest('.form-group');
             $group.removeClass('col-md-4').addClass('col-md-3');
+            if($.inArray(id,['item_code_display','item_name','item_group','supid','adjustment_qty','item_image','purchase_price','tax_type','tax_id'])!==-1){
+              $group.removeClass('col-md-3').addClass('col-md-4 item-layout-col-4');
+            }
+            if(id==='sku') $group.addClass('hide');
             $layout.append($group);
           });
           $('#supid').next('.select2-container').css('width','100%');

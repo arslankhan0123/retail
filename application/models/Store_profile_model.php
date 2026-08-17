@@ -16,6 +16,14 @@ class Store_profile_model extends CI_Model {
 			}
 		}
 
+		$branch_first_name = isset($branch_first_name) ? trim($branch_first_name) : '';
+		$branch_last_name = isset($branch_last_name) ? trim($branch_last_name) : '';
+		if($branch_first_name === '' || $branch_last_name === ''){
+			echo 'Branch First Name and Branch Last Name are required.';
+			exit();
+		}
+		$store_name = trim($branch_first_name.' '.$branch_last_name);
+
 		$required_fields = array(
 			'bank_details' => 'Bank Details',
 			'country'      => 'Country',
@@ -92,6 +100,8 @@ class Store_profile_model extends CI_Model {
 		$data = array(
 		    				'store_code'				=> $store_code,
 		    				'store_name'				=> $store_name,
+							'branch_first_name'		=> $branch_first_name,
+							'branch_last_name'		=> $branch_last_name,
 		    				'store_website'				=> $store_website,
 		    				'mobile'					=> $mobile,
 		    				'phone'						=> $phone,

@@ -193,23 +193,16 @@
                               <thead>
                                  <tr class="bg-blue">
                                     <th style="">#</th>
-                                    <?php if(store_module() && is_admin()){ ?>
-                                    <th style=""><?= $this->lang->line('store_name'); ?></th>
-                                    <?php } ?>
                                     <?php if(warehouse_module() && warehouse_count()>0){ ?>
                                       <th style=""><?= $this->lang->line('warehouse_name'); ?></th>
                                     <?php } ?>
-                                    <th style=""><?= $this->lang->line('department'); ?></th>
-                                    <th style=""><?= $this->lang->line('category'); ?></th>
-                                    <th style=""><?= $this->lang->line('subcategory'); ?></th>
-                                    <th style=""><?= $this->lang->line('brand'); ?></th>
                                     <th style=""><?= $this->lang->line('invoice_no'); ?></th>
                                     <th style=""><?= $this->lang->line('sales_date'); ?></th>
                                     <th style=""><?= $this->lang->line('customer_id'); ?></th>
                                     <th style=""><?= $this->lang->line('customer_name'); ?></th>
-                                    <th style=""><?= $this->lang->line('invoice_total'); ?>(<?= $CI->currency(); ?>)</th>
-                                    <th style=""><?= $this->lang->line('paid_amount'); ?>(<?= $CI->currency(); ?>)</th>
-                                    <th style=""><?= $this->lang->line('due_amount'); ?>(<?= $CI->currency(); ?>)</th>
+                                    <th style=""><?= $this->lang->line('invoice_total'); ?></th>
+                                    <th style=""><?= $this->lang->line('paid_amount'); ?></th>
+                                    <th style=""><?= $this->lang->line('due_amount'); ?></th>
                                     <th style=""><?= $this->lang->line('user'); ?></th>
                                  </tr>
                               </thead>

@@ -33,6 +33,11 @@
                
                 
               }
+              if(empty($branch_first_name) && empty($branch_last_name)){
+                $branch_name_parts = preg_split('/\s+/u', trim((string)$store_name), 3);
+                $branch_first_name = implode(' ', array_slice($branch_name_parts, 0, 2));
+                $branch_last_name = isset($branch_name_parts[2]) ? $branch_name_parts[2] : '';
+              }
           ?>
 
          <!-- Content Wrapper. Contains page content -->
@@ -86,10 +91,17 @@
                                                    </div>
                                                 </div>
                                                 <div class="form-group">
-                                                   <label for="store_name" class="col-sm-4 control-label">Branch Name<label class="text-danger">*</label></label>
+                                                   <label for="branch_first_name" class="col-sm-4 control-label">Branch First Name<label class="text-danger">*</label></label>
                                                    <div class="col-sm-8">
-                                                      <input type="text" class="form-control" id="store_name" name="store_name" placeholder="" onkeyup="shift_cursor(event,'mobile')" value="<?php print $store_name; ?>" >
-                                                      <span id="store_name_msg" style="display:none" class="text-danger"></span>
+                                                      <input type="text" class="form-control" id="branch_first_name" name="branch_first_name" placeholder="" onkeyup="shift_cursor(event,'branch_last_name')" value="<?= html_escape($branch_first_name); ?>" >
+                                                      <span id="branch_first_name_msg" style="display:none" class="text-danger"></span>
+                                                   </div>
+                                                </div>
+                                                <div class="form-group">
+                                                   <label for="branch_last_name" class="col-sm-4 control-label">Branch Last Name<label class="text-danger">*</label></label>
+                                                   <div class="col-sm-8">
+                                                      <input type="text" class="form-control" id="branch_last_name" name="branch_last_name" placeholder="" onkeyup="shift_cursor(event,'mobile')" value="<?= html_escape($branch_last_name); ?>" >
+                                                      <span id="branch_last_name_msg" style="display:none" class="text-danger"></span>
                                                    </div>
                                                 </div>
                                                 <div class="form-group">

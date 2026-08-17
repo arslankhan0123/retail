@@ -23,9 +23,10 @@ $('#update').on("click",function (e) {
         }
     }
 
-    //STORE
+	//STORE
 	check_field("store_code");if(flag==false){$("#tab_4_btn").trigger('click');}
-	check_field("store_name");if(flag==false){$("#tab_4_btn").trigger('click');}
+	check_field("branch_first_name");if(flag==false){$("#tab_4_btn").trigger('click');}
+	check_field("branch_last_name");if(flag==false){$("#tab_4_btn").trigger('click');}
 	check_field("mobile");	if(flag==false){$("#tab_4_btn").trigger('click');}
 	check_field("email");	if(flag==false){$("#tab_4_btn").trigger('click');}
 	check_field("bank_details");if(flag==false){$("#tab_4_btn").trigger('click');}

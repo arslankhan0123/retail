@@ -8,10 +8,12 @@
     html,body{margin:0;padding:0;background:#fff;color:#000}
     body{font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:1.22;font-weight:700}
     .receipt{width:80mm;max-width:80mm;margin:0 auto;padding:4mm 5mm 5mm}
-    .receipt,.receipt table,.receipt th,.receipt td,.receipt div,.receipt span{font-weight:700}
+    .receipt,.receipt table,.receipt th,.receipt td,.receipt div,.receipt span{font-weight:800;-webkit-text-stroke:.04px currentColor}
     .center{text-align:center}.right{text-align:right}.bold{font-weight:700}
     .store-logo{display:block;max-width:34mm;max-height:20mm;width:auto;height:auto;margin:0 auto 2px}
-    .store-name{font-size:9px;font-weight:900;text-transform:uppercase;white-space:nowrap}
+    .store-name{font-family:"Arial Black",Arial,Helvetica,sans-serif;font-size:14px;font-weight:900;text-transform:uppercase;line-height:1.15}
+    .store-name-primary{white-space:nowrap}
+    .store-name-secondary{font-size:11px;margin-top:1px;white-space:nowrap}
     .rule{border:0;border-top:1px dashed #000;margin:5px 0}
     .solid-rule{border:0;border-top:1px solid #000;margin:5px 0}
     .invoice-meta{width:100%;border-collapse:collapse;font-size:9px}
@@ -55,7 +57,8 @@
     .paid-logo{max-width:25mm;max-height:20mm}
     .print-button{display:block;width:55mm;margin:12px auto 0;padding:5px;border:0;background:#00a65a;color:#fff;cursor:pointer}
     body.email-pdf .receipt{width:70mm;max-width:70mm}
-    body.email-pdf .store-name{white-space:normal}
+    body.email-pdf .store-name-primary{white-space:normal}
+    body.email-pdf .store-name-secondary{font-size:9px;white-space:nowrap}
     body.email-pdf .invoice-meta{font-size:8px}
     body.email-pdf .items th{font-size:8px}
     body.email-pdf .section-title{font-size:12px}
@@ -92,6 +95,13 @@ $payments = $this->db->where('sales_id',(int)$sales_id)->order_by('id','ASC')->g
 
 $store_logo = !empty($store->store_logo) ? $store->store_logo : store_demo_logo();
 $store_name = html_entity_decode((string)$store->store_name, ENT_QUOTES, 'UTF-8');
+$store_name_primary = isset($store->branch_first_name) ? trim(html_entity_decode((string)$store->branch_first_name, ENT_QUOTES, 'UTF-8')) : '';
+$store_name_secondary = isset($store->branch_last_name) ? trim(html_entity_decode((string)$store->branch_last_name, ENT_QUOTES, 'UTF-8')) : '';
+if($store_name_primary === '' && $store_name_secondary === ''){
+  $store_name_parts = preg_split('/\s+/u', trim($store_name), 3);
+  $store_name_primary = implode(' ', array_slice($store_name_parts, 0, 2));
+  $store_name_secondary = isset($store_name_parts[2]) ? $store_name_parts[2] : '';
+}
 $invoice_date = show_date($sale->sales_date);
 $invoice_time_value = strtotime($sale->created_time);
 $invoice_time = $invoice_time_value !== false ? date('h:i:s A', $invoice_time_value) : $sale->created_time;
@@ -132,7 +142,10 @@ $footer = !empty(trim($store->sales_invoice_footer_text)) ? html_entity_decode($
 <main class="receipt">
   <header class="center">
     <?php if(!empty($store_logo)): ?><img class="store-logo" src="<?= base_url($store_logo); ?>" alt="Logo"><?php endif; ?>
-    <div class="store-name"><?= html_escape($store_name); ?></div>
+    <div class="store-name store-name-primary"><?= html_escape($store_name_primary); ?></div>
+    <?php if($store_name_secondary !== ''): ?>
+      <div class="store-name store-name-secondary"><?= html_escape($store_name_secondary); ?></div>
+    <?php endif; ?>
     <?php if(!empty($store->address)): ?><div><?= html_escape($store->address); ?></div><?php endif; ?>
     <?php if(!empty($store_location)): ?><div><?= html_escape(implode(', ', $store_location)); ?></div><?php endif; ?>
     <?php if(!empty($store->mobile)): ?>

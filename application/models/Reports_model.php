@@ -162,42 +162,11 @@ class Reports_model extends CI_Model {
 			$tot_paid_amount=0;
 			$tot_due_amount=0;
 			foreach ($q1->result() as $res1) {
-				$this->db->select("d.dptName, c.category_name, s.scatName, b.brand_name");
-				$this->db->from("db_salesitems si");
-				$this->db->join("db_items i", "i.id=si.item_id", "left");
-				$this->db->join("db_department d", "d.dptid=i.dptid", "left");
-				$this->db->join("db_category c", "c.id=i.category_id", "left");
-				$this->db->join("db_subcategory s", "s.scatid=i.scatid", "left");
-				$this->db->join("db_brands b", "b.id=i.brand_id", "left");
-				$this->db->where("si.sales_id", $res1->id);
-				$item_q = $this->db->get();
-				$departments = array();
-				$categories = array();
-				$subcategories = array();
-				$brands = array();
-				foreach($item_q->result() as $item_row) {
-					if(!empty($item_row->dptName)) $departments[] = $item_row->dptName;
-					if(!empty($item_row->category_name)) $categories[] = $item_row->category_name;
-					if(!empty($item_row->scatName)) $subcategories[] = $item_row->scatName;
-					if(!empty($item_row->brand_name)) $brands[] = $item_row->brand_name;
-				}
-				$departments = implode(", ", array_unique($departments));
-				$categories = implode(", ", array_unique($categories));
-				$subcategories = implode(", ", array_unique($subcategories));
-				$brands = implode(", ", array_unique($brands));
-
 				echo "<tr>";
 				echo "<td>".++$i."</td>";
-				if(store_module() && is_admin()){
-					echo "<td>".get_store_name($res1->store_id)."</td>";	
-				}
 				if(warehouse_module() && warehouse_count()>0){
 					echo "<td>".get_warehouse_name($res1->warehouse_id)."</td>";	
 				}
-				echo "<td>".$departments."</td>";
-				echo "<td>".$categories."</td>";
-				echo "<td>".$subcategories."</td>";
-				echo "<td>".$brands."</td>";
 				if($store_id==get_current_store_id()){
 				echo "<td><a title='View Invoice' href='".base_url("sales/invoice/$res1->id")."'>".$res1->sales_code."</a></td>";
 				}
@@ -218,10 +187,7 @@ class Reports_model extends CI_Model {
 
 			}
 
-			$total_columns_count=9;
-			if(store_module() && is_admin()){
-				$total_columns_count ++;
-			}
+			$total_columns_count=5;
 			if(warehouse_module() && warehouse_count()>0){
 				$total_columns_count ++;
 			}
@@ -234,10 +200,7 @@ class Reports_model extends CI_Model {
 				  </tr>";
 		}
 		else{
-			$total_columns_count=13;
-			if(store_module() && is_admin()){
-				$total_columns_count ++;
-			}
+			$total_columns_count=9;
 			if(warehouse_module() && warehouse_count()>0){
 				$total_columns_count ++;
 			}

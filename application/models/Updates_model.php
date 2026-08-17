@@ -34,6 +34,13 @@ class Updates_model extends CI_Model {
 			if(!$q1){ echo "failed"; exit(); }
 		}
 
+		$result = $this->db->query("SHOW COLUMNS FROM `db_store` LIKE 'branch_first_name'");
+		if(!$result->num_rows()){
+			$q1 = $this->db->query("ALTER TABLE `db_store` ADD COLUMN `branch_first_name` VARCHAR(150) NULL AFTER `store_name`, ADD COLUMN `branch_last_name` VARCHAR(250) NULL AFTER `branch_first_name`");
+			if(!$q1){ echo "failed"; exit(); }
+		}
+		$this->db->query("UPDATE `db_store` SET `branch_first_name`=SUBSTRING_INDEX(TRIM(`store_name`),' ',2), `branch_last_name`=TRIM(SUBSTRING(TRIM(`store_name`),LENGTH(SUBSTRING_INDEX(TRIM(`store_name`),' ',2))+1)) WHERE (`branch_first_name` IS NULL OR TRIM(`branch_first_name`)='') AND `store_name` IS NOT NULL AND TRIM(`store_name`)<>''");
+
 		if($this->db_version <=2.8){
 			
 			$result = $this->db->query("SHOW COLUMNS FROM `db_store` LIKE 'qty_decimals'");

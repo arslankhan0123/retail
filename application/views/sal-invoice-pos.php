@@ -23,8 +23,8 @@
     .items{width:100%;border-collapse:collapse;table-layout:fixed}
     .items th{font-size:10px;text-align:left;border-top:1px dashed #000;border-bottom:1px dashed #000;padding:3px 1px}
     .items td{vertical-align:top;padding:2px 1px}
-    .items .sl{width:7%}.items .description{width:47%}.items .qty{width:12%;text-align:center}
-    .items .price,.items .amount{width:17%;text-align:right}
+    .items .sl{width:7%}.items .description{width:44%}.items .qty{width:12%;text-align:center}
+    .items .price{width:18%;text-align:right}.items .amount{width:19%;text-align:right}
     .item-barcode{display:block;font-size:8px;margin-top:1px}
     .summary,.details{width:100%;border-collapse:collapse}
     .details{table-layout:fixed}

@@ -6,7 +6,7 @@
   <style>
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;background:#fff;color:#000}
-    body{font-family:Arial;font-size:10px;line-height:1.22;font-weight:700}
+    body{font-family:Arial;font-size:11px;line-height:1.3;font-weight:700}
     .receipt{width:80mm;max-width:80mm;margin:0 auto;padding:4mm 5mm 5mm}
     .receipt,.receipt table,.receipt th,.receipt td,.receipt div,.receipt span{font-weight:750;-webkit-text-stroke:.04px currentColor}
     .center{text-align:center}.right{text-align:right}.bold{font-weight:700}
@@ -16,24 +16,24 @@
     .store-name-secondary{font-size:11px;margin-top:1px;white-space:nowrap}
     .rule{border:0;border-top:1px dashed #000;margin:5px 0}
     .solid-rule{border:0;border-top:1px solid #000;margin:5px 0}
-    .invoice-meta{width:100%;border-collapse:collapse;font-size:10px}
+    .invoice-meta{width:100%;border-collapse:collapse;font-size:10.5px}
     .invoice-meta td{padding:0;white-space:nowrap}
     .barcode{display:block;width:55mm;height:auto;max-height:15mm;margin:3px auto 0;object-fit:fill}
-    .barcode-number{text-align:center;font-size:10px;font-weight:700;line-height:1;margin:1px 0 3px}
+    .barcode-number{text-align:center;font-size:11px;font-weight:700;line-height:1;margin:1px 0 3px}
     .items{width:100%;border-collapse:collapse;table-layout:fixed}
-    .items th{font-size:10px;text-align:left;border-top:1px dashed #000;border-bottom:1px dashed #000;padding:3px 1px}
-    .items td{vertical-align:top;padding:2px 1px}
+    .items th{font-size:10.5px;text-align:left;border-top:1px dashed #000;border-bottom:1px dashed #000;padding:3px 1px}
+    .items td{font-size:11px;vertical-align:top;padding:3px 1px}
     .items .sl{width:7%}.items .description{width:44%}.items .qty{width:12%;text-align:center}
     .items .price{width:18%;text-align:right}.items .amount{width:19%;text-align:right}
-    .item-barcode{display:block;font-size:8px;margin-top:1px}
+    .item-barcode{display:block;font-size:9px;margin-top:1px}
     .summary,.details{width:100%;border-collapse:collapse}
     .details{table-layout:fixed}
-    .summary td{font-size:11px;padding:1px 0}.summary .label{width:65%}.summary .value{width:35%;text-align:right;padding-right:5px}
+    .summary td{font-size:11.5px;padding:1px 0}.summary .label{width:65%}.summary .value{width:35%;text-align:right;padding-right:5px}
     .net-amount{text-align:center;font-size:16px;font-weight:700;padding:7px 0 4px}
     .details td{width:50%;vertical-align:top;padding:0}
     .details td:first-child{padding-right:2mm}
     .section-title{font-size:14px;font-weight:700;margin-bottom:4px;white-space:nowrap}
-    .detail-row{display:grid;grid-template-columns:21mm 2mm minmax(0,1fr);align-items:baseline;font-size:11px;line-height:1.45;white-space:nowrap}
+    .detail-row{display:grid;grid-template-columns:21mm 2mm minmax(0,1fr);align-items:baseline;font-size:10.5px;line-height:1.5;white-space:nowrap}
     .detail-row span,.detail-row i,.detail-row b{display:block;white-space:nowrap}
     .detail-row i{font-style:normal;text-align:center}
     .detail-row b{text-align:right;font-variant-numeric:tabular-nums}
@@ -48,22 +48,24 @@
     .vat-details .detail-row span{text-align:left;padding-right:0}
     .details + .rule{margin-bottom:0}
     .policy-title{font-size:11px;font-weight:700;margin:2px 0 1px}
-    .policy{font-size:10px;line-height:1.2;white-space:pre-line}
+    .policy{font-size:10.5px;line-height:1.3;white-space:pre-line}
     .thank-you{font-size:11px;font-weight:700;margin:10px 0 5px}
-    .receipt-marks{width:64mm;margin:7px auto 0;border-collapse:collapse;table-layout:fixed}
-    .receipt-marks td{width:50%;padding:0 1mm;text-align:center;vertical-align:middle}
+    .receipt-marks{width:68mm;margin:7px auto 0;border-collapse:collapse;table-layout:fixed}
+    .receipt-marks td{width:50%;padding:0;text-align:center;vertical-align:middle}
+    .receipt-marks td:first-child{text-align:left}
+    .receipt-marks td:last-child{text-align:right}
     .receipt-marks img{display:inline-block;width:auto;height:auto;object-fit:contain}
     .qr{max-width:27mm;max-height:27mm}
     .paid-logo{max-width:32mm;max-height:29mm}
     .print-button{display:block;width:55mm;margin:12px auto 0;padding:5px;border:0;background:#00a65a;color:#fff;cursor:pointer}
-    body.email-pdf .receipt{width:70mm;max-width:70mm}
+    body.email-pdf .receipt{width:80mm;max-width:80mm}
     body.email-pdf .store-name-primary{white-space:normal}
-    body.email-pdf .store-name-secondary{font-size:9px;white-space:nowrap}
-    body.email-pdf .invoice-meta{font-size:8px}
-    body.email-pdf .items th{font-size:8px}
-    body.email-pdf .section-title{font-size:12px}
-    body.email-pdf .detail-row{font-size:8px;grid-template-columns:16mm 2mm minmax(0,1fr)}
-    body.email-pdf .vat-details .detail-row{grid-template-columns:15mm 2mm minmax(0,1fr)}
+    body.email-pdf .store-name-secondary{font-size:10px;white-space:nowrap}
+    body.email-pdf .invoice-meta{font-size:10px}
+    body.email-pdf .items th{font-size:10px}
+    body.email-pdf .section-title{font-size:13px}
+    body.email-pdf .detail-row{font-size:10px;grid-template-columns:20mm 2mm minmax(0,1fr)}
+    body.email-pdf .vat-details .detail-row{grid-template-columns:18mm 2mm minmax(0,1fr)}
     @media print{
       @page{size:80mm auto;margin:0}
       html,body,.receipt{width:80mm;max-width:80mm}

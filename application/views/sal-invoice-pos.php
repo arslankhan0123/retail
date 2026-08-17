@@ -31,7 +31,7 @@
     .summary td{font-size:11.5px;padding:1px 0}.summary .label{width:65%}.summary .value{width:35%;text-align:right;padding-right:5px}
     .net-amount{text-align:center;font-size:16px;font-weight:700;padding:7px 0 4px}
     .details td{width:50%;vertical-align:top;padding:0}
-    .details td:first-child{padding-right:2mm}
+    .details td:first-child{padding-right:3mm}
     .section-title{font-size:14px;font-weight:700;margin-bottom:4px;white-space:nowrap}
     .detail-row{display:grid;grid-template-columns:21mm 2mm minmax(0,1fr);align-items:baseline;font-size:10.5px;line-height:1.5;white-space:nowrap}
     .detail-row span,.detail-row i,.detail-row b{display:block;white-space:nowrap}
@@ -42,7 +42,7 @@
     .detail-list .detail-label{width:58%;text-align:left}
     .detail-list .detail-colon{width:7%;text-align:center}
     .detail-list .detail-value{width:35%;text-align:right;font-variant-numeric:tabular-nums}
-    .details td.vat-details{text-align:left;padding-left:2mm;padding-right:0}
+    .details td.vat-details{text-align:left;padding-left:3mm;padding-right:0}
     .vat-details .section-title{text-align:left}
     .vat-details .detail-row{grid-template-columns:19mm 2mm minmax(0,1fr)}
     .vat-details .detail-row span{text-align:left;padding-right:0}

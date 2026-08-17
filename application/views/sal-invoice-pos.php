@@ -48,13 +48,13 @@
     .vat-details .detail-row span{text-align:left;padding-right:0}
     .details + .rule{margin-bottom:0}
     .policy-title{font-size:11px;font-weight:700;margin:2px 0 1px}
-    .policy{font-size:9px;line-height:1.2;white-space:pre-line}
+    .policy{font-size:10px;line-height:1.2;white-space:pre-line}
     .thank-you{font-size:11px;font-weight:700;margin:10px 0 5px}
-    .receipt-marks{width:60mm;margin:7px auto 0;border-collapse:collapse;table-layout:fixed}
-    .receipt-marks td{width:50%;padding:0 2mm;text-align:center;vertical-align:middle}
+    .receipt-marks{width:64mm;margin:7px auto 0;border-collapse:collapse;table-layout:fixed}
+    .receipt-marks td{width:50%;padding:0 1mm;text-align:center;vertical-align:middle}
     .receipt-marks img{display:inline-block;width:auto;height:auto;object-fit:contain}
-    .qr{max-width:24mm;max-height:24mm}
-    .paid-logo{max-width:30mm;max-height:26mm}
+    .qr{max-width:27mm;max-height:27mm}
+    .paid-logo{max-width:32mm;max-height:29mm}
     .print-button{display:block;width:55mm;margin:12px auto 0;padding:5px;border:0;background:#00a65a;color:#fff;cursor:pointer}
     body.email-pdf .receipt{width:70mm;max-width:70mm}
     body.email-pdf .store-name-primary{white-space:normal}

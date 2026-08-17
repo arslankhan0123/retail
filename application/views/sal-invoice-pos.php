@@ -6,12 +6,12 @@
   <style>
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;background:#fff;color:#000}
-    body{font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:1.22;font-weight:700}
+    body{font-family:Arial;font-size:10px;line-height:1.22;font-weight:700}
     .receipt{width:80mm;max-width:80mm;margin:0 auto;padding:4mm 5mm 5mm}
     .receipt,.receipt table,.receipt th,.receipt td,.receipt div,.receipt span{font-weight:750;-webkit-text-stroke:.04px currentColor}
     .center{text-align:center}.right{text-align:right}.bold{font-weight:700}
     .store-logo{display:block;max-width:34mm;max-height:20mm;width:auto;height:auto;margin:0 auto 2px}
-    .store-name{font-family:"Arial Black",Arial,Helvetica,sans-serif;font-size:14px;font-weight:900;text-transform:uppercase;line-height:1.15}
+    .store-name{font-family:Arial;font-size:14px;font-weight:900;text-transform:uppercase;line-height:1.15}
     .store-name-primary{white-space:nowrap}
     .store-name-secondary{font-size:11px;margin-top:1px;white-space:nowrap}
     .rule{border:0;border-top:1px dashed #000;margin:5px 0}
@@ -49,7 +49,7 @@
     .details + .rule{margin-bottom:0}
     .policy-title{font-size:11px;font-weight:700;margin:2px 0 1px}
     .policy{font-size:9px;line-height:1.2;white-space:pre-line}
-    .thank-you{font-size:9px;font-weight:700;margin:10px 0 5px}
+    .thank-you{font-size:11px;font-weight:700;margin:10px 0 5px}
     .receipt-marks{width:60mm;margin:7px auto 0;border-collapse:collapse;table-layout:fixed}
     .receipt-marks td{width:50%;padding:0 2mm;text-align:center;vertical-align:middle}
     .receipt-marks img{display:inline-block;width:auto;height:auto;object-fit:contain}

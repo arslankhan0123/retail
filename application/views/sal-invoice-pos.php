@@ -16,12 +16,12 @@
     .store-name-secondary{font-size:11px;margin-top:1px;white-space:nowrap}
     .rule{border:0;border-top:1px dashed #000;margin:5px 0}
     .solid-rule{border:0;border-top:1px solid #000;margin:5px 0}
-    .invoice-meta{width:100%;border-collapse:collapse;font-size:9px}
+    .invoice-meta{width:100%;border-collapse:collapse;font-size:10px}
     .invoice-meta td{padding:0;white-space:nowrap}
     .barcode{display:block;width:55mm;height:auto;max-height:15mm;margin:3px auto 0;object-fit:fill}
     .barcode-number{text-align:center;font-size:10px;font-weight:700;line-height:1;margin:1px 0 3px}
     .items{width:100%;border-collapse:collapse;table-layout:fixed}
-    .items th{font-size:9px;text-align:left;border-top:1px dashed #000;border-bottom:1px dashed #000;padding:3px 1px}
+    .items th{font-size:10px;text-align:left;border-top:1px dashed #000;border-bottom:1px dashed #000;padding:3px 1px}
     .items td{vertical-align:top;padding:2px 1px}
     .items .sl{width:7%}.items .description{width:47%}.items .qty{width:12%;text-align:center}
     .items .price,.items .amount{width:17%;text-align:right}

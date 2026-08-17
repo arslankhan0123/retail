@@ -28,7 +28,7 @@
     .item-barcode{display:block;font-size:8px;margin-top:1px}
     .summary,.details{width:100%;border-collapse:collapse}
     .details{table-layout:fixed}
-    .summary td{padding:1px 0}.summary .label{width:65%}.summary .value{width:35%;text-align:right;padding-right:5px}
+    .summary td{font-size:11px;padding:1px 0}.summary .label{width:65%}.summary .value{width:35%;text-align:right;padding-right:5px}
     .net-amount{text-align:center;font-size:16px;font-weight:700;padding:7px 0 4px}
     .details td{width:50%;vertical-align:top;padding:0}
     .details td:first-child{padding-right:2mm}
@@ -48,7 +48,7 @@
     .vat-details .detail-row span{text-align:left;padding-right:0}
     .details + .rule{margin-bottom:0}
     .policy-title{font-size:11px;font-weight:700;margin:2px 0 1px}
-    .policy{font-size:8px;line-height:1.2;white-space:pre-line}
+    .policy{font-size:9px;line-height:1.2;white-space:pre-line}
     .thank-you{font-size:9px;font-weight:700;margin:10px 0 5px}
     .receipt-marks{width:60mm;margin:7px auto 0;border-collapse:collapse;table-layout:fixed}
     .receipt-marks td{width:50%;padding:0 2mm;text-align:center;vertical-align:middle}

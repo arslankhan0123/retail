@@ -33,7 +33,7 @@
     .details td{width:50%;vertical-align:top;padding:0}
     .details td:first-child{padding-right:2mm}
     .section-title{font-size:14px;font-weight:700;margin-bottom:4px;white-space:nowrap}
-    .detail-row{display:grid;grid-template-columns:21mm 2mm minmax(0,1fr);align-items:baseline;font-size:10px;line-height:1.45;white-space:nowrap}
+    .detail-row{display:grid;grid-template-columns:21mm 2mm minmax(0,1fr);align-items:baseline;font-size:11px;line-height:1.45;white-space:nowrap}
     .detail-row span,.detail-row i,.detail-row b{display:block;white-space:nowrap}
     .detail-row i{font-style:normal;text-align:center}
     .detail-row b{text-align:right;font-variant-numeric:tabular-nums}

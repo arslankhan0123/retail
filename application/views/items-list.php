@@ -23,6 +23,16 @@
           top: -106px;
       }
     }
+    #example2 tbody td img, #example2 tbody td image {
+      transition: transform 0.2s ease-in-out;
+    }
+    #example2 tbody td img:hover, #example2 tbody td image:hover {
+      transform: scale(2.5);
+      position: relative;
+      z-index: 9999;
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+      background-color: #fff;
+    }
   </style>
 
   <!-- Content Wrapper. Contains page content -->
@@ -93,7 +103,7 @@
                               <option value=''>All</option>
                             <?php } ?>  
                             <?php if($CI->permissions('items_view')){?>
-                              <option value='Items'>Items</option>
+                               <option value='Items'>Products</option>
                             <?php } ?>
                             <?php if($CI->permissions('services_view')){?>
                               <option value='Services'>Services</option>

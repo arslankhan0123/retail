@@ -14,6 +14,12 @@
     .btn {
       font-size: 15px;
     }
+
+    /* Hide the currency D icon on the dashboard */
+    .content img[src*="logo.png"],
+    .content img[alt="logo"] {
+      display: none !important;
+    }
   </style>
 </head>
 

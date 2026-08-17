@@ -47,7 +47,7 @@
     .vat-details .detail-row{grid-template-columns:19mm 2mm minmax(0,1fr)}
     .vat-details .detail-row span{text-align:left;padding-right:0}
     .details + .rule{margin-bottom:0}
-    .policy-title{font-size:11px;font-weight:700;margin:2px 0 1px}
+    .policy-title{font-size:11px;font-weight:700;margin:2px 0 6px}
     .policy{font-size:10.5px;line-height:1.3;white-space:pre-line}
     .thank-you{font-size:11px;font-weight:700;margin:10px 0 5px}
     .receipt-marks{width:68mm;margin:7px auto 0;border-collapse:collapse;table-layout:fixed}

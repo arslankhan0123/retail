@@ -606,6 +606,20 @@ $sales_due_total = $this->db->select("COALESCE(SUM(sales_due),0) AS sales_due")-
 function show_receipt(id){
   window.open("<?=base_url();?>sales/print_show_receipt/"+id, "_blank", "scrollbars=1,resizable=1,height=500,width=500");
 }
+function share_invoice_whatsapp(id, mobile, sales_code, grand_total, public_pdf_url) {
+  var phoneNumber = mobile.replace(/[^0-9]/g, '');
+  var inputNumber = prompt("Enter customer WhatsApp number (with country code, e.g., 923001234567):", phoneNumber);
+  if (inputNumber === null) {
+    return;
+  }
+  if (inputNumber.trim() === "") {
+    alert("Please enter a valid WhatsApp number.");
+    return;
+  }
+  var message = "Dear Customer, here is your invoice " + sales_code + " for " + grand_total + ". You can view or download the PDF invoice here: " + public_pdf_url;
+  var waLink = "https://api.whatsapp.com/send?phone=" + inputNumber + "&text=" + encodeURIComponent(message);
+  window.open(waLink, '_blank');
+}
 </script>
 <!-- Make sidebar menu hughlighter/selector -->
 <script>$(".<?php echo basename(__FILE__, '.php'); ?>-active-li").addClass("active");</script>

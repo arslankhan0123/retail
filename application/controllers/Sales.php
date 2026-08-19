@@ -165,18 +165,30 @@ class Sales extends MY_Controller {
 												</a>
 											</li>';
 
-											if($this->permissions('sales_add') || $this->permissions('sales_edit'))
-											$str2.='
-											<li>
-												<a title="Download PDF" target="_blank" href="'.base_url().'pdf/sales/'.$sales->id.'">
-													<i class="fa fa-fw fa-file-pdf-o text-blue"></i>PDF
-												</a>
-											</li>
-											<li>
-												<a style="cursor:pointer" title="Print POS Invoice ?" onclick="print_invoice('.$sales->id.')">
-													<i class="fa fa-fw fa-file-text text-blue"></i>POS Invoice
-												</a>
-											</li>';
+											if($this->permissions('sales_add') || $this->permissions('sales_edit')) {
+												$salt = $this->config->item('encryption_key');
+												if (empty($salt)) {
+													$salt = 'retail_app_secret_salt';
+												}
+												$public_pdf_url = base_url().'pdf/sales_public/'.$sales->id.'/'.md5($sales->id . $salt);
+
+												$str2.='
+												<li>
+													<a title="Download PDF" target="_blank" href="'.base_url().'pdf/sales/'.$sales->id.'">
+														<i class="fa fa-fw fa-file-pdf-o text-blue"></i>PDF
+													</a>
+												</li>
+												<li>
+													<a style="cursor:pointer" title="Share on WhatsApp" onclick="share_invoice_whatsapp('.$sales->id.', \''.html_escape($sales->mobile).'\', \''.html_escape($sales->sales_code).'\', \''.html_escape(store_total_format($sales->grand_total)).'\', \''.html_escape($public_pdf_url).'\')">
+														<i class="fa fa-fw fa-whatsapp text-green" style="color:#25D366;"></i>WhatsApp
+													</a>
+												</li>
+												<li>
+													<a style="cursor:pointer" title="Print POS Invoice ?" onclick="print_invoice('.$sales->id.')">
+														<i class="fa fa-fw fa-file-text text-blue"></i>POS Invoice
+													</a>
+												</li>';
+											}
 
 											if($this->permissions('sales_return_add'))
 											$str2.='<li>

@@ -49,6 +49,7 @@ class Sales_model extends CI_Model {
 		$privileged_warehouses = get_privileged_warehouses_ids();
 
 		$this->db->select($this->column_order);
+		$this->db->select('b.mobile');
 		$this->db->from($this->table);
 		$this->db->join('db_customers as b','b.id=a.customer_id','left');
 		

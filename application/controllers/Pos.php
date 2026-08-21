@@ -74,15 +74,35 @@ class Pos extends MY_Controller {
 
 		$explode = explode("<<<###>>>",$response);
 		if($explode['0']=='success'){
+			$sales_id = (int)$explode[1];
 			$init_code=get_only_init_code('sales');
 			$count_id=get_last_count_id('db_sales');
 			$customer_remaining_advance=get_customer_details($_REQUEST['customer_id'])->tot_advance;
 			$email_result=array('status'=>'skipped','message'=>'');
 			if($this->input->post('send_invoice_email')=='1'){
-				$email_result=$this->send_pos_invoice_email((int)$explode[1]);
+				$email_result=$this->send_pos_invoice_email($sales_id);
 			}
+			
+			$sale_row = $this->db->select('sales_code, grand_total, customer_id')->where('id', $sales_id)->get('db_sales')->row();
+			$mobile = '';
+			if(!empty($sale_row)){
+				$cust = $this->db->select('mobile')->where('id', $sale_row->customer_id)->get('db_customers')->row();
+				if(!empty($cust)){
+					$mobile = $cust->mobile;
+				}
+			}
+			$sales_code = !empty($sale_row) ? $sale_row->sales_code : '';
+			$grand_total = !empty($sale_row) ? store_total_format($sale_row->grand_total) : '0.00';
+			
+			$salt = $this->config->item('encryption_key');
+			if (empty($salt)) {
+				$salt = 'retail_app_secret_salt';
+			}
+			$public_pdf_url = base_url().'pdf/sales_public/'.$sales_id.'/'.md5($sales_id . $salt);
+
 			$response .="<<<###>>>".$init_code."<<<###>>>".$count_id."<<<###>>>".$customer_remaining_advance
-				."<<<###>>>".$email_result['status']."<<<###>>>".$email_result['message'];
+				."<<<###>>>".$email_result['status']."<<<###>>>".$email_result['message']
+				."<<<###>>>".$mobile."<<<###>>>".$sales_code."<<<###>>>".$grand_total."<<<###>>>".$public_pdf_url;
 		}
 		echo $response;
 	}

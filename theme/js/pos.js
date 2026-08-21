@@ -60,6 +60,7 @@ function save(print=false,pay_all=false){
 	
 	var base_url=$("#base_url").val();
 	var send_invoice_email=$("#send_invoice_email").is(':checked');
+	var send_invoice_whatsapp=$("#send_invoice_whatsapp").is(':checked');
 
     if(!$("#salesman_id").val()){
         toastr["warning"]("Please Select Salesman!!");
@@ -143,6 +144,15 @@ function save(print=false,pay_all=false){
 			            if(send_invoice_email){
 			              if(result[5]==='success') toastr['success'](result[6] || "Invoice PDF emailed successfully.");
 			              else toastr['error'](result[6] || "Invoice email failed.");
+			            }
+			            if(send_invoice_whatsapp){
+			              var phoneNumber = result[7].replace(/[^0-9]/g, '');
+			              var inputNumber = prompt("Enter customer WhatsApp number (with country code, e.g., 923001234567):", phoneNumber);
+			              if (inputNumber !== null && inputNumber.trim() !== "") {
+			                var message = "Dear Customer, here is your invoice " + result[8] + " for " + result[9] + ". You can view or download the PDF invoice here: " + result[10];
+			                var waLink = "https://api.whatsapp.com/send?phone=" + inputNumber.replace(/[^0-9]/g, '') + "&text=" + encodeURIComponent(message);
+			                window.open(waLink, '_blank');
+			              }
 			            }
 						var warehouse_id=$("#warehouse_id").val();
 						var print_done=true;

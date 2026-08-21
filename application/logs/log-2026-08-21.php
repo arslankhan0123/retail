@@ -12,3 +12,9 @@ ERROR - 2026-08-21 18:15:54 --> Severity: Notice --> Undefined variable: warehou
 ERROR - 2026-08-21 14:16:32 --> 404 Page Not Found: Faviconico/index
 ERROR - 2026-08-21 18:18:26 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 265
 ERROR - 2026-08-21 18:19:06 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 265
+ERROR - 2026-08-21 14:30:46 --> 404 Page Not Found: Faviconico/index
+ERROR - 2026-08-21 18:32:06 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 265
+ERROR - 2026-08-21 18:34:05 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 265
+ERROR - 2026-08-21 18:35:37 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 265
+ERROR - 2026-08-21 18:36:19 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 265
+ERROR - 2026-08-21 18:37:39 --> Severity: Notice --> Undefined variable: warehouse_id F:\Projects\retail\application\views\pos.php 265

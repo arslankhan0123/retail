@@ -398,8 +398,11 @@
               <div class="box-footer bg-gray">
                 <div class="row">
                   <div class="col-md-12">
-                    <label class="cursor-pointer" style="margin-bottom:8px;">
+                    <label class="cursor-pointer" style="margin-bottom:8px; margin-right: 15px;">
                       <input type="checkbox" id="send_invoice_email" name="send_invoice_email" value="1" autocomplete="off"> Send Email
+                    </label>
+                    <label class="cursor-pointer" style="margin-bottom:8px;">
+                      <input type="checkbox" id="send_invoice_whatsapp" name="send_invoice_whatsapp" value="1" autocomplete="off"> Send WhatsApp
                     </label>
                   </div>
                 </div>

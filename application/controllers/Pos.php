@@ -212,13 +212,12 @@ class Pos extends MY_Controller {
 		try{
 			$data=$this->data;
 			$data['sales_id']=$sales_id;
-			$data['email_pdf']=true;
 			$html=$this->load->view('sal-invoice-pos',$data,true);
 			$options=new Options();
 			$options->set('isRemoteEnabled',true);
 			$dompdf=new Dompdf($options);
 			$dompdf->loadHtml($html,'UTF-8');
-			$dompdf->setPaper(array(0,0,226.77,1000),'portrait');
+			$dompdf->setPaper('A4','portrait');
 			$dompdf->render();
 
 			$this->load->model('email_model');
